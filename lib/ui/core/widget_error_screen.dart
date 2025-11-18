@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../utils/constants.dart';
+import 'package:topix/utils/constants.dart';
 
 class WidgetErrorScreen extends StatelessWidget {
   final FlutterErrorDetails e;

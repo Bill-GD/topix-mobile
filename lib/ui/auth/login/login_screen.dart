@@ -1,18 +1,21 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import '../../../utils/constants.dart';
-import '../../core/button.dart';
-import '../../core/input.dart';
-import '../layout.dart';
-import '../register/register_screen.dart';
-import '../register/register_view_model.dart' show RegisterViewModel;
-import 'login_view_model.dart';
+import 'package:topix/ui/auth/layout.dart';
+import 'package:topix/ui/auth/login/login_view_model.dart';
+import 'package:topix/ui/auth/register/register_screen.dart';
+import 'package:topix/ui/auth/register/register_view_model.dart' show RegisterViewModel;
+import 'package:topix/ui/core/button.dart';
+import 'package:topix/ui/core/input.dart';
+import 'package:topix/ui/core/toast.dart';
+import 'package:topix/utils/constants.dart';
 
 class LoginScreen extends StatelessWidget {
   final LoginViewModel viewModel;
+  final usernameController = TextEditingController(),
+      passwordController = TextEditingController();
 
-  const LoginScreen({super.key, required this.viewModel});
+  LoginScreen({super.key, required this.viewModel});
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +64,7 @@ class LoginScreen extends StatelessWidget {
                     ),
                   ),
                   Input(
+                    controller: usernameController,
                     labelText: 'Username',
                     hintText: 'Enter your username',
                     prefixIcon: Icon(Icons.person_rounded),
@@ -68,6 +72,7 @@ class LoginScreen extends StatelessWidget {
                     textInputAction: .next,
                   ),
                   Input(
+                    controller: passwordController,
                     labelText: 'Password',
                     hintText: 'Enter your password',
                     obscureText: viewModel.hidePassword,
@@ -85,7 +90,20 @@ class LoginScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Button(type: .success, onPressed: () {}, text: 'Login'),
+                  Button(
+                    type: .success,
+                    onPressed: () async {
+                      final res = await viewModel.login(
+                        usernameController.text.trim(),
+                        passwordController.text.trim(),
+                      );
+
+                      if (!res.success) {
+                        if (context.mounted) return showToast(context, res.message);
+                      }
+                    },
+                    text: 'Login',
+                  ),
                 ],
               ),
             ),

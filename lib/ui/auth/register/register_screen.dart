@@ -1,13 +1,15 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import '../../../utils/constants.dart';
-import '../../core/button.dart';
-import '../../core/input.dart';
-import '../layout.dart';
-import '../login/login_screen.dart';
-import '../login/login_view_model.dart';
-import 'register_view_model.dart';
+import 'package:provider/provider.dart';
+
+import 'package:topix/ui/auth/layout.dart';
+import 'package:topix/ui/auth/login/login_screen.dart';
+import 'package:topix/ui/auth/login/login_view_model.dart';
+import 'package:topix/ui/auth/register/register_view_model.dart';
+import 'package:topix/ui/core/button.dart';
+import 'package:topix/ui/core/input.dart';
+import 'package:topix/utils/constants.dart';
 
 class RegisterScreen extends StatelessWidget {
   final RegisterViewModel viewModel;
@@ -51,7 +53,9 @@ class RegisterScreen extends StatelessWidget {
                               Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
                                   builder: (context) {
-                                    return LoginScreen(viewModel: LoginViewModel());
+                                    return LoginScreen(
+                                      viewModel: LoginViewModel(dio: context.read()),
+                                    );
                                   },
                                 ),
                               );

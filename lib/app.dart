@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
+import 'package:provider/provider.dart';
 import 'package:theme_provider/theme_provider.dart';
 
-import 'ui/auth/login/login_screen.dart';
-import 'ui/auth/login/login_view_model.dart' show LoginViewModel;
-import 'ui/core/widget_error_screen.dart';
+import 'package:topix/ui/auth/login/login_screen.dart';
+import 'package:topix/ui/auth/login/login_view_model.dart' show LoginViewModel;
+import 'package:topix/ui/core/widget_error_screen.dart';
 
 class TopixApp extends StatelessWidget {
   final GlobalKey<NavigatorState> navKey;
@@ -64,7 +65,7 @@ class TopixApp extends StatelessWidget {
                 if (child != null) return child;
                 throw StateError('Widget is null');
               },
-              home: LoginScreen(viewModel: LoginViewModel()),
+              home: LoginScreen(viewModel: LoginViewModel(dio: context.read())),
             );
           },
         ),

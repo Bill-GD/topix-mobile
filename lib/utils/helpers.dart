@@ -1,10 +1,8 @@
 import 'package:firebase_remote_config/firebase_remote_config.dart'
     show FirebaseRemoteConfig, RemoteConfigSettings;
 
-import 'package:theme_provider/theme_provider.dart';
-
-import 'constants.dart' show Constants;
-import 'extensions.dart' show NumDurationExtensions;
+import 'package:topix/utils/constants.dart' show Constants;
+import 'package:topix/utils/extensions.dart' show NumDurationExtensions;
 
 /// From https://pub.dev/packages/dedent, modified to not use extra packages
 String dedent(String text) {
@@ -73,11 +71,13 @@ Future<void> setupFirebaseRemoteConfig(FirebaseRemoteConfig config) async {
   );
   await config.fetchAndActivate();
   Constants.emailVerificationEnabled.value = config.getBool('ENABLE_EMAIL_VERIFICATION');
+  Constants.apiUrl.value = config.getString('API_URL');
 
   config.onConfigUpdated.listen((event) async {
     await config.activate();
     Constants.emailVerificationEnabled.value = config.getBool(
       'ENABLE_EMAIL_VERIFICATION',
     );
+    Constants.apiUrl.value = config.getString('API_URL');
   });
 }

@@ -11,4 +11,5 @@ class FontSize {
 
 class Constants {
   static final emailVerificationEnabled = ValueNotifier(false);
+  static final apiUrl = ValueNotifier('');
 }

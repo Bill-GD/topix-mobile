@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../utils/constants.dart';
+import 'package:topix/utils/constants.dart';
 
 class Input extends StatefulWidget {
   final TextStyle? style;
