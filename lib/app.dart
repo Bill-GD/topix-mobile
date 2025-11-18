@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+
 import 'package:theme_provider/theme_provider.dart';
 
 import 'ui/auth/register/register_screen.dart';
@@ -60,6 +61,7 @@ class TopixApp extends StatelessWidget {
               navigatorKey: navKey,
               title: 'Flutter Demo',
               theme: ThemeProvider.themeOf(context).data,
+              debugShowCheckedModeBanner: false,
               builder: (context, child) {
                 ErrorWidget.builder = (errorDetails) => WidgetErrorScreen(e: errorDetails);
                 if (child != null) return child;
