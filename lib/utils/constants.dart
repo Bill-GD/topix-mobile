@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 enum FontSize {
   xl(48),
   large(32),
@@ -11,4 +13,8 @@ enum FontSize {
   const FontSize(this.size);
 
   double call() => size;
+}
+
+class Constants {
+  static final emailVerificationEnabled = ValueNotifier(false);
 }

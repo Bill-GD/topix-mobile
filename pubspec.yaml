@@ -18,6 +18,9 @@ dependencies:
   animations: ^2.1.1
   provider: ^6.1.5+1
   path_provider: ^2.1.5
+  firebase_core: ^4.2.1
+  firebase_remote_config: ^6.1.2
+  firebase_analytics: ^12.0.4
   google_sign_in: ^7.2.0
   dio: ^5.9.0
   flutter_secure_storage: ^9.2.4
@@ -43,6 +46,7 @@ dev_dependencies:
 # yaml configs
 import_sorter:
   comments: false
+  # flutter pub run import_sorter:main
 # flutter_launcher_icons:
 #   android: true
 #   image_path: 'assets/images/icon.png'

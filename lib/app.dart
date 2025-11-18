@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'ui/core/widget_error.dart';
+import 'utils/constants.dart';
 
 class TopixApp extends StatelessWidget {
   final GlobalKey<NavigatorState> navKey;
@@ -92,8 +93,15 @@ class _MyHomePageState extends State<MyHomePage> {
           // wireframe for each widget.
           mainAxisAlignment: .center,
           children: [
+            ValueListenableBuilder<bool>(
+              valueListenable: Constants.emailVerificationEnabled,
+              builder: (_, value, _) => Text('$value'),
+            ),
             const Text('You have pushed the button this many times:'),
-            Text('$_counter', style: Theme.of(context).textTheme.headlineMedium),
+            Text(
+              '$_counter',
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
           ],
         ),
       ),

@@ -2,10 +2,18 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-import 'app.dart';
-import 'ui/core/ui_helpers.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:provider/provider.dart';
 
-void main() {
+import 'app.dart';
+import 'firebase_options.dart';
+import 'ui/core/ui_helpers.dart';
+import 'utils/helpers.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   FlutterError.onError = (details) {
     FlutterError.presentError(details);
   };
@@ -22,5 +30,16 @@ void main() {
     );
     return true;
   };
-  runApp(TopixApp(navKey: navigatorKey));
+
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  final remoteConfig = FirebaseRemoteConfig.instance;
+  await setupFirebaseRemoteConfig(remoteConfig);
+
+  runApp(
+    MultiProvider(
+      providers: [Provider.value(value: remoteConfig)],
+      child: TopixApp(navKey: navigatorKey),
+    ),
+  );
 }
