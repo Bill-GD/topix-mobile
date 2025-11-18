@@ -2,7 +2,8 @@ import 'package:flutter/foundation.dart';
 
 import 'package:dio/dio.dart' show Dio;
 
-import 'package:topix/utils/result.dart';
+import 'package:topix/utils/api_response.dart';
+import 'package:topix/utils/extensions.dart';
 
 class LoginViewModel extends ChangeNotifier {
   final Dio dio;
@@ -15,16 +16,11 @@ class LoginViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<Result> login(String username, String password) async {
-    if (username.isEmpty || password.isEmpty) {
-      return Result.fail('All fields must not be empty.');
-    }
-
+  Future<ApiResponse> login(String username, String password) async {
     final res = await dio.post(
       '/auth/login',
       data: {'username': username, 'password': password},
     );
-
-    return Result.ok('Success', res.data);
+    return res.toApiResponse();
   }
 }

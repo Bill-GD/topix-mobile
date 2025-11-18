@@ -93,10 +93,14 @@ class LoginScreen extends StatelessWidget {
                   Button(
                     type: .success,
                     onPressed: () async {
-                      final res = await viewModel.login(
-                        usernameController.text.trim(),
-                        passwordController.text.trim(),
-                      );
+                      final username = usernameController.text.trim(),
+                          password = passwordController.text.trim();
+
+                      if (username.isEmpty || password.isEmpty) {
+                        return showToast(context, 'All fields must not be empty.');
+                      }
+
+                      final res = await viewModel.login(username, password);
 
                       if (!res.success) {
                         if (context.mounted) return showToast(context, res.message);
