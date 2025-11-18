@@ -1,18 +1,12 @@
 import 'package:flutter/foundation.dart';
 
-enum FontSize {
-  xl(48),
-  large(32),
-  medium(24),
-  mediumSmall(20),
-  small(16),
-  xs(12);
-
-  final double size;
-
-  const FontSize(this.size);
-
-  double call() => size;
+class FontSize {
+  static const double xl = 48;
+  static const double large = 32;
+  static const double medium = 24;
+  static const double mediumSmall = 20;
+  static const double small = 16;
+  static const double xs = 12;
 }
 
 class Constants {

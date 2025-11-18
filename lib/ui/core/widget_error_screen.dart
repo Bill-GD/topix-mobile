@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 
 import '../../utils/constants.dart';
 
-class WidgetError extends StatelessWidget {
+class WidgetErrorScreen extends StatelessWidget {
   final FlutterErrorDetails e;
-  final textStyle = TextStyle(
-    fontSize: FontSize.medium(),
+  final textStyle = const TextStyle(
+    fontSize: FontSize.medium,
     color: Colors.red,
     decoration: .none,
   );
 
-  WidgetError({super.key, required this.e});
+  const WidgetErrorScreen({super.key, required this.e});
 
   @override
   Widget build(BuildContext context) {
