@@ -1,5 +1,6 @@
 import 'package:firebase_remote_config/firebase_remote_config.dart'
     show FirebaseRemoteConfig, RemoteConfigSettings;
+
 import 'package:theme_provider/theme_provider.dart';
 
 import 'constants.dart' show Constants;

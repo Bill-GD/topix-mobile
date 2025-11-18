@@ -5,14 +5,14 @@ import '../../../utils/constants.dart';
 import '../../core/button.dart';
 import '../../core/input.dart';
 import '../layout.dart';
-import '../login/login_screen.dart';
-import '../login/login_view_model.dart';
-import 'register_view_model.dart';
+import '../register/register_screen.dart';
+import '../register/register_view_model.dart' show RegisterViewModel;
+import 'login_view_model.dart';
 
-class RegisterScreen extends StatelessWidget {
-  final RegisterViewModel viewModel;
+class LoginScreen extends StatelessWidget {
+  final LoginViewModel viewModel;
 
-  const RegisterScreen({super.key, required this.viewModel});
+  const LoginScreen({super.key, required this.viewModel});
 
   @override
   Widget build(BuildContext context) {
@@ -29,18 +29,18 @@ class RegisterScreen extends StatelessWidget {
                 crossAxisAlignment: .stretch,
                 children: [
                   Text(
-                    'Sign up for topix',
+                    'Log in to your account',
                     style: TextStyle(fontSize: FontSize.large, fontWeight: .w700),
                     textAlign: .center,
                   ),
                   RichText(
                     textAlign: .center,
                     text: TextSpan(
-                      text: 'Already have an account? ',
+                      text: "Don't have an account? ",
                       style: TextStyle(fontSize: FontSize.small, color: Colors.grey[500]),
                       children: [
                         TextSpan(
-                          text: 'Login',
+                          text: 'Sign up',
                           style: TextStyle(
                             fontSize: FontSize.small,
                             color: Colors.blueAccent,
@@ -51,7 +51,7 @@ class RegisterScreen extends StatelessWidget {
                               Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
                                   builder: (context) {
-                                    return LoginScreen(viewModel: LoginViewModel());
+                                    return RegisterScreen(viewModel: RegisterViewModel());
                                   },
                                 ),
                               );
@@ -59,13 +59,6 @@ class RegisterScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                  ),
-                  Input(
-                    labelText: 'Email',
-                    hintText: 'Enter your email',
-                    prefixIcon: Icon(Icons.email_rounded),
-                    textInputType: .emailAddress,
-                    textInputAction: .next,
                   ),
                   Input(
                     labelText: 'Username',
@@ -79,11 +72,11 @@ class RegisterScreen extends StatelessWidget {
                     hintText: 'Enter your password',
                     obscureText: viewModel.hidePassword,
                     textInputType: .visiblePassword,
-                    textInputAction: .next,
+                    textInputAction: .done,
                     prefixIcon: Icon(Icons.password_rounded),
                     suffixIcon: ExcludeFocus(
                       child: IconButton(
-                        onPressed: () => viewModel.togglePasswordVisibility(.normal),
+                        onPressed: viewModel.togglePasswordVisibility,
                         icon: Icon(
                           viewModel.hidePassword
                               ? Icons.visibility
@@ -92,46 +85,7 @@ class RegisterScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Input(
-                    labelText: 'Confirm password',
-                    hintText: 'Repeat your password',
-                    obscureText: viewModel.hideConfirmPassword,
-                    textInputType: .visiblePassword,
-                    textInputAction: .done,
-                    prefixIcon: Icon(Icons.password_rounded),
-                    suffixIcon: ExcludeFocus(
-                      child: IconButton(
-                        onPressed: () => viewModel.togglePasswordVisibility(.confirm),
-                        icon: Icon(
-                          viewModel.hideConfirmPassword
-                              ? Icons.visibility
-                              : Icons.visibility_off_rounded,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Button(type: .success, onPressed: () {}, text: 'Register'),
-                  Row(
-                    mainAxisAlignment: .center,
-                    children: const [
-                      Expanded(child: Divider(thickness: 1)),
-                      Padding(
-                        padding: .symmetric(horizontal: 15),
-                        child: Text(
-                          'Or sign up with',
-                          style: TextStyle(fontSize: 16, fontWeight: .w600),
-                        ),
-                      ),
-                      Expanded(child: Divider(thickness: 1)),
-                    ],
-                  ),
-                  Button(
-                    type: .base,
-                    outline: true,
-                    onPressed: () async {},
-                    padding: const .all(12),
-                    icon: Image.asset('assets/images/google_icon.png', scale: 1.75),
-                  ),
+                  Button(type: .success, onPressed: () {}, text: 'Login'),
                 ],
               ),
             ),

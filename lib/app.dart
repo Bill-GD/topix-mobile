@@ -3,8 +3,8 @@ import 'package:flutter/scheduler.dart';
 
 import 'package:theme_provider/theme_provider.dart';
 
-import 'ui/auth/register/register_screen.dart';
-import 'ui/auth/register/register_view_model.dart';
+import 'ui/auth/login/login_screen.dart';
+import 'ui/auth/login/login_view_model.dart' show LoginViewModel;
 import 'ui/core/widget_error_screen.dart';
 
 class TopixApp extends StatelessWidget {
@@ -17,7 +17,8 @@ class TopixApp extends StatelessWidget {
     return ThemeProvider(
       saveThemesOnChange: true,
       loadThemeOnInit: true,
-      defaultThemeId: '${SchedulerBinding.instance.platformDispatcher.platformBrightness.name}_theme',
+      defaultThemeId:
+          '${SchedulerBinding.instance.platformDispatcher.platformBrightness.name}_theme',
       themes: [
         AppTheme(
           id: 'light_theme',
@@ -30,10 +31,7 @@ class TopixApp extends StatelessWidget {
             //   activeTickMarkColor: Colors.transparent,
             //   inactiveTickMarkColor: Colors.transparent,
             // ),
-            colorScheme: .fromSeed(
-              seedColor: Colors.blueAccent,
-              brightness: .light,
-            ),
+            colorScheme: .fromSeed(seedColor: Colors.blueAccent, brightness: .light),
           ),
         ),
         AppTheme(
@@ -47,10 +45,7 @@ class TopixApp extends StatelessWidget {
             //   activeTickMarkColor: Colors.transparent,
             //   inactiveTickMarkColor: Colors.transparent,
             // ),
-            colorScheme: .fromSeed(
-              seedColor: Colors.blueAccent,
-              brightness: .dark,
-            ),
+            colorScheme: .fromSeed(seedColor: Colors.blueAccent, brightness: .dark),
           ),
         ),
       ],
@@ -63,13 +58,15 @@ class TopixApp extends StatelessWidget {
               theme: ThemeProvider.themeOf(context).data,
               debugShowCheckedModeBanner: false,
               builder: (context, child) {
-                ErrorWidget.builder = (errorDetails) => WidgetErrorScreen(e: errorDetails);
+                ErrorWidget.builder = (errorDetails) {
+                  return WidgetErrorScreen(e: errorDetails);
+                };
                 if (child != null) return child;
                 throw StateError('Widget is null');
               },
-              home:  RegisterScreen(viewModel: RegisterViewModel(),),
+              home: LoginScreen(viewModel: LoginViewModel()),
             );
-          }
+          },
         ),
       ),
     );

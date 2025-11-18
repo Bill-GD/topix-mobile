@@ -46,7 +46,7 @@ dev_dependencies:
 # yaml configs
 import_sorter:
   comments: false
-  # flutter pub run import_sorter:main
+  # dart run import_sorter:main
 # flutter_launcher_icons:
 #   android: true
 #   image_path: 'assets/images/icon.png'
