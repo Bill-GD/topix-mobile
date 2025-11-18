@@ -1,5 +1,6 @@
 import 'package:firebase_remote_config/firebase_remote_config.dart'
     show FirebaseRemoteConfig, RemoteConfigSettings;
+import 'package:theme_provider/theme_provider.dart';
 
 import 'constants.dart' show Constants;
 import 'extensions.dart' show NumDurationExtensions;
@@ -67,15 +68,10 @@ Iterable<List<T>> zip<T>(Iterable<Iterable<T>> iterables) sync* {
 
 Future<void> setupFirebaseRemoteConfig(FirebaseRemoteConfig config) async {
   await config.setConfigSettings(
-    RemoteConfigSettings(
-      fetchTimeout: 1.minutes,
-      minimumFetchInterval: 1.hours,
-    ),
+    RemoteConfigSettings(fetchTimeout: 1.minutes, minimumFetchInterval: 1.hours),
   );
   await config.fetchAndActivate();
-  Constants.emailVerificationEnabled.value = config.getBool(
-    'ENABLE_EMAIL_VERIFICATION',
-  );
+  Constants.emailVerificationEnabled.value = config.getBool('ENABLE_EMAIL_VERIFICATION');
 
   config.onConfigUpdated.listen((event) async {
     await config.activate();

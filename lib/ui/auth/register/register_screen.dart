@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import '../../../utils/constants.dart';
+import '../../core/button.dart';
 import '../../core/input.dart';
 import '../layout.dart';
 import 'register_view_model.dart';
@@ -34,7 +35,7 @@ class RegisterScreen extends StatelessWidget {
                     textAlign: .center,
                     text: TextSpan(
                       text: 'Already have an account? ',
-                      style: TextStyle(fontSize: FontSize.small, color: Colors.grey[700]),
+                      style: TextStyle(fontSize: FontSize.small, color: Colors.grey[500]),
                       children: [
                         TextSpan(
                           text: 'Login',
@@ -69,12 +70,14 @@ class RegisterScreen extends StatelessWidget {
                     textInputType: .visiblePassword,
                     textInputAction: .next,
                     prefixIcon: Icon(Icons.password_rounded),
-                    suffixIcon: IconButton(
-                      onPressed: () => viewModel.togglePasswordVisibility(.normal),
-                      icon: Icon(
-                        viewModel.hidePassword
-                            ? Icons.visibility
-                            : Icons.visibility_off_rounded,
+                    suffixIcon: ExcludeFocus(
+                      child: IconButton(
+                        onPressed: () => viewModel.togglePasswordVisibility(.normal),
+                        icon: Icon(
+                          viewModel.hidePassword
+                              ? Icons.visibility
+                              : Icons.visibility_off_rounded,
+                        ),
                       ),
                     ),
                   ),
@@ -85,32 +88,18 @@ class RegisterScreen extends StatelessWidget {
                     textInputType: .visiblePassword,
                     textInputAction: .done,
                     prefixIcon: Icon(Icons.password_rounded),
-                    suffixIcon: IconButton(
-                      onPressed: () => viewModel.togglePasswordVisibility(.confirm),
-                      icon: Icon(
-                        viewModel.hideConfirmPassword
-                            ? Icons.visibility
-                            : Icons.visibility_off_rounded,
+                    suffixIcon: ExcludeFocus(
+                      child: IconButton(
+                        onPressed: () => viewModel.togglePasswordVisibility(.confirm),
+                        icon: Icon(
+                          viewModel.hideConfirmPassword
+                              ? Icons.visibility
+                              : Icons.visibility_off_rounded,
+                        ),
                       ),
                     ),
                   ),
-                  ElevatedButton(
-                    onPressed: () {},
-                    style: ButtonStyle(
-                      backgroundColor: WidgetStatePropertyAll(Colors.green[800]),
-                      shape: WidgetStatePropertyAll(
-                        RoundedRectangleBorder(borderRadius: .circular(8)),
-                      ),
-                    ),
-                    child: Text(
-                      'Register',
-                      style: TextStyle(
-                        color: Colors.grey[200],
-                        fontSize: FontSize.small,
-                        fontWeight: .w700,
-                      ),
-                    ),
-                  ),
+                  Button(type: .success, onPressed: () {}, text: 'Register'),
                   Row(
                     mainAxisAlignment: .center,
                     children: const [
@@ -125,16 +114,11 @@ class RegisterScreen extends StatelessWidget {
                       Expanded(child: Divider(thickness: 1)),
                     ],
                   ),
-                  IconButton(
+                  Button(
+                    type: .base,
+                    outline: true,
                     onPressed: () async {},
                     padding: const .all(12),
-                    style: ButtonStyle(
-                      elevation: const WidgetStatePropertyAll(0),
-                      backgroundColor: WidgetStatePropertyAll(Colors.grey[200]),
-                      shape: WidgetStatePropertyAll(
-                        RoundedRectangleBorder(borderRadius: .circular(10)),
-                      ),
-                    ),
                     icon: Image.asset('assets/images/google_icon.png', scale: 1.75),
                   ),
                 ],
