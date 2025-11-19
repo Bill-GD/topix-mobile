@@ -14,7 +14,7 @@ import 'package:topix/firebase_options.dart';
 import 'package:topix/ui/core/popup.dart' show showPopupMessage;
 import 'package:topix/utils/constants.dart' show Constants;
 import 'package:topix/utils/helpers.dart' show setupFirebaseRemoteConfig;
-import 'package:topix/utils/token_service.dart' show TokenService;
+import 'package:topix/utils/services/token_service.dart' show TokenService;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,6 +37,18 @@ Future<void> main() async {
   };
 
   GetIt.I.registerSingleton(TokenService(FlutterSecureStorage()));
+  GetIt.I.registerSingleton(
+    Dio(
+      BaseOptions(
+        baseUrl: Constants.apiUrl.value,
+        contentType: Headers.jsonContentType,
+        headers: {Headers.acceptHeader: Headers.jsonContentType},
+        validateStatus: (_) {
+          return true;
+        },
+      ),
+    ),
+  );
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   final remoteConfig = FirebaseRemoteConfig.instance;
@@ -46,20 +58,7 @@ Future<void> main() async {
     MultiProvider(
       providers: [
         Provider.value(value: remoteConfig),
-        Provider(
-          create: (_) {
-            return Dio(
-              BaseOptions(
-                baseUrl: Constants.apiUrl.value,
-                contentType: Headers.jsonContentType,
-                headers: {Headers.acceptHeader: Headers.jsonContentType},
-                validateStatus: (_) {
-                  return true;
-                },
-              ),
-            );
-          },
-        ),
+        Provider.value(value: GetIt.I<Dio>()),
       ],
       child: TopixApp(navKey: navigatorKey),
     ),

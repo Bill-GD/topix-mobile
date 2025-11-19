@@ -3,9 +3,9 @@ import 'package:flutter/foundation.dart';
 import 'package:dio/dio.dart' show Dio;
 import 'package:get_it/get_it.dart' show GetIt;
 
-import 'package:topix/utils/api_response.dart';
 import 'package:topix/utils/extensions.dart' show ParseApiResponse;
-import 'package:topix/utils/token_service.dart';
+import 'package:topix/utils/models/api_response.dart';
+import 'package:topix/utils/services/token_service.dart';
 
 class LoginViewModel extends ChangeNotifier {
   final Dio dio;

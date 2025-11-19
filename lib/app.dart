@@ -7,6 +7,7 @@ import 'package:theme_provider/theme_provider.dart';
 import 'package:topix/ui/auth/login/login_screen.dart';
 import 'package:topix/ui/auth/login/login_view_model.dart' show LoginViewModel;
 import 'package:topix/ui/core/widget_error_screen.dart';
+import 'package:topix/utils/auth_observer.dart';
 
 class TopixApp extends StatelessWidget {
   final GlobalKey<NavigatorState> navKey;
@@ -58,6 +59,7 @@ class TopixApp extends StatelessWidget {
               title: 'Flutter Demo',
               theme: ThemeProvider.themeOf(context).data,
               debugShowCheckedModeBanner: false,
+              navigatorObservers: [AuthObserver()],
               builder: (context, child) {
                 ErrorWidget.builder = (errorDetails) {
                   return WidgetErrorScreen(e: errorDetails);

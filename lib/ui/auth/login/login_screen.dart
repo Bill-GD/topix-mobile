@@ -9,6 +9,7 @@ import 'package:topix/ui/core/button.dart';
 import 'package:topix/ui/core/input.dart';
 import 'package:topix/ui/core/toast.dart';
 import 'package:topix/utils/constants.dart' show FontSize;
+import 'package:topix/utils/services/logger_service.dart';
 
 class LoginScreen extends StatelessWidget {
   final LoginViewModel viewModel;
@@ -107,7 +108,8 @@ class LoginScreen extends StatelessWidget {
                       }
 
                       await viewModel.saveTokens(res.data as Map<String, dynamic>);
-                      print(await viewModel.tryGetToken(.access));
+                      // TODO redirect to home
+                      LoggerService.log('to home');
                     },
                     text: 'Login',
                   ),
