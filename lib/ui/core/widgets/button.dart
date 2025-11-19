@@ -11,6 +11,7 @@ class Button extends StatelessWidget {
   final ButtonType type;
   final bool outline;
   final void Function()? onPressed;
+  final bool disabled;
 
   final String? text;
 
@@ -22,6 +23,7 @@ class Button extends StatelessWidget {
     required this.type,
     this.outline = false,
     this.onPressed,
+    this.disabled = false,
     this.text,
     this.icon,
     this.padding,
@@ -98,7 +100,7 @@ class Button extends StatelessWidget {
 
     return icon == null
         ? ElevatedButton(
-            onPressed: onPressed,
+            onPressed: disabled ? null : onPressed,
             style: ButtonStyle(
               backgroundColor: WidgetStatePropertyAll(colors['bg']),
               overlayColor: WidgetStatePropertyAll(colors['hover']),
@@ -116,7 +118,7 @@ class Button extends StatelessWidget {
             ),
           )
         : IconButton(
-            onPressed: onPressed,
+            onPressed: disabled ? null : onPressed,
             padding: padding,
             style: ButtonStyle(
               elevation: const WidgetStatePropertyAll(0),

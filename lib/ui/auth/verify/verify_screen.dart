@@ -13,10 +13,9 @@ import 'package:topix/ui/core/widgets/toast.dart';
 import 'package:topix/utils/constants.dart' show FontSize;
 
 class VerifyScreen extends StatefulWidget {
-  final int userId;
   final VerifyViewModel viewModel;
 
-  const VerifyScreen({super.key, required this.viewModel, required this.userId});
+  const VerifyScreen({super.key, required this.viewModel});
 
   @override
   State<VerifyScreen> createState() => _VerifyScreenState();
@@ -68,7 +67,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
                       }
 
                       final res = await context.read<AuthService>().verify(
-                        widget.userId,
+                        widget.viewModel.userId,
                         otp,
                       );
 
@@ -90,7 +89,9 @@ class _VerifyScreenState extends State<VerifyScreen> {
                     type: .base,
                     text: 'Resend',
                     onPressed: () async {
-                      final res = await context.read<AuthService>().resend(widget.userId);
+                      final res = await context.read<AuthService>().resend(
+                        widget.viewModel.userId,
+                      );
                       if (context.mounted) showToast(context, res.$2);
                     },
                   ),

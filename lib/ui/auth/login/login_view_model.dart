@@ -1,10 +1,12 @@
 import 'package:flutter/foundation.dart';
 
 class LoginViewModel extends ChangeNotifier {
-  bool hidePassword = true;
+  bool _hidePassword = true;
+
+  bool get hidePassword => _hidePassword;
 
   void togglePasswordVisibility() {
-    hidePassword = !hidePassword;
+    _hidePassword = !_hidePassword;
     notifyListeners();
   }
 }
