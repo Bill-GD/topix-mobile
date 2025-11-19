@@ -7,27 +7,43 @@ import 'package:topix/ui/auth/layout.dart';
 import 'package:topix/ui/auth/login/login_screen.dart';
 import 'package:topix/ui/auth/login/login_view_model.dart' show LoginViewModel;
 import 'package:topix/ui/auth/register/register_view_model.dart';
+import 'package:topix/ui/auth/verify/verify_screen.dart';
+import 'package:topix/ui/auth/verify/verify_view_model.dart';
 import 'package:topix/ui/core/widgets/button.dart';
 import 'package:topix/ui/core/widgets/input.dart';
 import 'package:topix/ui/core/widgets/toast.dart';
 import 'package:topix/utils/constants.dart' show FontSize;
 import 'package:topix/utils/services/auth_service.dart';
-import 'package:topix/utils/services/logger_service.dart';
 
-class RegisterScreen extends StatelessWidget {
+class RegisterScreen extends StatefulWidget {
   final RegisterViewModel viewModel;
+
+  const RegisterScreen({super.key, required this.viewModel});
+
+  @override
+  State<RegisterScreen> createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
   final emailController = TextEditingController(),
       usernameController = TextEditingController(),
       passwordController = TextEditingController(),
       confirmPasswordController = TextEditingController();
 
-  RegisterScreen({super.key, required this.viewModel});
+  @override
+  void dispose() {
+    emailController.dispose();
+    usernameController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return AuthLayout(
       child: ListenableBuilder(
-        listenable: viewModel,
+        listenable: widget.viewModel,
         builder: (context, _) {
           return Center(
             child: Padding(
@@ -89,15 +105,16 @@ class RegisterScreen extends StatelessWidget {
                     controller: passwordController,
                     labelText: 'Password',
                     hintText: 'Enter your password',
-                    obscureText: viewModel.hidePassword,
+                    obscureText: widget.viewModel.hidePassword,
                     textInputType: .visiblePassword,
                     textInputAction: .next,
                     prefixIcon: Icon(Icons.password_rounded),
                     suffixIcon: ExcludeFocus(
                       child: IconButton(
-                        onPressed: () => viewModel.togglePasswordVisibility(.normal),
+                        onPressed: () =>
+                            widget.viewModel.togglePasswordVisibility(.normal),
                         icon: Icon(
-                          viewModel.hidePassword
+                          widget.viewModel.hidePassword
                               ? Icons.visibility
                               : Icons.visibility_off_rounded,
                         ),
@@ -108,15 +125,16 @@ class RegisterScreen extends StatelessWidget {
                     controller: confirmPasswordController,
                     labelText: 'Confirm password',
                     hintText: 'Repeat your password',
-                    obscureText: viewModel.hideConfirmPassword,
+                    obscureText: widget.viewModel.hideConfirmPassword,
                     textInputType: .visiblePassword,
                     textInputAction: .done,
                     prefixIcon: Icon(Icons.password_rounded),
                     suffixIcon: ExcludeFocus(
                       child: IconButton(
-                        onPressed: () => viewModel.togglePasswordVisibility(.confirm),
+                        onPressed: () =>
+                            widget.viewModel.togglePasswordVisibility(.confirm),
                         icon: Icon(
-                          viewModel.hideConfirmPassword
+                          widget.viewModel.hideConfirmPassword
                               ? Icons.visibility
                               : Icons.visibility_off_rounded,
                         ),
@@ -157,16 +175,16 @@ class RegisterScreen extends StatelessWidget {
                       );
 
                       if (context.mounted) {
-                        showToast(context, res.$2);
+                        showToast(context, 'Verification code sent.');
                         if (res.$1) {
-                          LoggerService.log(res.$2);
-                          // Navigator.of(context).pushReplacement(
-                          //   MaterialPageRoute(
-                          //     builder: (_) {
-                          //       return FeedScreen();
-                          //     },
-                          //   ),
-                          // );
+                          await Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) => VerifyScreen(
+                                viewModel: VerifyViewModel(),
+                                userId: int.parse(res.$2),
+                              ),
+                            ),
+                          );
                         }
                       }
                     },

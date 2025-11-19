@@ -27,6 +27,23 @@ class AuthService {
     return (true, '${resData['id']}');
   }
 
+  Future<(bool, String)> verify(int userId, String otp) async {
+    final res = (await dio.post(
+      '/auth/confirm/$userId',
+      data: {'otp': otp},
+    )).toApiResponse();
+
+    if (!res.success) return (false, '${res.error}');
+    return (true, res.message);
+  }
+
+  Future<(bool, String)> resend(int userId) async {
+    final res = (await dio.post('/auth/resend/$userId')).toApiResponse();
+
+    if (!res.success) return (false, '${res.error}');
+    return (true, 'The code has been resent. Please check your email.');
+  }
+
   Future<void> refresh() async {
     final tokenService = GetIt.I<TokenService>();
     final res = (await dio.post(

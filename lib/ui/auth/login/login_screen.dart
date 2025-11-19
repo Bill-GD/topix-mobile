@@ -15,18 +15,31 @@ import 'package:topix/utils/constants.dart' show FontSize;
 import 'package:topix/utils/services/auth_service.dart';
 import 'package:topix/utils/services/logger_service.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   final LoginViewModel viewModel;
+
+  const LoginScreen({super.key, required this.viewModel});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   final usernameController = TextEditingController(),
       passwordController = TextEditingController();
 
-  LoginScreen({super.key, required this.viewModel});
+  @override
+  void dispose() {
+    usernameController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return AuthLayout(
       child: ListenableBuilder(
-        listenable: viewModel,
+        listenable: widget.viewModel,
         builder: (context, _) {
           return Center(
             child: Padding(
@@ -80,15 +93,15 @@ class LoginScreen extends StatelessWidget {
                     controller: passwordController,
                     labelText: 'Password',
                     hintText: 'Enter your password',
-                    obscureText: viewModel.hidePassword,
+                    obscureText: widget.viewModel.hidePassword,
                     textInputType: .visiblePassword,
                     textInputAction: .done,
                     prefixIcon: Icon(Icons.password_rounded),
                     suffixIcon: ExcludeFocus(
                       child: IconButton(
-                        onPressed: viewModel.togglePasswordVisibility,
+                        onPressed: widget.viewModel.togglePasswordVisibility,
                         icon: Icon(
-                          viewModel.hidePassword
+                          widget.viewModel.hidePassword
                               ? Icons.visibility
                               : Icons.visibility_off_rounded,
                         ),
@@ -117,7 +130,7 @@ class LoginScreen extends StatelessWidget {
                           LoggerService.log(res.$2);
                           Navigator.of(context).pushReplacement(
                             MaterialPageRoute(
-                              builder: (_) {
+                              builder: (context) {
                                 return FeedScreen();
                               },
                             ),

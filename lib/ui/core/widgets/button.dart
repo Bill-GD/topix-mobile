@@ -47,8 +47,8 @@ class Button extends StatelessWidget {
           bgColor = Colors.transparent;
         } else {
           bgColor = isDark ? ThemeColors.lightDim : ThemeColors.darkDim;
-          hoverColor = isDark ? ThemeColors.lightSubtle : ThemeColors.darkSubtle;
-          textColor = isDark ? ThemeColors.lightSubtle : ThemeColors.darkSubtle;
+          hoverColor = isDark ? ThemeColors.lightFaint : ThemeColors.darkFaint;
+          textColor = isDark ? ThemeColors.darkSubtle : ThemeColors.lightSubtle;
           outlineColor = null;
         }
       case ButtonType.primary:

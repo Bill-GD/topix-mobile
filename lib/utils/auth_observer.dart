@@ -7,6 +7,7 @@ import 'package:topix/ui/app/feed/feed_screen.dart';
 import 'package:topix/ui/auth/login/login_screen.dart';
 import 'package:topix/ui/auth/login/login_view_model.dart';
 import 'package:topix/ui/auth/register/register_screen.dart';
+import 'package:topix/ui/auth/verify/verify_screen.dart';
 import 'package:topix/utils/services/auth_service.dart';
 import 'package:topix/utils/services/logger_service.dart';
 import 'package:topix/utils/services/token_service.dart';
@@ -36,7 +37,7 @@ class AuthObserver extends NavigatorObserver {
 
     if (at == null && rt == null) {
       // blocks app access if no token present
-      if (widget is! LoginScreen && widget is! RegisterScreen) {
+      if (widget is! LoginScreen && widget is! RegisterScreen && widget is! VerifyScreen) {
         navigator?.pop();
         navigator?.pushReplacement(
           MaterialPageRoute(
@@ -52,7 +53,7 @@ class AuthObserver extends NavigatorObserver {
     if (at == null) await context.read<AuthService>().refresh();
 
     // blocks auth access if authenticated
-    if (widget is LoginScreen || widget is RegisterScreen) {
+    if (widget is LoginScreen || widget is RegisterScreen || widget is VerifyScreen) {
       LoggerService.log('AT & RT present, auth access is blocked');
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
