@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
+import 'package:topix/data/services/auth_service.dart';
+import 'package:topix/data/services/logger_service.dart';
 import 'package:topix/ui/app/feed/feed_screen.dart';
 import 'package:topix/ui/auth/layout.dart';
 import 'package:topix/ui/auth/login/login_view_model.dart';
@@ -12,8 +14,6 @@ import 'package:topix/ui/core/widgets/button.dart';
 import 'package:topix/ui/core/widgets/input.dart';
 import 'package:topix/ui/core/widgets/toast.dart';
 import 'package:topix/utils/constants.dart' show FontSize;
-import 'package:topix/utils/services/auth_service.dart';
-import 'package:topix/utils/services/logger_service.dart';
 
 class LoginScreen extends StatefulWidget {
   final LoginViewModel viewModel;

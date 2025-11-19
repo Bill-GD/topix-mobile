@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart' show Dio, Options;
 import 'package:get_it/get_it.dart';
 
+import 'package:topix/data/services/logger_service.dart';
+import 'package:topix/data/services/token_service.dart';
 import 'package:topix/utils/extensions.dart' show ParseApiResponse;
-import 'package:topix/utils/services/logger_service.dart';
-import 'package:topix/utils/services/token_service.dart';
 
 class AuthService {
   final Dio dio;

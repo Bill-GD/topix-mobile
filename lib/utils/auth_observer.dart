@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart' show GetIt;
 import 'package:provider/provider.dart';
 
+import 'package:topix/data/services/auth_service.dart';
+import 'package:topix/data/services/logger_service.dart';
+import 'package:topix/data/services/token_service.dart';
 import 'package:topix/ui/app/feed/feed_screen.dart';
 import 'package:topix/ui/auth/login/login_screen.dart';
 import 'package:topix/ui/auth/login/login_view_model.dart';
 import 'package:topix/ui/auth/register/register_screen.dart';
 import 'package:topix/ui/auth/verify/verify_screen.dart';
-import 'package:topix/utils/services/auth_service.dart';
-import 'package:topix/utils/services/logger_service.dart';
-import 'package:topix/utils/services/token_service.dart';
 
 class AuthObserver extends NavigatorObserver {
   @override

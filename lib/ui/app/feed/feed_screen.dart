@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'package:get_it/get_it.dart';
 
+import 'package:topix/data/services/token_service.dart';
 import 'package:topix/ui/auth/login/login_screen.dart';
 import 'package:topix/ui/auth/login/login_view_model.dart' show LoginViewModel;
-import 'package:topix/utils/services/token_service.dart';
 
 class FeedScreen extends StatelessWidget {
   const FeedScreen({super.key});

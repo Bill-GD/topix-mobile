@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 
-import 'package:topix/utils/models/api_response.dart';
+import 'package:topix/data/models/api_response.dart';
 
 extension NumDurationExtensions on num {
   Duration get microseconds => Duration(microseconds: round());

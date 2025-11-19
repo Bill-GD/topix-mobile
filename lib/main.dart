@@ -10,12 +10,12 @@ import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 import 'package:topix/app.dart';
+import 'package:topix/data/services/auth_service.dart';
+import 'package:topix/data/services/token_service.dart' show TokenService;
 import 'package:topix/firebase_options.dart';
 import 'package:topix/ui/core/widgets/popup.dart' show showPopupMessage;
 import 'package:topix/utils/constants.dart' show Constants;
 import 'package:topix/utils/helpers.dart' show setupFirebaseRemoteConfig;
-import 'package:topix/utils/services/auth_service.dart';
-import 'package:topix/utils/services/token_service.dart' show TokenService;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
