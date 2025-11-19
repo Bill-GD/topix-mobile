@@ -5,11 +5,11 @@ import 'package:provider/provider.dart';
 
 import 'package:topix/ui/auth/layout.dart';
 import 'package:topix/ui/auth/login/login_screen.dart';
-import 'package:topix/ui/auth/login/login_view_model.dart';
+import 'package:topix/ui/auth/login/login_view_model.dart' show LoginViewModel;
 import 'package:topix/ui/auth/register/register_view_model.dart';
 import 'package:topix/ui/core/button.dart';
 import 'package:topix/ui/core/input.dart';
-import 'package:topix/utils/constants.dart';
+import 'package:topix/utils/constants.dart' show FontSize;
 
 class RegisterScreen extends StatelessWidget {
   final RegisterViewModel viewModel;

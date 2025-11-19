@@ -8,11 +8,9 @@ void showToast(BuildContext context, String msg) {
         content: Text(msg),
         behavior: .floating,
         margin: const .only(bottom: 10, left: 15, right: 15),
-        shape: RoundedRectangleBorder(borderRadius: .circular(15)),
-        action: SnackBarAction(
-          label: 'OK',
-          onPressed: ScaffoldMessenger.of(context).hideCurrentSnackBar,
-        ),
+        shape: RoundedRectangleBorder(borderRadius: .circular(10)),
+        showCloseIcon: true,
+        persist: false,
       ),
     );
 }

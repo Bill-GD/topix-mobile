@@ -17,6 +17,7 @@ dependencies:
   font_awesome_flutter: ^10.12.0
   animations: ^2.1.1
   provider: ^6.1.5+1
+  get_it: ^9.0.5
   path_provider: ^2.1.5
   firebase_core: ^4.2.1
   firebase_remote_config: ^6.1.2

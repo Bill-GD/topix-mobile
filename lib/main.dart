@@ -5,13 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 import 'package:topix/app.dart';
 import 'package:topix/firebase_options.dart';
-import 'package:topix/ui/core/popup.dart';
-import 'package:topix/utils/constants.dart';
-import 'package:topix/utils/helpers.dart';
+import 'package:topix/ui/core/popup.dart' show showPopupMessage;
+import 'package:topix/utils/constants.dart' show Constants;
+import 'package:topix/utils/helpers.dart' show setupFirebaseRemoteConfig;
+import 'package:topix/utils/token_service.dart' show TokenService;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,8 +36,9 @@ Future<void> main() async {
     return true;
   };
 
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  GetIt.I.registerSingleton(TokenService(FlutterSecureStorage()));
 
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   final remoteConfig = FirebaseRemoteConfig.instance;
   await setupFirebaseRemoteConfig(remoteConfig);
 
@@ -43,16 +47,18 @@ Future<void> main() async {
       providers: [
         Provider.value(value: remoteConfig),
         Provider(
-          create: (_) => Dio(
-            BaseOptions(
-              baseUrl: Constants.apiUrl.value,
-              contentType: Headers.jsonContentType,
-              headers: {Headers.acceptHeader: Headers.jsonContentType},
-              validateStatus: (_) {
-                return true;
-              }
-            ),
-          ),
+          create: (_) {
+            return Dio(
+              BaseOptions(
+                baseUrl: Constants.apiUrl.value,
+                contentType: Headers.jsonContentType,
+                headers: {Headers.acceptHeader: Headers.jsonContentType},
+                validateStatus: (_) {
+                  return true;
+                },
+              ),
+            );
+          },
         ),
       ],
       child: TopixApp(navKey: navigatorKey),

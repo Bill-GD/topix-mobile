@@ -8,7 +8,7 @@ import 'package:topix/ui/auth/register/register_view_model.dart' show RegisterVi
 import 'package:topix/ui/core/button.dart';
 import 'package:topix/ui/core/input.dart';
 import 'package:topix/ui/core/toast.dart';
-import 'package:topix/utils/constants.dart';
+import 'package:topix/utils/constants.dart' show FontSize;
 
 class LoginScreen extends StatelessWidget {
   final LoginViewModel viewModel;
@@ -105,6 +105,9 @@ class LoginScreen extends StatelessWidget {
                       if (!res.success) {
                         if (context.mounted) return showToast(context, res.message);
                       }
+
+                      await viewModel.saveTokens(res.data as Map<String, dynamic>);
+                      print(await viewModel.tryGetToken(.access));
                     },
                     text: 'Login',
                   ),
