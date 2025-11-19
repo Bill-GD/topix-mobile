@@ -10,6 +10,23 @@ class AuthService {
 
   AuthService({required this.dio});
 
+  Future<(bool, String)> register(String email, String username, String password) async {
+    final res = (await dio.post(
+      '/auth/register',
+      data: {
+        'email': email,
+        'username': username,
+        'password': password,
+        'confirmPassword': password, // already checked
+      },
+    )).toApiResponse();
+
+    if (!res.success) return (false, '${res.error}');
+
+    final resData = res.data as Map<String, dynamic>;
+    return (true, '${resData['id']}');
+  }
+
   Future<void> refresh() async {
     final tokenService = GetIt.I<TokenService>();
     final res = (await dio.post(

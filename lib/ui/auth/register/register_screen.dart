@@ -1,18 +1,27 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
+import 'package:provider/provider.dart';
+
 import 'package:topix/ui/auth/layout.dart';
 import 'package:topix/ui/auth/login/login_screen.dart';
 import 'package:topix/ui/auth/login/login_view_model.dart' show LoginViewModel;
 import 'package:topix/ui/auth/register/register_view_model.dart';
-import 'package:topix/ui/core/button.dart';
-import 'package:topix/ui/core/input.dart';
+import 'package:topix/ui/core/widgets/button.dart';
+import 'package:topix/ui/core/widgets/input.dart';
+import 'package:topix/ui/core/widgets/toast.dart';
 import 'package:topix/utils/constants.dart' show FontSize;
+import 'package:topix/utils/services/auth_service.dart';
+import 'package:topix/utils/services/logger_service.dart';
 
 class RegisterScreen extends StatelessWidget {
   final RegisterViewModel viewModel;
+  final emailController = TextEditingController(),
+      usernameController = TextEditingController(),
+      passwordController = TextEditingController(),
+      confirmPasswordController = TextEditingController();
 
-  const RegisterScreen({super.key, required this.viewModel});
+  RegisterScreen({super.key, required this.viewModel});
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +70,7 @@ class RegisterScreen extends StatelessWidget {
                     ),
                   ),
                   Input(
+                    controller: emailController,
                     labelText: 'Email',
                     hintText: 'Enter your email',
                     prefixIcon: Icon(Icons.email_rounded),
@@ -68,6 +78,7 @@ class RegisterScreen extends StatelessWidget {
                     textInputAction: .next,
                   ),
                   Input(
+                    controller: usernameController,
                     labelText: 'Username',
                     hintText: 'Enter your username',
                     prefixIcon: Icon(Icons.person_rounded),
@@ -75,6 +86,7 @@ class RegisterScreen extends StatelessWidget {
                     textInputAction: .next,
                   ),
                   Input(
+                    controller: passwordController,
                     labelText: 'Password',
                     hintText: 'Enter your password',
                     obscureText: viewModel.hidePassword,
@@ -93,6 +105,7 @@ class RegisterScreen extends StatelessWidget {
                     ),
                   ),
                   Input(
+                    controller: confirmPasswordController,
                     labelText: 'Confirm password',
                     hintText: 'Repeat your password',
                     obscureText: viewModel.hideConfirmPassword,
@@ -110,7 +123,54 @@ class RegisterScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Button(type: .success, onPressed: () {}, text: 'Register'),
+                  Button(
+                    type: .success,
+                    text: 'Register',
+                    onPressed: () async {
+                      final email = emailController.text.trim(),
+                          username = usernameController.text.trim(),
+                          password = passwordController.text.trim(),
+                          confirmPassword = confirmPasswordController.text.trim();
+
+                      if (email.isEmpty ||
+                          username.isEmpty ||
+                          password.isEmpty ||
+                          confirmPassword.isEmpty) {
+                        return showToast(context, 'All fields must not be empty.');
+                      }
+
+                      final emailRegex =
+                          '^[a-zA-Z0-9]+([._-][0-9a-zA-Z]+)*@[a-zA-Z0-9]+([.-][0-9a-zA-Z]+)*.[a-zA-Z]{2,}\$';
+
+                      if (!RegExp(emailRegex).hasMatch(email)) {
+                        return showToast(context, 'Email format is invalid.');
+                      }
+
+                      if (password != confirmPassword) {
+                        return showToast(context, 'Passwords do not match.');
+                      }
+
+                      final res = await context.read<AuthService>().register(
+                        email,
+                        username,
+                        password,
+                      );
+
+                      if (context.mounted) {
+                        showToast(context, res.$2);
+                        if (res.$1) {
+                          LoggerService.log(res.$2);
+                          // Navigator.of(context).pushReplacement(
+                          //   MaterialPageRoute(
+                          //     builder: (_) {
+                          //       return FeedScreen();
+                          //     },
+                          //   ),
+                          // );
+                        }
+                      }
+                    },
+                  ),
                   Row(
                     mainAxisAlignment: .center,
                     children: const [

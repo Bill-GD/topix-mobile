@@ -5,7 +5,7 @@ import 'package:theme_provider/theme_provider.dart';
 
 import 'package:topix/ui/auth/login/login_screen.dart';
 import 'package:topix/ui/auth/login/login_view_model.dart' show LoginViewModel;
-import 'package:topix/ui/core/widget_error_screen.dart';
+import 'package:topix/ui/core/screens/widget_error_screen.dart';
 import 'package:topix/utils/auth_observer.dart';
 
 class TopixApp extends StatelessWidget {

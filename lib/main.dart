@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 
 import 'package:topix/app.dart';
 import 'package:topix/firebase_options.dart';
-import 'package:topix/ui/core/popup.dart' show showPopupMessage;
+import 'package:topix/ui/core/widgets/popup.dart' show showPopupMessage;
 import 'package:topix/utils/constants.dart' show Constants;
 import 'package:topix/utils/helpers.dart' show setupFirebaseRemoteConfig;
 import 'package:topix/utils/services/auth_service.dart';
