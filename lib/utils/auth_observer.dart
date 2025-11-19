@@ -41,7 +41,7 @@ class AuthObserver extends NavigatorObserver {
         navigator?.pushReplacement(
           MaterialPageRoute(
             builder: (context) {
-              return LoginScreen(viewModel: LoginViewModel(dio: context.read()));
+              return LoginScreen(viewModel: LoginViewModel());
             },
           ),
         );
@@ -49,10 +49,7 @@ class AuthObserver extends NavigatorObserver {
       return;
     }
 
-    if (at == null) {
-      final authService = AuthService(dio: context.read());
-      await authService.refresh();
-    }
+    if (at == null) await context.read<AuthService>().refresh();
 
     // blocks auth access if authenticated
     if (widget is LoginScreen || widget is RegisterScreen) {

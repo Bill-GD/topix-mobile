@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 import 'package:dio/dio.dart' show Dio, Options;
 import 'package:get_it/get_it.dart';
 
@@ -7,7 +5,7 @@ import 'package:topix/utils/extensions.dart' show ParseApiResponse;
 import 'package:topix/utils/services/logger_service.dart';
 import 'package:topix/utils/services/token_service.dart';
 
-class AuthService extends ChangeNotifier {
+class AuthService {
   final Dio dio;
 
   AuthService({required this.dio});
@@ -21,11 +19,32 @@ class AuthService extends ChangeNotifier {
 
     final resData = res.data as Map<String, dynamic>;
 
+    await tokenService.writeToken(.access, resData['token'], resData['time'] as int);
+    LoggerService.log('Access token refreshed');
+  }
+
+  Future<(bool, String)> login(String username, String password) async {
+    final res = (await dio.post(
+      '/auth/login',
+      data: {'username': username, 'password': password},
+    )).toApiResponse();
+
+    if (!res.success) return (false, res.message);
+
+    final resData = res.data as Map<String, dynamic>;
+    final tokenService = GetIt.I<TokenService>();
+
     await tokenService.writeToken(
       .access,
-      resData['token'],
-      resData['time'] as int,
+      resData['accessToken'],
+      resData['atTime'] as int,
     );
-    LoggerService.log('Access token refreshed');
+    await tokenService.writeToken(
+      .refresh,
+      resData['refreshToken'],
+      resData['rtTime'] as int,
+    );
+
+    return (true, res.message);
   }
 }

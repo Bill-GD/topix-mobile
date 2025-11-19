@@ -1,6 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
+import 'package:provider/provider.dart';
+
 import 'package:topix/ui/app/feed/feed_screen.dart';
 import 'package:topix/ui/auth/layout.dart';
 import 'package:topix/ui/auth/login/login_view_model.dart';
@@ -10,6 +12,7 @@ import 'package:topix/ui/core/button.dart';
 import 'package:topix/ui/core/input.dart';
 import 'package:topix/ui/core/toast.dart';
 import 'package:topix/utils/constants.dart' show FontSize;
+import 'package:topix/utils/services/auth_service.dart';
 import 'package:topix/utils/services/logger_service.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -103,24 +106,23 @@ class LoginScreen extends StatelessWidget {
                         return showToast(context, 'All fields must not be empty.');
                       }
 
-                      final res = await viewModel.login(username, password);
+                      final res = await context.read<AuthService>().login(
+                        username,
+                        password,
+                      );
 
-                      if (!res.success) {
-                        if (context.mounted) return showToast(context, res.message);
-                      }
-
-                      await viewModel.saveTokens(res.data as Map<String, dynamic>);
-
-                      LoggerService.log(res.message);
                       if (context.mounted) {
-                        showToast(context, res.message);
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(
-                            builder: (_) {
-                              return FeedScreen();
-                            },
-                          ),
-                        );
+                        showToast(context, res.$2);
+                        if (res.$1) {
+                          LoggerService.log(res.$2);
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (_) {
+                                return FeedScreen();
+                              },
+                            ),
+                          );
+                        }
                       }
                     },
                   ),

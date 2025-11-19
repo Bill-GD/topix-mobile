@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
-import 'package:provider/provider.dart';
 import 'package:theme_provider/theme_provider.dart';
 
 import 'package:topix/ui/auth/login/login_screen.dart';
@@ -67,7 +66,7 @@ class TopixApp extends StatelessWidget {
                 if (child != null) return child;
                 throw StateError('Widget is null');
               },
-              home: LoginScreen(viewModel: LoginViewModel(dio: context.read())),
+              home: LoginScreen(viewModel: LoginViewModel()),
             );
           },
         ),

@@ -14,6 +14,7 @@ import 'package:topix/firebase_options.dart';
 import 'package:topix/ui/core/popup.dart' show showPopupMessage;
 import 'package:topix/utils/constants.dart' show Constants;
 import 'package:topix/utils/helpers.dart' show setupFirebaseRemoteConfig;
+import 'package:topix/utils/services/auth_service.dart';
 import 'package:topix/utils/services/token_service.dart' show TokenService;
 
 Future<void> main() async {
@@ -36,6 +37,10 @@ Future<void> main() async {
     return true;
   };
 
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  final remoteConfig = FirebaseRemoteConfig.instance;
+  await setupFirebaseRemoteConfig(remoteConfig);
+
   GetIt.I.registerSingleton(TokenService(FlutterSecureStorage()));
   GetIt.I.registerSingleton(
     Dio(
@@ -50,15 +55,12 @@ Future<void> main() async {
     ),
   );
 
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  final remoteConfig = FirebaseRemoteConfig.instance;
-  await setupFirebaseRemoteConfig(remoteConfig);
-
   runApp(
     MultiProvider(
       providers: [
         Provider.value(value: remoteConfig),
         Provider.value(value: GetIt.I<Dio>()),
+        Provider(create: (_) => AuthService(dio: GetIt.I<Dio>())),
       ],
       child: TopixApp(navKey: navigatorKey),
     ),

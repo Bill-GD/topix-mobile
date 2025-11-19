@@ -1,8 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import 'package:provider/provider.dart';
-
 import 'package:topix/ui/auth/layout.dart';
 import 'package:topix/ui/auth/login/login_screen.dart';
 import 'package:topix/ui/auth/login/login_view_model.dart' show LoginViewModel;
@@ -53,9 +51,7 @@ class RegisterScreen extends StatelessWidget {
                               Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
                                   builder: (context) {
-                                    return LoginScreen(
-                                      viewModel: LoginViewModel(dio: context.read()),
-                                    );
+                                    return LoginScreen(viewModel: LoginViewModel());
                                   },
                                 ),
                               );
