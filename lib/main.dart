@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart' show dotenv;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
@@ -36,6 +37,8 @@ Future<void> main() async {
     );
     return true;
   };
+
+  await dotenv.load();
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   final remoteConfig = FirebaseRemoteConfig.instance;

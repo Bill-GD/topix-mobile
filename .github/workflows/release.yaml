@@ -57,11 +57,12 @@ jobs:
       - name: Create env
         run: |
           echo "VERSION=${{ env.VERSION }}" > .env
+          echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" > .env
 
       - name: Build APKs
-        run: flutter build apk --dart-define-from-file=.env
+        run: flutter build apk
       - name: Build split APKs
-        run: flutter build apk --split-per-abi --dart-define-from-file=.env
+        run: flutter build apk --split-per-abi
 
       - name: Update binary names
         run: |
