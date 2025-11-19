@@ -10,10 +10,10 @@ import 'package:topix/ui/auth/layout.dart';
 import 'package:topix/ui/auth/login/login_view_model.dart';
 import 'package:topix/ui/auth/register/register_screen.dart';
 import 'package:topix/ui/auth/register/register_view_model.dart' show RegisterViewModel;
+import 'package:topix/ui/core/theme/font.dart';
 import 'package:topix/ui/core/widgets/button.dart';
 import 'package:topix/ui/core/widgets/input.dart';
 import 'package:topix/ui/core/widgets/toast.dart';
-import 'package:topix/utils/constants.dart' show FontSize;
 
 class LoginScreen extends StatefulWidget {
   final LoginViewModel viewModel;

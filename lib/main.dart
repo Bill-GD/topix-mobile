@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart' show dotenv;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
@@ -15,7 +15,7 @@ import 'package:topix/data/services/auth_service.dart';
 import 'package:topix/data/services/token_service.dart' show TokenService;
 import 'package:topix/firebase_options.dart';
 import 'package:topix/ui/core/widgets/popup.dart' show showPopupMessage;
-import 'package:topix/utils/constants.dart' show Constants;
+import 'package:topix/utils/constants.dart';
 import 'package:topix/utils/helpers.dart' show setupFirebaseRemoteConfig;
 
 Future<void> main() async {

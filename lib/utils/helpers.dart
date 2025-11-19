@@ -1,7 +1,7 @@
 import 'package:firebase_remote_config/firebase_remote_config.dart'
     show FirebaseRemoteConfig, RemoteConfigSettings;
 
-import 'package:topix/utils/constants.dart' show Constants;
+import 'package:topix/utils/constants.dart';
 import 'package:topix/utils/extensions.dart' show NumDurationExtensions;
 
 /// From https://pub.dev/packages/dedent, modified to not use extra packages

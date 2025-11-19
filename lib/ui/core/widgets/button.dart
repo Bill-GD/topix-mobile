@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:theme_provider/theme_provider.dart' show ThemeProvider;
 
 import 'package:topix/ui/core/theme/colors.dart';
-import 'package:topix/utils/constants.dart' show FontSize;
+import 'package:topix/ui/core/theme/font.dart';
 
 enum ButtonType { base, primary, danger, success }
 
