@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart' show GetIt;
 import 'package:provider/provider.dart';
 
+import 'package:topix/ui/app/feed/feed_screen.dart';
 import 'package:topix/ui/auth/login/login_screen.dart';
 import 'package:topix/ui/auth/login/login_view_model.dart';
 import 'package:topix/ui/auth/register/register_screen.dart';
@@ -25,7 +26,8 @@ class AuthObserver extends NavigatorObserver {
     if (route == null || route is! MaterialPageRoute) return;
 
     final tokenService = GetIt.I<TokenService>();
-    final widget = route.builder(route.navigator!.context);
+    final context = route.navigator!.context;
+    final widget = route.builder(context);
 
     final [at, rt] = await Future.wait([
       tokenService.tryGet(.access),
@@ -48,14 +50,20 @@ class AuthObserver extends NavigatorObserver {
     }
 
     if (at == null) {
-      final authService = AuthService(dio: route.navigator!.context.read());
+      final authService = AuthService(dio: context.read());
       await authService.refresh();
     }
 
     // blocks auth access if authenticated
     if (widget is LoginScreen || widget is RegisterScreen) {
-      // TODO redirect to home
-      LoggerService.log('to home');
+      LoggerService.log('AT & RT present, auth access is blocked');
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (_) {
+            return FeedScreen();
+          },
+        ),
+      );
     }
   }
 }

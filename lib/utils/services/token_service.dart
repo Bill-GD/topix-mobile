@@ -33,11 +33,16 @@ class TokenService {
       .refresh => '_rt',
     };
 
-    final expireTimestamp = int.tryParse(await _storage.read(key: '${key}Time') ?? '0') ?? 0;
+    final expireTimestamp =
+        int.tryParse(await _storage.read(key: '${key}Time') ?? '0') ?? 0;
     if (expireTimestamp < DateTime.now().millisecondsSinceEpoch) {
       return null;
     }
 
     return _storage.read(key: key);
+  }
+
+  Future<void> deleteTokens() async {
+    return _storage.deleteAll(aOptions: AndroidOptions(resetOnError: true));
   }
 }

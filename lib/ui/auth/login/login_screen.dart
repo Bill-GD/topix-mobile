@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
+import 'package:topix/ui/app/feed/feed_screen.dart';
 import 'package:topix/ui/auth/layout.dart';
 import 'package:topix/ui/auth/login/login_view_model.dart';
 import 'package:topix/ui/auth/register/register_screen.dart';
@@ -93,6 +94,7 @@ class LoginScreen extends StatelessWidget {
                   ),
                   Button(
                     type: .success,
+                    text: 'Login',
                     onPressed: () async {
                       final username = usernameController.text.trim(),
                           password = passwordController.text.trim();
@@ -108,10 +110,19 @@ class LoginScreen extends StatelessWidget {
                       }
 
                       await viewModel.saveTokens(res.data as Map<String, dynamic>);
-                      // TODO redirect to home
-                      LoggerService.log('to home');
+
+                      LoggerService.log(res.message);
+                      if (context.mounted) {
+                        showToast(context, res.message);
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (_) {
+                              return FeedScreen();
+                            },
+                          ),
+                        );
+                      }
                     },
-                    text: 'Login',
                   ),
                 ],
               ),

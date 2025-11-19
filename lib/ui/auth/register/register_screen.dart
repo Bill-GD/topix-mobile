@@ -132,9 +132,9 @@ class RegisterScreen extends StatelessWidget {
                   Button(
                     type: .base,
                     outline: true,
-                    onPressed: () async {},
                     padding: const .all(12),
                     icon: Image.asset('assets/images/google_icon.png', scale: 1.75),
+                    onPressed: () async {},
                   ),
                 ],
               ),
