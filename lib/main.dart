@@ -13,7 +13,6 @@ import 'package:provider/provider.dart' show MultiProvider, Provider;
 
 import 'package:topix/app.dart';
 import 'package:topix/data/services/auth_service.dart';
-import 'package:topix/data/services/google_oauth_service.dart';
 import 'package:topix/data/services/logger_service.dart';
 import 'package:topix/data/services/token_service.dart' show TokenService;
 import 'package:topix/firebase_options.dart';
@@ -58,7 +57,7 @@ Future<void> main() async {
   await GoogleSignIn.instance.initialize();
 
   GetIt.I.registerSingleton(TokenService(FlutterSecureStorage()));
-  GetIt.I.registerSingleton(GoogleOAuthService(GoogleSignIn.instance));
+  GetIt.I.registerSingleton(GoogleSignIn.instance);
   GetIt.I.registerSingleton(
     Dio(
       BaseOptions(
@@ -69,7 +68,9 @@ Future<void> main() async {
       ),
     ),
   );
-  GetIt.I.registerSingleton(AuthService(dio: GetIt.I(), tokenService: GetIt.I()));
+  GetIt.I.registerSingleton(
+    AuthService(dio: GetIt.I<Dio>(), tokenService: GetIt.I<TokenService>()),
+  );
 
   runApp(
     MultiProvider(

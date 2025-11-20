@@ -12,7 +12,13 @@ class AuthService {
     : _tokenService = tokenService,
       _dio = dio;
 
-  Future<(bool, String)> register(String email, String username, String password) async {
+  Future<(bool, String)> register(
+    String email,
+    String username,
+    String password, {
+    bool? verified,
+    String? picture,
+  }) async {
     final res = (await _dio.post(
       '/auth/register',
       data: {
@@ -20,10 +26,12 @@ class AuthService {
         'username': username,
         'password': password,
         'confirmPassword': password, // already checked
+        'verified': ?verified,
+        'profilePictureUrl': ?picture,
       },
     )).toApiResponse();
 
-    if (!res.success) return (false, '${res.error}');
+    if (!res.success) return (false, '${res.error}'.replaceAll(RegExp(r'[\[\]]'), ''));
 
     final resData = res.data as Map<String, dynamic>;
     return (true, '${resData['id']}');
@@ -35,14 +43,14 @@ class AuthService {
       data: {'otp': otp},
     )).toApiResponse();
 
-    if (!res.success) return (false, '${res.error}');
+    if (!res.success) return (false, '${res.error}'.replaceAll(RegExp(r'[\[\]]'), ''));
     return (true, res.message);
   }
 
   Future<(bool, String)> resend(int userId) async {
     final res = (await _dio.post('/auth/resend/$userId')).toApiResponse();
 
-    if (!res.success) return (false, '${res.error}');
+    if (!res.success) return (false, '${res.error}'.replaceAll(RegExp(r'[\[\]]'), ''));
     return (true, 'The code has been resent. Please check your email.');
   }
 

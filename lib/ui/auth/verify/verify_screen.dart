@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get_it/get_it.dart';
@@ -39,63 +40,96 @@ class _VerifyScreenState extends State<VerifyScreen> {
           return Center(
             child: Padding(
               padding: const .all(16),
-              child: Column(
-                spacing: 16,
-                mainAxisAlignment: .center,
-                crossAxisAlignment: .stretch,
-                children: [
-                  Text(
-                    'We sent the code to the email you specified.',
-                    style: TextStyle(fontSize: FontSize.mediumSmall),
-                    textAlign: .center,
-                  ),
-                  Input(
-                    controller: otpController,
-                    labelText: 'Code',
-                    hintText: 'Enter the OTP code',
-                    prefixIcon: Icon(Icons.password_rounded),
-                    textInputAction: .done,
-                  ),
-                  Button(
-                    type: .success,
-                    text: 'Verify',
-                    onPressed: () async {
-                      final otp = otpController.text.trim();
+              child: SingleChildScrollView(
+                child: Column(
+                  spacing: 16,
+                  mainAxisAlignment: .center,
+                  crossAxisAlignment: .stretch,
+                  children: [
+                    Text(
+                      'We sent the code to the email you specified.',
+                      style: TextStyle(fontSize: FontSize.mediumSmall),
+                      textAlign: .center,
+                    ),
+                    Input(
+                      controller: otpController,
+                      labelText: 'Code',
+                      hintText: 'Enter the OTP code',
+                      prefixIcon: Icon(Icons.password_rounded),
+                      textInputAction: .done,
+                    ),
+                    Button(
+                      type: .success,
+                      text: 'Verify',
+                      onPressed: () async {
+                        final otp = otpController.text.trim();
 
-                      if (otp.isEmpty) {
-                        return showToast(context, 'You must enter the code.');
-                      }
-
-                      final res = await GetIt.I<AuthService>().verify(
-                        widget.viewModel.userId,
-                        otp,
-                      );
-
-                      if (context.mounted) {
-                        showToast(context, 'Email verified.');
-                        if (res.$1) {
-                          Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(
-                              builder: (context) {
-                                return LoginScreen(viewModel: LoginViewModel());
-                              },
-                            ),
-                          );
+                        if (otp.isEmpty) {
+                          return showToast(context, 'You must enter the code.');
                         }
-                      }
-                    },
-                  ),
-                  Button(
-                    type: .base,
-                    text: 'Resend',
-                    onPressed: () async {
-                      final res = await GetIt.I<AuthService>().resend(
-                        widget.viewModel.userId,
-                      );
-                      if (context.mounted) showToast(context, res.$2);
-                    },
-                  ),
-                ],
+
+                        final res = await GetIt.I<AuthService>().verify(
+                          widget.viewModel.userId,
+                          otp,
+                        );
+
+                        if (context.mounted) {
+                          showToast(context, 'Email verified.');
+                          if (res.$1) {
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return LoginScreen(viewModel: LoginViewModel());
+                                },
+                              ),
+                            );
+                          }
+                        }
+                      },
+                    ),
+                    Button(
+                      type: .base,
+                      text: 'Resend',
+                      onPressed: () async {
+                        final res = await GetIt.I<AuthService>().resend(
+                          widget.viewModel.userId,
+                        );
+                        if (context.mounted) showToast(context, res.$2);
+                      },
+                    ),
+                    const Divider(),
+                    RichText(
+                      textAlign: .center,
+                      text: TextSpan(
+                        text: 'Back to ',
+                        style: TextStyle(
+                          fontSize: FontSize.small,
+                          color: Colors.grey[500],
+                        ),
+                        children: [
+                          TextSpan(
+                            text: 'login',
+                            style: TextStyle(
+                              fontSize: FontSize.small,
+                              color: Colors.blueAccent,
+                              fontWeight: .w600,
+                            ),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return LoginScreen(viewModel: LoginViewModel());
+                                    },
+                                  ),
+                                );
+                              },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           );
