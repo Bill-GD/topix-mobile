@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:provider/provider.dart';
+import 'package:get_it/get_it.dart';
 
 import 'package:topix/data/services/auth_service.dart';
 import 'package:topix/ui/auth/layout.dart';
@@ -66,7 +66,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
                         return showToast(context, 'You must enter the code.');
                       }
 
-                      final res = await context.read<AuthService>().verify(
+                      final res = await GetIt.I<AuthService>().verify(
                         widget.viewModel.userId,
                         otp,
                       );
@@ -89,7 +89,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
                     type: .base,
                     text: 'Resend',
                     onPressed: () async {
-                      final res = await context.read<AuthService>().resend(
+                      final res = await GetIt.I<AuthService>().resend(
                         widget.viewModel.userId,
                       );
                       if (context.mounted) showToast(context, res.$2);

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:get_it/get_it.dart' show GetIt;
-import 'package:provider/provider.dart';
 
 import 'package:topix/data/services/auth_service.dart';
 import 'package:topix/data/services/logger_service.dart';
@@ -50,7 +49,7 @@ class AuthObserver extends NavigatorObserver {
       return;
     }
 
-    if (at == null) await context.read<AuthService>().refresh();
+    if (at == null) await GetIt.I<AuthService>().refresh();
 
     // blocks auth access if authenticated
     if (widget is LoginScreen || widget is RegisterScreen || widget is VerifyScreen) {

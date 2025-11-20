@@ -1,17 +1,19 @@
 import 'package:dio/dio.dart' show Dio, Options;
-import 'package:get_it/get_it.dart';
 
 import 'package:topix/data/services/logger_service.dart';
 import 'package:topix/data/services/token_service.dart';
 import 'package:topix/utils/extensions.dart' show ParseApiResponse;
 
 class AuthService {
-  final Dio dio;
+  final Dio _dio;
+  final TokenService _tokenService;
 
-  AuthService({required this.dio});
+  AuthService({required Dio dio, required TokenService tokenService})
+    : _tokenService = tokenService,
+      _dio = dio;
 
   Future<(bool, String)> register(String email, String username, String password) async {
-    final res = (await dio.post(
+    final res = (await _dio.post(
       '/auth/register',
       data: {
         'email': email,
@@ -28,7 +30,7 @@ class AuthService {
   }
 
   Future<(bool, String)> verify(int userId, String otp) async {
-    final res = (await dio.post(
+    final res = (await _dio.post(
       '/auth/confirm/$userId',
       data: {'otp': otp},
     )).toApiResponse();
@@ -38,27 +40,26 @@ class AuthService {
   }
 
   Future<(bool, String)> resend(int userId) async {
-    final res = (await dio.post('/auth/resend/$userId')).toApiResponse();
+    final res = (await _dio.post('/auth/resend/$userId')).toApiResponse();
 
     if (!res.success) return (false, '${res.error}');
     return (true, 'The code has been resent. Please check your email.');
   }
 
   Future<void> refresh() async {
-    final tokenService = GetIt.I<TokenService>();
-    final res = (await dio.post(
+    final res = (await _dio.post(
       '/auth/refresh',
-      options: Options(headers: {'Authorization': tokenService.tryGet(.refresh)}),
+      options: Options(headers: {'Authorization': _tokenService.tryGet(.refresh)}),
     )).toApiResponse();
 
     final resData = res.data as Map<String, dynamic>;
 
-    await tokenService.writeToken(.access, resData['token'], resData['time'] as int);
+    await _tokenService.writeToken(.access, resData['token'], resData['time'] as int);
     LoggerService.log('Access token refreshed');
   }
 
   Future<(bool, String)> login(String username, String password) async {
-    final res = (await dio.post(
+    final res = (await _dio.post(
       '/auth/login',
       data: {'username': username, 'password': password},
     )).toApiResponse();
@@ -66,14 +67,13 @@ class AuthService {
     if (!res.success) return (false, res.message);
 
     final resData = res.data as Map<String, dynamic>;
-    final tokenService = GetIt.I<TokenService>();
 
-    await tokenService.writeToken(
+    await _tokenService.writeToken(
       .access,
       resData['accessToken'],
       resData['atTime'] as int,
     );
-    await tokenService.writeToken(
+    await _tokenService.writeToken(
       .refresh,
       resData['refreshToken'],
       resData['rtTime'] as int,

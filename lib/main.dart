@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 
 import 'package:topix/app.dart';
 import 'package:topix/data/services/auth_service.dart';
+import 'package:topix/data/services/logger_service.dart';
 import 'package:topix/data/services/token_service.dart' show TokenService;
 import 'package:topix/firebase_options.dart';
 import 'package:topix/ui/core/widgets/popup.dart' show showPopupMessage;
@@ -21,13 +22,21 @@ import 'package:topix/utils/helpers.dart' show setupFirebaseRemoteConfig;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
   FlutterError.onError = (details) {
     FlutterError.presentError(details);
   };
-  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   PlatformDispatcher.instance.onError = (e, s) {
     final curContext = navigatorKey.currentContext;
     if (curContext == null) return false;
+
+    LoggerService.log(
+      '${e.toString()}\n'
+      'Stack:\n'
+      '\n${s.toString()}',
+      .error,
+    );
 
     showPopupMessage(
       curContext,
@@ -51,19 +60,17 @@ Future<void> main() async {
         baseUrl: Constants.apiUrl.value,
         contentType: Headers.jsonContentType,
         headers: {Headers.acceptHeader: Headers.jsonContentType},
-        validateStatus: (_) {
-          return true;
-        },
+        validateStatus: (_) => true,
       ),
     ),
   );
+  GetIt.I.registerSingleton(AuthService(dio: GetIt.I(), tokenService: GetIt.I()));
 
   runApp(
     MultiProvider(
       providers: [
         Provider.value(value: remoteConfig),
         Provider.value(value: GetIt.I<Dio>()),
-        Provider(create: (_) => AuthService(dio: GetIt.I<Dio>())),
       ],
       child: TopixApp(navKey: navigatorKey),
     ),

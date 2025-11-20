@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import 'package:provider/provider.dart';
+import 'package:get_it/get_it.dart';
 
 import 'package:topix/data/services/auth_service.dart';
 import 'package:topix/ui/auth/layout.dart';
@@ -169,7 +169,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         return showToast(context, 'Passwords do not match.');
                       }
 
-                      final res = await context.read<AuthService>().register(
+                      final res = await GetIt.I<AuthService>().register(
                         email,
                         username,
                         password,
@@ -181,8 +181,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           await Navigator.of(context).pushReplacement(
                             MaterialPageRoute(
                               builder: (context) => VerifyScreen(
-                                viewModel: VerifyViewModel(),
-                                userId: int.parse(res.$2),
+                                viewModel: VerifyViewModel(userId: int.parse(res.$2)),
                               ),
                             ),
                           );

@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import 'package:provider/provider.dart';
+import 'package:get_it/get_it.dart';
 
 import 'package:topix/data/services/auth_service.dart';
 import 'package:topix/data/services/logger_service.dart';
@@ -119,7 +119,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         return showToast(context, 'All fields must not be empty.');
                       }
 
-                      final res = await context.read<AuthService>().login(
+                      final res = await GetIt.I<AuthService>().login(
                         username,
                         password,
                       );
