@@ -2,16 +2,18 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-import 'package:dio/dio.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:dio/dio.dart' show BaseOptions, Dio, Headers;
+import 'package:firebase_core/firebase_core.dart' show Firebase;
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart' show dotenv;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:get_it/get_it.dart';
-import 'package:provider/provider.dart';
+import 'package:get_it/get_it.dart' show GetIt;
+import 'package:google_sign_in/google_sign_in.dart' show GoogleSignIn;
+import 'package:provider/provider.dart' show MultiProvider, Provider;
 
 import 'package:topix/app.dart';
 import 'package:topix/data/services/auth_service.dart';
+import 'package:topix/data/services/google_oauth_service.dart';
 import 'package:topix/data/services/logger_service.dart';
 import 'package:topix/data/services/token_service.dart' show TokenService;
 import 'package:topix/firebase_options.dart';
@@ -53,7 +55,10 @@ Future<void> main() async {
   final remoteConfig = FirebaseRemoteConfig.instance;
   await setupFirebaseRemoteConfig(remoteConfig);
 
+  await GoogleSignIn.instance.initialize();
+
   GetIt.I.registerSingleton(TokenService(FlutterSecureStorage()));
+  GetIt.I.registerSingleton(GoogleOAuthService(GoogleSignIn.instance));
   GetIt.I.registerSingleton(
     Dio(
       BaseOptions(

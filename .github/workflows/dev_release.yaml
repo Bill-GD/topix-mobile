@@ -34,14 +34,14 @@ jobs:
         run: flutter clean
 
       - name: Decode keystore
-        run: echo "${{ secrets.KEYSTORE }}" | base64 --decode > android/upload-keystore.jks
+        run: echo "${{ secrets.KEYSTORE }}" | base64 --decode > android/app/upload-keystore.jks
 
       - name: Writing key.properties
         run: |
           echo "storePassword=${{ secrets.STORE_PASSWORD }}" > android/key.properties
           echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> android/key.properties
           echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
-          echo "storeFile=android/upload-keystore.jks" >> android/key.properties
+          echo "storeFile=upload-keystore.jks" >> android/key.properties
 
       - name: Install dependencies
         run: flutter pub get
@@ -73,7 +73,6 @@ jobs:
       - name: Create env
         run: |
           echo "VERSION=${{ env.VERSION }}" > .env
-          echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" > .env
 
       - name: Build split APKs
         run: flutter build apk --split-per-abi

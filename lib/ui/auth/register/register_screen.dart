@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:topix/data/services/auth_service.dart';
+import 'package:topix/data/services/google_oauth_service.dart';
 import 'package:topix/ui/auth/layout.dart';
 import 'package:topix/ui/auth/login/login_screen.dart';
 import 'package:topix/ui/auth/login/login_view_model.dart' show LoginViewModel;
@@ -86,8 +87,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ],
                     ),
                   ),
+                  if (!Constants.emailVerificationEnabled.value)
+                    Text(
+                      'Normal account registration is currently disabled. '
+                      'Please sign up using Google.',
+                      style: TextStyle(fontSize: FontSize.small, color: Colors.grey[500]),
+                      textAlign: .center,
+                    ),
                   Input(
                     controller: emailController,
+                    readOnly:
+                        !widget.viewModel.isGoogleOAuth &&
+                        !Constants.emailVerificationEnabled.value,
                     labelText: 'Email',
                     hintText: 'Enter your email',
                     prefixIcon: Icon(Icons.email_rounded),
@@ -96,6 +107,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   Input(
                     controller: usernameController,
+                    readOnly:
+                        !widget.viewModel.isGoogleOAuth &&
+                        !Constants.emailVerificationEnabled.value,
                     labelText: 'Username',
                     hintText: 'Enter your username',
                     prefixIcon: Icon(Icons.person_rounded),
@@ -104,6 +118,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   Input(
                     controller: passwordController,
+                    readOnly:
+                        !widget.viewModel.isGoogleOAuth &&
+                        !Constants.emailVerificationEnabled.value,
                     labelText: 'Password',
                     hintText: 'Enter your password',
                     obscureText: widget.viewModel.hidePassword,
@@ -124,6 +141,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   Input(
                     controller: confirmPasswordController,
+                    readOnly:
+                        !widget.viewModel.isGoogleOAuth &&
+                        !Constants.emailVerificationEnabled.value,
                     labelText: 'Confirm password',
                     hintText: 'Repeat your password',
                     obscureText: widget.viewModel.hideConfirmPassword,
@@ -206,9 +226,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   Button(
                     type: .base,
                     outline: true,
+                    disabled: !GetIt.I<GoogleOAuthService>().supportsAuthenticate,
                     padding: const .all(12),
                     icon: Image.asset('assets/images/google_icon.png', scale: 1.75),
-                    onPressed: () async {},
+                    onPressed: () async {
+                      final googleOAuthService = GetIt.I<GoogleOAuthService>();
+                      // await googleOAuthService.googleSignIn.attemptLightweightAuthentication();
+                      await googleOAuthService.signIn();
+                    },
                   ),
                 ],
               ),
