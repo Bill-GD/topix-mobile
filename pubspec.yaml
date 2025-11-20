@@ -1,23 +1,22 @@
 name: topix
-description: "A new Flutter project."
+description: "The Android client of topix."
 publish_to: 'none'
 version: 0.1.0+1
 
 environment:
   sdk: ^3.10.0
 
-# Dependencies specify other packages that your package needs in order to work.
-# To automatically upgrade your package dependencies to the latest versions
-# consider running `flutter pub upgrade --major-versions`. Alternatively,
-# dependencies can be manually updated by changing the version numbers below to
-# the latest version available on pub.dev. To see which dependencies have newer
-# versions available, run `flutter pub outdated`.
 dependencies:
   theme_provider: ^0.6.0
   font_awesome_flutter: ^10.12.0
   animations: ^2.1.1
   provider: ^6.1.5+1
+  get_it: ^9.0.5
   path_provider: ^2.1.5
+  flutter_dotenv: ^6.0.0
+  firebase_core: ^4.2.1
+  firebase_remote_config: ^6.1.2
+  firebase_analytics: ^12.0.4
   google_sign_in: ^7.2.0
   dio: ^5.9.0
   flutter_secure_storage: ^9.2.4
@@ -32,17 +31,12 @@ dev_dependencies:
   import_sorter: ^4.6.0
   flutter_test:
     sdk: flutter
-
-  # The "flutter_lints" package below contains a set of recommended lints to
-  # encourage good coding practices. The lint set provided by the package is
-  # activated in the `analysis_options.yaml` file located at the root of your
-  # package. See that file for information about deactivating specific lint
-  # rules and activating additional ones.
   flutter_lints: ^6.0.0
 
 # yaml configs
 import_sorter:
   comments: false
+  # dart run import_sorter:main
 # flutter_launcher_icons:
 #   android: true
 #   image_path: 'assets/images/icon.png'
@@ -51,6 +45,10 @@ import_sorter:
 # The following section is specific to Flutter packages.
 flutter:
   uses-material-design: true
+  assets:
+    - .env
+    - assets/
+    - assets/images/
   fonts:
     - family: Nunito
       fonts:

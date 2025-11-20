@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
-import 'ui/core/widget_error.dart';
+import 'package:theme_provider/theme_provider.dart';
+
+import 'package:topix/ui/auth/login/login_screen.dart';
+import 'package:topix/ui/auth/login/login_view_model.dart' show LoginViewModel;
+import 'package:topix/ui/core/screens/widget_error_screen.dart';
+import 'package:topix/utils/auth_observer.dart';
 
 class TopixApp extends StatelessWidget {
   final GlobalKey<NavigatorState> navKey;
@@ -9,98 +15,61 @@ class TopixApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      navigatorKey: navKey,
-      title: 'Flutter Demo',
-      theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
-      builder: (context, child) {
-        ErrorWidget.builder = (errorDetails) => WidgetError(e: errorDetails);
-        if (child != null) return child;
-        throw StateError('Widget is null');
-      },
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: .center,
-          children: [
-            const Text('You have pushed the button this many times:'),
-            Text('$_counter', style: Theme.of(context).textTheme.headlineMedium),
-          ],
+    return ThemeProvider(
+      saveThemesOnChange: true,
+      loadThemeOnInit: true,
+      defaultThemeId:
+          '${SchedulerBinding.instance.platformDispatcher.platformBrightness.name}_theme',
+      themes: [
+        AppTheme(
+          id: 'light_theme',
+          description: 'Light theme',
+          data: ThemeData(
+            useMaterial3: true,
+            fontFamily: 'Nunito',
+            brightness: .light,
+            // sliderTheme: const SliderThemeData(
+            //   activeTickMarkColor: Colors.transparent,
+            //   inactiveTickMarkColor: Colors.transparent,
+            // ),
+            colorScheme: .fromSeed(seedColor: Colors.blueAccent, brightness: .light),
+          ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+        AppTheme(
+          id: 'dark_theme',
+          description: 'Dark theme',
+          data: ThemeData(
+            useMaterial3: true,
+            fontFamily: 'Nunito',
+            brightness: .dark,
+            // sliderTheme: const SliderThemeData(
+            //   activeTickMarkColor: Colors.transparent,
+            //   inactiveTickMarkColor: Colors.transparent,
+            // ),
+            colorScheme: .fromSeed(seedColor: Colors.blueAccent, brightness: .dark),
+          ),
+        ),
+      ],
+      child: ThemeConsumer(
+        child: Builder(
+          builder: (context) {
+            return MaterialApp(
+              navigatorKey: navKey,
+              title: 'Flutter Demo',
+              theme: ThemeProvider.themeOf(context).data,
+              debugShowCheckedModeBanner: false,
+              navigatorObservers: [AuthObserver()],
+              builder: (context, child) {
+                ErrorWidget.builder = (errorDetails) {
+                  return WidgetErrorScreen(e: errorDetails);
+                };
+                if (child != null) return child;
+                throw StateError('Widget is null');
+              },
+              home: LoginScreen(viewModel: LoginViewModel()),
+            );
+          },
+        ),
       ),
     );
   }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../utils/constants.dart';
-import '../../utils/helpers.dart';
+import 'package:topix/ui/core/theme/font.dart';
+import 'package:topix/utils/helpers.dart';
 
 Future<void> showPopupMessage(
   BuildContext context, {
@@ -19,7 +19,12 @@ Future<void> showPopupMessage(
     content: content,
     centerContent: centerContent,
     time: time,
-    actions: [TextButton(onPressed: enableButton ? () => Navigator.of(context).pop() : null, child: const Text('OK'))],
+    actions: [
+      TextButton(
+        onPressed: enableButton ? () => Navigator.of(context).pop() : null,
+        child: const Text('OK'),
+      ),
+    ],
     horizontalPadding: horizontalPadding,
     barrierDismissible: barrierDismissible,
   );
@@ -50,19 +55,15 @@ Future<T?> dialogWithActions<T>(
     },
     pageBuilder: (_, _, _) {
       return AlertDialog(
+        scrollable: true,
         icon: icon,
-        title: Text(
-          title,
-          textAlign: .center,
-          style: TextStyle(fontSize: FontSize.medium()),
-        ),
-        titleTextStyle: TextStyle(fontSize: FontSize.medium()),
+        title: Text(title, textAlign: .center),
+        titleTextStyle: const TextStyle(fontSize: FontSize.mediumSmall),
         content: Text(
           dedent(content),
           textAlign: centerContent ? .center : null,
-          style: TextStyle(fontSize: FontSize.mediumSmall()),
+          style: const TextStyle(fontSize: FontSize.small),
         ),
-        contentTextStyle: TextStyle(fontSize: FontSize.mediumSmall()),
         contentPadding: const .symmetric(horizontal: 20, vertical: 15),
         actionsAlignment: .spaceEvenly,
         actions: actions,

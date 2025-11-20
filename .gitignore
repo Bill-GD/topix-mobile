@@ -48,3 +48,4 @@ app.*.map.json
 *.env
 **/*.properties
 local.properties
+**/google-services.json
