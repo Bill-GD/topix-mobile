@@ -9,7 +9,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart' show dotenv;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart' show GetIt;
 import 'package:google_sign_in/google_sign_in.dart' show GoogleSignIn;
-import 'package:provider/provider.dart' show MultiProvider, Provider;
+import 'package:provider/provider.dart' show MultiProvider;
 
 import 'package:topix/app.dart';
 import 'package:topix/data/services/auth_service.dart';
@@ -75,8 +75,7 @@ Future<void> main() async {
   runApp(
     MultiProvider(
       providers: [
-        Provider.value(value: remoteConfig),
-        Provider.value(value: GetIt.I<Dio>()),
+        // Provider.value(value: remoteConfig),
       ],
       child: TopixApp(navKey: navigatorKey),
     ),
