@@ -35,6 +35,7 @@ class AppLayout extends StatelessWidget {
           child: Padding(
             padding: const .all(16),
             child: Column(
+              crossAxisAlignment: .stretch,
               mainAxisSize: .min,
               spacing: 8,
               children: [
@@ -74,6 +75,33 @@ class AppLayout extends StatelessWidget {
                     print('to profile page');
                   },
                 ),
+                ListTile(
+                  title: Text('Settings'),
+                  trailing: Icon(Icons.arrow_forward_ios_rounded),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: .circular(12),
+                    side: BorderSide(color: context.colorScheme.surfaceContainerHighest),
+                  ),
+                  dense: true,
+                  onTap: () {},
+                ),
+                if (self.role == .admin)
+                  ListTile(
+                    title: Text('Dev'),
+                    trailing: Icon(Icons.arrow_forward_ios_rounded),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: .circular(12),
+                      side: BorderSide(
+                        color: context.colorScheme.surfaceContainerHighest,
+                      ),
+                    ),
+                    dense: true,
+                    onTap: () {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (context) => DevScreen()),
+                      );
+                    },
+                  ),
                 SwitchListTile.adaptive(
                   title: Text('Dark mode'),
                   value: context.isDarkMode,
@@ -81,35 +109,24 @@ class AppLayout extends StatelessWidget {
                     borderRadius: .circular(12),
                     side: BorderSide(color: context.colorScheme.surfaceContainerHighest),
                   ),
+                  dense: true,
                   onChanged: (_) => ThemeProvider.controllerOf(context).nextTheme(),
                 ),
-                if (self.role == .admin)
-                  ListTile(
-                    title: Text('Dev'),
-                    shape: RoundedRectangleBorder(borderRadius: .circular(12)),
-                    onTap: () {
+                Button(
+                  type: .base,
+                  text: 'Log out',
+                  onPressed: () async {
+                    await GetIt.I<AuthService>().logout();
+                    if (context.mounted) {
                       Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (context) => DevScreen()),
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return LoginScreen(viewModel: LoginViewModel());
+                          },
+                        ),
                       );
-                    },
-                  ),
-                ListTile(
-                  title: Button(
-                    type: .base,
-                    text: 'Log out',
-                    onPressed: () async {
-                      await GetIt.I<AuthService>().logout();
-                      if (context.mounted) {
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return LoginScreen(viewModel: LoginViewModel());
-                            },
-                          ),
-                        );
-                      }
-                    },
-                  ),
+                    }
+                  },
                 ),
               ],
             ),

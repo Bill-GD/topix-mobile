@@ -13,6 +13,7 @@ import 'package:google_sign_in/google_sign_in.dart' show GoogleSignIn;
 import 'package:topix/app.dart';
 import 'package:topix/data/services/auth_service.dart';
 import 'package:topix/data/services/logger_service.dart';
+import 'package:topix/data/services/post_service.dart';
 import 'package:topix/data/services/token_service.dart' show TokenService;
 import 'package:topix/data/services/user_service.dart';
 import 'package:topix/firebase_options.dart';
@@ -56,24 +57,22 @@ Future<void> main() async {
 
   await GoogleSignIn.instance.initialize();
 
-  GetIt.I.registerSingleton(TokenService(FlutterSecureStorage()));
-  GetIt.I.registerSingleton(GoogleSignIn.instance);
-  GetIt.I.registerSingleton(
-    Dio(
-      BaseOptions(
-        baseUrl: Constants.apiUrl.value,
-        contentType: Headers.jsonContentType,
-        headers: {Headers.acceptHeader: Headers.jsonContentType},
-        validateStatus: (_) => true,
-      ),
+  final dio = Dio(
+    BaseOptions(
+      baseUrl: Constants.apiUrl.value,
+      contentType: Headers.jsonContentType,
+      headers: {Headers.acceptHeader: Headers.jsonContentType},
+      validateStatus: (_) => true,
     ),
   );
-  GetIt.I.registerSingleton(
-    AuthService(dio: GetIt.I<Dio>(), tokenService: GetIt.I<TokenService>()),
-  );
-  GetIt.I.registerSingleton(
-    UserService(dio: GetIt.I<Dio>(), tokenService: GetIt.I<TokenService>()),
-  );
+  final tokenService = TokenService(FlutterSecureStorage());
+
+  GetIt.I.registerSingleton(GoogleSignIn.instance);
+  GetIt.I.registerSingleton(tokenService);
+  GetIt.I.registerSingleton(dio);
+  GetIt.I.registerSingleton(AuthService(dio: dio, tokenService: tokenService));
+  GetIt.I.registerSingleton(UserService(dio: dio, tokenService: tokenService));
+  GetIt.I.registerSingleton(PostService(dio: dio, tokenService: tokenService));
 
   runApp(TopixApp(navKey: navigatorKey));
 }
