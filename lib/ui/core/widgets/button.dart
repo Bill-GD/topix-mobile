@@ -7,7 +7,7 @@ import 'package:topix/utils/extensions.dart' show ThemeHelper;
 enum ButtonType { base, primary, danger, success }
 
 class Button extends StatelessWidget {
-  final ButtonType type;
+  final ButtonType? type;
   final bool outline;
   final void Function()? onPressed;
   final bool disabled;
@@ -19,7 +19,7 @@ class Button extends StatelessWidget {
 
   const Button({
     super.key,
-    required this.type,
+    this.type,
     this.outline = false,
     this.onPressed,
     this.disabled = false,
@@ -32,79 +32,78 @@ class Button extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(icon != null || text != null);
 
-    final isDark = context.isDarkMode;
+    final colorScheme = context.colorScheme;
 
+    Color? bgColor = outline ? Colors.transparent : null;
     Color? outlineColor;
-    Color hoverColor;
-    Color textColor;
-    Color bgColor;
+    Color? hoverColor;
+    Color? textColor;
 
     switch (type) {
       case .base:
         if (outline) {
-          outlineColor = isDark ? ThemeColors.darkFaint : ThemeColors.lightFaint;
-          hoverColor = outlineColor;
-          textColor = isDark ? ThemeColors.lightFaint : ThemeColors.darkDim;
-          bgColor = Colors.transparent;
+          outlineColor = colorScheme.outline;
+          textColor = colorScheme.onSurface;
         } else {
-          bgColor = isDark ? ThemeColors.lightDim : ThemeColors.darkDim;
-          hoverColor = isDark ? ThemeColors.lightFaint : ThemeColors.darkFaint;
-          textColor = isDark ? ThemeColors.darkSubtle : ThemeColors.lightSubtle;
-          outlineColor = null;
+          bgColor = colorScheme.onSurface;
+          textColor = colorScheme.onInverseSurface;
         }
       case .primary:
         if (outline) {
           outlineColor = ThemeColors.primary;
-          hoverColor = ThemeColors.primaryLight;
-          textColor = ThemeColors.primaryLight;
-          bgColor = Colors.transparent;
+          textColor = ThemeColors.primary;
         } else {
           bgColor = ThemeColors.primary;
-          hoverColor = ThemeColors.primaryLight;
           textColor = ThemeColors.lightDim;
-          outlineColor = null;
+          hoverColor = ThemeColors.primaryLight;
         }
       case .danger:
         if (outline) {
           outlineColor = ThemeColors.danger;
-          hoverColor = ThemeColors.dangerLight;
-          textColor = ThemeColors.dangerLight;
-          bgColor = Colors.transparent;
+          textColor = ThemeColors.danger;
         } else {
           bgColor = ThemeColors.danger;
-          hoverColor = ThemeColors.dangerLight;
           textColor = ThemeColors.lightDim;
-          outlineColor = null;
+          hoverColor = ThemeColors.dangerLight;
         }
       case .success:
         if (outline) {
           outlineColor = ThemeColors.success;
-          hoverColor = ThemeColors.successLight;
-          textColor = ThemeColors.successLight;
-          bgColor = Colors.transparent;
+          textColor = ThemeColors.success;
         } else {
           bgColor = ThemeColors.success;
-          hoverColor = ThemeColors.successLight;
           textColor = ThemeColors.lightDim;
-          outlineColor = null;
+          hoverColor = ThemeColors.successLight;
         }
+      case null:
     }
 
     final colors = {
-      'bg': bgColor,
-      'outline': outlineColor,
-      'hover': hoverColor,
-      'text': textColor,
+      'bg': ?bgColor,
+      'outline': ?outlineColor,
+      'hover': ?hoverColor,
+      'text': ?textColor,
     };
 
     return icon == null
         ? ElevatedButton(
-            onPressed: disabled ? null : onPressed,
+            onPressed: disabled
+                ? null
+                : () {
+                    onPressed?.call();
+                    colors['text'] = Colors.white;
+                  },
             style: ButtonStyle(
+              elevation: const WidgetStatePropertyAll(0),
               backgroundColor: WidgetStatePropertyAll(colors['bg']),
               overlayColor: WidgetStatePropertyAll(colors['hover']),
               shape: WidgetStatePropertyAll(
-                RoundedRectangleBorder(borderRadius: .circular(8)),
+                RoundedRectangleBorder(
+                  borderRadius: .circular(8),
+                  side: outline && colors['outline'] != null
+                      ? BorderSide(color: colors['outline']!)
+                      : .none,
+                ),
               ),
             ),
             child: Text(
@@ -119,14 +118,18 @@ class Button extends StatelessWidget {
         : IconButton(
             onPressed: disabled ? null : onPressed,
             padding: padding,
+            hoverColor: colors['hover'],
             style: ButtonStyle(
               elevation: const WidgetStatePropertyAll(0),
               backgroundColor: WidgetStatePropertyAll(colors['bg']),
               overlayColor: WidgetStatePropertyAll(colors['hover']),
+              foregroundColor: WidgetStatePropertyAll(colors['text']),
               shape: WidgetStatePropertyAll(
                 RoundedRectangleBorder(
                   borderRadius: .circular(10),
-                  side: outline ? BorderSide(color: colors['outline']!) : .none,
+                  side: outline && colors['outline'] != null
+                      ? BorderSide(color: colors['outline']!)
+                      : .none,
                 ),
               ),
             ),
