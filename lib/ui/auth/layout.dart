@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:theme_provider/theme_provider.dart' show ThemeProvider;
 
+import 'package:topix/ui/core/theme/helpers.dart';
+
 class AuthLayout extends StatelessWidget {
   final Widget child;
 
@@ -19,7 +21,7 @@ class AuthLayout extends StatelessWidget {
               child: IconButton(
                 onPressed: ThemeProvider.controllerOf(context).nextTheme,
                 icon: Icon(
-                  ThemeProvider.themeOf(context).id.contains('dark')
+                  isDarkMode(context)
                       ? Icons.light_mode_rounded
                       : Icons.dark_mode_rounded,
                 ),

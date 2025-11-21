@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 
-import 'package:provider/provider.dart';
+import 'package:get_it/get_it.dart' show GetIt;
+import 'package:provider/provider.dart' show Provider;
+
 import 'package:topix/data/services/user_service.dart';
-
 import 'package:topix/ui/app/feed/feed_screen.dart';
 import 'package:topix/ui/app/feed/feed_view_model.dart';
-import 'package:topix/utils/extensions.dart';
 
 class LoggedInRoute extends StatefulWidget {
   const LoggedInRoute({super.key});
