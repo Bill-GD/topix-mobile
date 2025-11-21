@@ -79,16 +79,14 @@ class AppLayout extends StatelessWidget {
                   value: context.isDarkMode,
                   shape: RoundedRectangleBorder(
                     borderRadius: .circular(12),
-                    side: BorderSide(
-                      color: context.isDarkMode
-                      color: context.colorScheme.surfaceContainerHigh,
-                    ),
+                    side: BorderSide(color: context.colorScheme.surfaceContainerHighest),
                   ),
                   onChanged: (_) => ThemeProvider.controllerOf(context).nextTheme(),
                 ),
                 if (self.role == .admin)
                   ListTile(
                     title: Text('Dev'),
+                    shape: RoundedRectangleBorder(borderRadius: .circular(12)),
                     onTap: () {
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(builder: (context) => DevScreen()),
@@ -118,6 +116,46 @@ class AppLayout extends StatelessWidget {
           ),
         ),
         body: child,
+        bottomNavigationBar: Container(
+          decoration: BoxDecoration(color: context.colorScheme.surfaceContainerLow),
+          padding: const .all(8),
+          child: Row(
+            mainAxisAlignment: .spaceBetween,
+            children: [
+              Button(
+                icon: Icon(Icons.home_rounded, size: 32),
+                tooltip: 'Home',
+                onPressed: () {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => FeedScreen(viewModel: FeedViewModel()),
+                    ),
+                  );
+                },
+              ),
+              Button(
+                icon: Icon(Icons.search_rounded, size: 32),
+                tooltip: 'Search',
+                onPressed: () {},
+              ),
+              Button(
+                icon: Icon(Icons.chat_bubble_rounded, size: 32),
+                tooltip: 'Chat',
+                onPressed: () {},
+              ),
+              Button(
+                icon: Icon(Icons.group_rounded, size: 32),
+                tooltip: 'Group',
+                onPressed: () {},
+              ),
+              Button(
+                icon: Icon(Icons.person_rounded, size: 32),
+                tooltip: 'Users',
+                onPressed: () {},
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

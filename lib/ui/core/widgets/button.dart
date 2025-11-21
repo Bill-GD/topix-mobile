@@ -9,6 +9,7 @@ enum ButtonType { base, primary, danger, success }
 class Button extends StatelessWidget {
   final ButtonType? type;
   final bool outline;
+  final String? tooltip;
   final void Function()? onPressed;
   final bool disabled;
 
@@ -21,6 +22,7 @@ class Button extends StatelessWidget {
     super.key,
     this.type,
     this.outline = false,
+    this.tooltip,
     this.onPressed,
     this.disabled = false,
     this.text,
@@ -42,7 +44,7 @@ class Button extends StatelessWidget {
     switch (type) {
       case .base:
         if (outline) {
-          outlineColor = colorScheme.outline;
+          outlineColor = colorScheme.surfaceContainerHighest;
           textColor = colorScheme.onSurface;
         } else {
           bgColor = colorScheme.onSurface;
@@ -85,7 +87,7 @@ class Button extends StatelessWidget {
       'text': ?textColor,
     };
 
-    return icon == null
+    final button = icon == null
         ? ElevatedButton(
             onPressed: disabled
                 ? null
@@ -135,5 +137,7 @@ class Button extends StatelessWidget {
             ),
             icon: icon!,
           );
+
+    return tooltip == null ? button : Tooltip(message: tooltip, child: button);
   }
 }
