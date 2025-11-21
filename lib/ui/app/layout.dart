@@ -10,8 +10,8 @@ import 'package:topix/ui/auth/login/login_screen.dart';
 import 'package:topix/ui/auth/login/login_view_model.dart' show LoginViewModel;
 import 'package:topix/ui/core/theme/colors.dart';
 import 'package:topix/ui/core/theme/font.dart';
-import 'package:topix/ui/core/theme/helpers.dart';
 import 'package:topix/ui/core/widgets/button.dart' show Button;
+import 'package:topix/utils/extensions.dart' show ThemeHelper;
 
 class AppLayout extends StatelessWidget {
   final Widget child;
@@ -30,7 +30,7 @@ class AppLayout extends StatelessWidget {
         ),
         drawerEnableOpenDragGesture: true,
         drawer: Drawer(
-          backgroundColor: isDarkMode(context) ? ThemeColors.darkDim : ThemeColors.light,
+          backgroundColor: context.isDarkMode ? ThemeColors.darkDim : ThemeColors.light,
           child: Padding(
             padding: const .all(16),
             child: Column(
@@ -51,13 +51,13 @@ class AppLayout extends StatelessWidget {
                     text: TextSpan(
                       text: self.displayName,
                       style: TextStyle(
-                          color: isDarkMode(context) ? ThemeColors.light : ThemeColors.darkDim,
+                          color: context.isDarkMode ? ThemeColors.light : ThemeColors.darkDim,
                           fontSize: FontSize.mediumSmall),
                       children: [
                         TextSpan(
                           text: ' @${self.username}',
                           style: TextStyle(
-                            color: isDarkMode(context) ? ThemeColors.lightFaint : ThemeColors.darkFaint,
+                            color: context.isDarkMode ? ThemeColors.lightFaint : ThemeColors.darkFaint,
                             fontSize: FontSize.small,
                           ),
                         ),
@@ -66,7 +66,7 @@ class AppLayout extends StatelessWidget {
                   ),
                   subtitle: Text('View profile'),
                   trailing: Icon(Icons.arrow_forward_ios_rounded),
-                  tileColor: isDarkMode(context)
+                  tileColor: context.isDarkMode
                       ? ThemeColors.darkSubtle
                       : ThemeColors.lightDim,
                   shape: RoundedRectangleBorder(borderRadius: .circular(12)),
@@ -76,11 +76,11 @@ class AppLayout extends StatelessWidget {
                 ),
                 SwitchListTile.adaptive(
                   title: Text('Dark mode'),
-                  value: isDarkMode(context),
+                  value: context.isDarkMode,
                   shape: RoundedRectangleBorder(
                     borderRadius: .circular(12),
                     side: BorderSide(
-                      color: isDarkMode(context)
+                      color: context.isDarkMode
                           ? ThemeColors.darkFaint
                           : ThemeColors.lightFaint,
                     ),

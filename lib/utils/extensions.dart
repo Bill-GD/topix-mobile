@@ -1,4 +1,7 @@
+import 'package:flutter/material.dart' show BuildContext, ColorScheme, Theme;
+
 import 'package:dio/dio.dart';
+import 'package:theme_provider/theme_provider.dart' show ThemeProvider;
 
 import 'package:topix/data/models/api_response.dart';
 
@@ -31,4 +34,10 @@ extension ParseApiResponse on Response {
       error: apiResponse['error'],
     );
   }
+}
+
+extension ThemeHelper on BuildContext {
+  bool get isDarkMode => ThemeProvider.themeOf(this).id.contains('dark');
+
+  ColorScheme get colorScheme => Theme.of(this).colorScheme;
 }

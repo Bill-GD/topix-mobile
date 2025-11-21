@@ -28,10 +28,6 @@ class TopixApp extends StatelessWidget {
             useMaterial3: true,
             fontFamily: 'Nunito',
             brightness: .light,
-            // sliderTheme: const SliderThemeData(
-            //   activeTickMarkColor: Colors.transparent,
-            //   inactiveTickMarkColor: Colors.transparent,
-            // ),
             colorScheme: .fromSeed(seedColor: Colors.blueAccent, brightness: .light),
           ),
         ),
@@ -42,10 +38,6 @@ class TopixApp extends StatelessWidget {
             useMaterial3: true,
             fontFamily: 'Nunito',
             brightness: .dark,
-            // sliderTheme: const SliderThemeData(
-            //   activeTickMarkColor: Colors.transparent,
-            //   inactiveTickMarkColor: Colors.transparent,
-            // ),
             colorScheme: .fromSeed(seedColor: Colors.blueAccent, brightness: .dark),
           ),
         ),

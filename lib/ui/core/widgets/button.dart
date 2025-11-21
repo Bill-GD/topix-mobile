@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:theme_provider/theme_provider.dart' show ThemeProvider;
-
 import 'package:topix/ui/core/theme/colors.dart';
 import 'package:topix/ui/core/theme/font.dart';
-import 'package:topix/ui/core/theme/helpers.dart';
+import 'package:topix/utils/extensions.dart' show ThemeHelper;
 
 enum ButtonType { base, primary, danger, success }
 
@@ -34,7 +32,7 @@ class Button extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(icon != null || text != null);
 
-    final isDark = isDarkMode(context);
+    final isDark = context.isDarkMode;
 
     Color? outlineColor;
     Color hoverColor;
