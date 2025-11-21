@@ -41,7 +41,7 @@ class Button extends StatelessWidget {
     Color bgColor;
 
     switch (type) {
-      case ButtonType.base:
+      case .base:
         if (outline) {
           outlineColor = isDark ? ThemeColors.darkFaint : ThemeColors.lightFaint;
           hoverColor = outlineColor;
@@ -53,7 +53,7 @@ class Button extends StatelessWidget {
           textColor = isDark ? ThemeColors.darkSubtle : ThemeColors.lightSubtle;
           outlineColor = null;
         }
-      case ButtonType.primary:
+      case .primary:
         if (outline) {
           outlineColor = ThemeColors.primary;
           hoverColor = ThemeColors.primaryLight;
@@ -65,7 +65,7 @@ class Button extends StatelessWidget {
           textColor = ThemeColors.lightDim;
           outlineColor = null;
         }
-      case ButtonType.danger:
+      case .danger:
         if (outline) {
           outlineColor = ThemeColors.danger;
           hoverColor = ThemeColors.dangerLight;
@@ -77,7 +77,7 @@ class Button extends StatelessWidget {
           textColor = ThemeColors.lightDim;
           outlineColor = null;
         }
-      case ButtonType.success:
+      case .success:
         if (outline) {
           outlineColor = ThemeColors.success;
           hoverColor = ThemeColors.successLight;

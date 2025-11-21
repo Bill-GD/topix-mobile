@@ -9,12 +9,12 @@ import 'package:flutter_dotenv/flutter_dotenv.dart' show dotenv;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart' show GetIt;
 import 'package:google_sign_in/google_sign_in.dart' show GoogleSignIn;
-import 'package:provider/provider.dart' show MultiProvider;
 
 import 'package:topix/app.dart';
 import 'package:topix/data/services/auth_service.dart';
 import 'package:topix/data/services/logger_service.dart';
 import 'package:topix/data/services/token_service.dart' show TokenService;
+import 'package:topix/data/services/user_service.dart';
 import 'package:topix/firebase_options.dart';
 import 'package:topix/ui/core/widgets/popup.dart' show showPopupMessage;
 import 'package:topix/utils/constants.dart';
@@ -71,13 +71,9 @@ Future<void> main() async {
   GetIt.I.registerSingleton(
     AuthService(dio: GetIt.I<Dio>(), tokenService: GetIt.I<TokenService>()),
   );
-
-  runApp(
-    MultiProvider(
-      providers: [
-        // Provider.value(value: remoteConfig),
-      ],
-      child: TopixApp(navKey: navigatorKey),
-    ),
+  GetIt.I.registerSingleton(
+    UserService(dio: GetIt.I<Dio>(), tokenService: GetIt.I<TokenService>()),
   );
+
+  runApp(TopixApp(navKey: navigatorKey));
 }

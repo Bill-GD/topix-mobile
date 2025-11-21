@@ -5,7 +5,7 @@ import 'package:get_it/get_it.dart' show GetIt;
 import 'package:topix/data/services/auth_service.dart';
 import 'package:topix/data/services/logger_service.dart';
 import 'package:topix/data/services/token_service.dart';
-import 'package:topix/ui/app/feed/feed_screen.dart';
+import 'package:topix/ui/app/logged_in_route.dart';
 import 'package:topix/ui/auth/login/login_screen.dart';
 import 'package:topix/ui/auth/login/login_view_model.dart';
 import 'package:topix/ui/auth/register/register_screen.dart';
@@ -36,7 +36,9 @@ class AuthObserver extends NavigatorObserver {
 
     if (at == null && rt == null) {
       // blocks app access if no token present
-      if (widget is! LoginScreen && widget is! RegisterScreen && widget is! VerifyScreen) {
+      if (widget is! LoginScreen &&
+          widget is! RegisterScreen &&
+          widget is! VerifyScreen) {
         navigator?.pop();
         navigator?.pushReplacement(
           MaterialPageRoute(
@@ -57,7 +59,7 @@ class AuthObserver extends NavigatorObserver {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (_) {
-            return FeedScreen();
+            return LoggedInRoute();
           },
         ),
       );

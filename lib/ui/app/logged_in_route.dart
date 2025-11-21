@@ -1,0 +1,46 @@
+import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+
+import 'package:provider/provider.dart';
+import 'package:topix/data/services/user_service.dart';
+
+import 'package:topix/ui/app/feed/feed_screen.dart';
+import 'package:topix/ui/app/feed/feed_view_model.dart';
+import 'package:topix/utils/extensions.dart';
+
+class LoggedInRoute extends StatefulWidget {
+  const LoggedInRoute({super.key});
+
+  @override
+  State<LoggedInRoute> createState() => _LoggedInRouteState();
+}
+
+class _LoggedInRouteState extends State<LoggedInRoute> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: GetIt.I<UserService>().getSelf(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Scaffold(body: Center(child: CircularProgressIndicator.adaptive()));
+        }
+
+        return Provider.value(
+          value: snapshot.data,
+          child: Navigator(
+            onGenerateRoute: (settings) {
+              return MaterialPageRoute(
+                builder: (_) => FeedScreen(viewModel: FeedViewModel()),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+}
