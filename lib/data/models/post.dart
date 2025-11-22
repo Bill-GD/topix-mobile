@@ -1,18 +1,21 @@
-import 'package:topix/data/models/enums.dart' show Visibility;
+import 'package:topix/data/models/enums.dart' show Visibility, ReactionType;
 import 'package:topix/data/models/tag.dart';
 import 'package:topix/data/models/user.dart';
+import 'package:topix/utils/extensions.dart';
 
 class Post {
   final int id;
   final User owner;
   final String content;
-  final String? reaction;
+  final ReactionType? reaction;
   final int reactionCount;
   final int replyCount;
   final List<String> mediaPaths;
   final Visibility visibility;
   final DateTime dateCreated;
   final DateTime? dateUpdated;
+
+  final Post? parentPost;
 
   final int? threadId;
   final String? threadTitle;
@@ -36,6 +39,7 @@ class Post {
     required this.mediaPaths,
     required this.visibility,
     required this.dateCreated,
+    this.parentPost,
     this.dateUpdated,
     this.threadId,
     this.threadTitle,
@@ -53,7 +57,7 @@ class Post {
     id: json['id'] as int,
     owner: User.fromJson(json['owner'] as Map<String, dynamic>),
     content: json['content'] as String,
-    reaction: json['reaction'] as String?,
+    reaction: .values.firstWhereOrNull((v) => v.name == json['reaction'] as String?),
     reactionCount: json['reactionCount'] as int? ?? 0,
     replyCount: json['replyCount'] as int? ?? 0,
     mediaPaths:
@@ -67,6 +71,7 @@ class Post {
     dateUpdated: json['dateUpdated'] != null
         ? DateTime.parse(json['dateUpdated'] as String)
         : null,
+    parentPost: json['parentPost'] != null ? Post.fromJson(json['parentPost']) : null,
     threadId: json['threadId'] as int?,
     threadTitle: json['threadTitle'] as String?,
     threadOwnerId: json['threadOwnerId'] as int?,
@@ -93,13 +98,14 @@ class Post {
     'id': id,
     'owner': owner.toJson(),
     'content': content,
-    'reaction': reaction,
+    'reaction': reaction?.name,
     'reactionCount': reactionCount,
     'replyCount': replyCount,
     'mediaPaths': mediaPaths,
     'visibility': visibility.name,
     'dateCreated': dateCreated.toIso8601String(),
     'dateUpdated': dateUpdated?.toIso8601String(),
+    'parentPost': parentPost?.toJson(),
     'threadId': threadId,
     'threadTitle': threadTitle,
     'threadOwnerId': threadOwnerId,
@@ -119,7 +125,7 @@ class Post {
         '\tid: $id,\n'
         '\towner: $ownerStr,\n'
         '\tcontent: $content,\n'
-        '\treaction: $reaction,\n'
+        '\treaction: ${reaction?.name},\n'
         '\treactionCount: $reactionCount,\n'
         '\treplyCount: $replyCount,\n'
         '\tmediaPaths: $mediaPaths,\n'
