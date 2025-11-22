@@ -17,8 +17,7 @@ class DevScreen extends StatelessWidget {
     return AppLayout(
       child: Padding(
         padding: const .symmetric(horizontal: 8),
-        child: Column(
-          spacing: 8,
+        child: ListView(
           children: [
             Wrap(
               direction: .horizontal,
@@ -132,7 +131,11 @@ class DevScreen extends StatelessWidget {
                 dateCreated: DateTime.now().subtract(30.minutes),
                 parentPost: Post(
                   id: 0,
-                  owner: User(id: 0, username: 'owner', displayName: 'Owner really long name'),
+                  owner: User(
+                    id: 0,
+                    username: 'owner',
+                    displayName: 'Owner really long name',
+                  ),
                   content: 'example content',
                   reactionCount: 1,
                   replyCount: 1,
@@ -145,6 +148,39 @@ class DevScreen extends StatelessWidget {
                 threadOwnerId: 0,
                 threadTitle: 'A very very long and extra long thread title',
                 threadVisibility: .public,
+                groupApproved: true,
+              ),
+            ),
+            PostWidget(
+              self: context.read(),
+              post: Post(
+                id: 0,
+                owner: User(id: 1, username: 'owner', displayName: 'Owner'),
+                content: 'example content',
+                reactionCount: 1,
+                replyCount: 1,
+                mediaPaths: [
+                  'https://res.cloudinary.com/djqtcdphf/image/upload/v1760779019/jgqxueci3zyuifcd1euj.jpg',
+                  'https://res.cloudinary.com/djqtcdphf/image/upload/v1760779018/xgbghehrjst0brtofrhk.jpg',
+                ],
+                visibility: .public,
+                dateCreated: DateTime.now().subtract(30.minutes),
+                groupApproved: true,
+              ),
+            ),
+            PostWidget(
+              self: context.read(),
+              post: Post(
+                id: 0,
+                owner: User(id: 1, username: 'owner', displayName: 'Owner'),
+                content: 'example content',
+                reactionCount: 1,
+                replyCount: 1,
+                mediaPaths: [
+                  'https://res.cloudinary.com/djqtcdphf/video/upload/v1757936272/cwqcetmilgpca92egj4d.mp4',
+                ],
+                visibility: .public,
+                dateCreated: DateTime.now().subtract(30.minutes),
                 groupApproved: true,
               ),
             ),

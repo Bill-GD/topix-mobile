@@ -21,21 +21,15 @@ class WidgetErrorScreen extends StatelessWidget {
         centerTitle: true,
       ),
       extendBodyBehindAppBar: true,
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(32),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Text('${e.exception}', style: textStyle),
-                const SizedBox(height: 16),
-                Flexible(
-                  child: SingleChildScrollView(
-                    child: Text(e.stack.toString(), style: textStyle),
-                  ),
-                ),
-              ],
-            ),
+      body: Padding(
+        padding: const EdgeInsets.all(32),
+        child: SingleChildScrollView(
+          child: Column(
+            spacing: 16,
+            children: [
+              Text('${e.exception}', style: textStyle),
+              Text(e.stack.toString(), style: textStyle),
+            ],
           ),
         ),
       ),

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 
+import 'package:video_player/video_player.dart';
+
 import 'package:topix/data/models/enums.dart' show ReactionType;
 import 'package:topix/data/models/post.dart';
 import 'package:topix/data/models/user.dart';
 import 'package:topix/ui/core/widgets/button.dart';
+import 'package:topix/ui/core/widgets/image_carousel.dart';
 import 'package:topix/utils/extensions.dart' show ThemeHelper, TimeAgo;
 
 class PostWidget extends StatefulWidget {
@@ -33,8 +36,12 @@ class PostWidget extends StatefulWidget {
 }
 
 class _PostWidgetState extends State<PostWidget> {
-  late final isImages = widget.post.mediaPaths.every((m) => m.contains('image')),
-      isVideo = widget.post.mediaPaths.every((m) => m.contains('video')),
+  late final isImages =
+          widget.post.mediaPaths.isNotEmpty &&
+          widget.post.mediaPaths.every((m) => m.contains('image')),
+      isVideo =
+          widget.post.mediaPaths.isNotEmpty &&
+          widget.post.mediaPaths.every((m) => m.contains('video')),
       canClickPost =
           !widget.isDetailed &&
           (widget.post.visibility == .public ||
@@ -47,6 +54,19 @@ class _PostWidgetState extends State<PostWidget> {
               (widget.post.groupName != null || widget.post.threadTitle != null));
 
   late ReactionType? currentReaction = widget.post.reaction;
+  VideoPlayerController? vidController;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (isVideo) {
+        vidController = VideoPlayerController.networkUrl(
+          Uri.parse(widget.post.mediaPaths.first),
+        )..initialize().then((_) => setState(() {}));
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -175,7 +195,20 @@ class _PostWidgetState extends State<PostWidget> {
                         spacing: 4,
                         children: [
                           if (widget.post.content.isNotEmpty) Text(widget.post.content),
-                          if (widget.post.mediaPaths.isNotEmpty) Text('media'),
+                          if (widget.post.mediaPaths.isNotEmpty)
+                            if (isImages)
+                              ImageCarousel(post: widget.post)
+                            else if (isVideo &&
+                                vidController?.value.isInitialized == true)
+                              ClipRRect(
+                                borderRadius: .circular(8),
+                                child: AspectRatio(
+                                  aspectRatio: vidController!.value.aspectRatio,
+                                  child: VideoPlayer(vidController!),
+                                ),
+                              )
+                            else
+                              Center(child: CircularProgressIndicator.adaptive()),
                         ],
                       ),
               ),

@@ -40,6 +40,8 @@ extension ParseApiResponse on Response {
 extension ThemeHelper on BuildContext {
   bool get isDarkMode => ThemeProvider.themeOf(this).id.contains('dark');
 
+  void nextTheme() => ThemeProvider.controllerOf(this).nextTheme();
+
   ColorScheme get colorScheme => Theme.of(this).colorScheme;
 }
 

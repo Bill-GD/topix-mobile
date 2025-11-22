@@ -42,25 +42,18 @@ class _FeedScreenState extends State<FeedScreen> {
               }
               return false;
             },
-            child: Scrollbar(
+            child: ListView.separated(
+              key: PageStorageKey('feed_posts_key'),
               controller: vm.scroll,
-              thumbVisibility: true,
-              radius: const Radius.circular(16),
-              child: ListView.separated(
-                key: PageStorageKey('feed_posts_key'),
-                controller: vm.scroll,
-                itemCount: vm.posts.length + (vm.loading ? 1 : 0),
-                separatorBuilder: (context, index) {
-                  return SizedBox(height: 8);
-                },
-                itemBuilder: (context, index) {
-                  if (vm.loading && index == vm.posts.length) {
-                    return Center(child: CircularProgressIndicator.adaptive());
-                  }
-                  final post = vm.posts.elementAt(index);
-                  return PostWidget(self: context.read<User>(), post: post);
-                },
-              ),
+              itemCount: vm.posts.length + (vm.loading ? 1 : 0),
+              separatorBuilder: (_, _) => const SizedBox(height: 8),
+              itemBuilder: (context, index) {
+                if (vm.loading && index == vm.posts.length) {
+                  return Center(child: CircularProgressIndicator.adaptive());
+                }
+                final post = vm.posts.elementAt(index);
+                return PostWidget(self: context.read<User>(), post: post);
+              },
             ),
           );
         },

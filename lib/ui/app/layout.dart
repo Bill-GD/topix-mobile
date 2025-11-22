@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
-import 'package:theme_provider/theme_provider.dart';
 
 import 'package:topix/data/models/user.dart';
 import 'package:topix/data/services/auth_service.dart';
 import 'package:topix/ui/app/dev/dev_screen.dart';
 import 'package:topix/ui/app/feed/feed_screen.dart';
-import 'package:topix/ui/app/feed/feed_view_model.dart';
 import 'package:topix/ui/auth/login/login_screen.dart';
 import 'package:topix/ui/auth/login/login_view_model.dart' show LoginViewModel;
 import 'package:topix/ui/core/theme/font.dart';
@@ -109,7 +107,7 @@ class AppLayout extends StatelessWidget {
                     side: BorderSide(color: context.colorScheme.surfaceContainerHighest),
                   ),
                   dense: true,
-                  onChanged: (_) => ThemeProvider.controllerOf(context).nextTheme(),
+                  onChanged: (_) => context.nextTheme(),
                 ),
                 Button(
                   type: .base,
@@ -144,7 +142,7 @@ class AppLayout extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).pushReplacement(
                     MaterialPageRoute(
-                      builder: (context) => FeedScreen(viewModel: FeedViewModel()),
+                      builder: (context) => FeedScreen(viewModel: context.read()),
                     ),
                   );
                 },
