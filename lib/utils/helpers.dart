@@ -65,6 +65,11 @@ Iterable<List<T>> zip<T>(Iterable<Iterable<T>> iterables) sync* {
   }
 }
 
+/// [start] and [end] are inclusive
+List<int> range(int start, int end) {
+  return List<int>.generate(end - start + 1, (i) => i + start);
+}
+
 Future<void> setupFirebaseRemoteConfig(FirebaseRemoteConfig config) async {
   await config.setConfigSettings(
     RemoteConfigSettings(fetchTimeout: 1.minutes, minimumFetchInterval: 1.hours),

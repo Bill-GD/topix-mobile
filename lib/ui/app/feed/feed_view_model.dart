@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get_it/get_it.dart' show GetIt;
+
 import 'package:topix/data/models/post.dart';
 import 'package:topix/data/services/post_service.dart';
 

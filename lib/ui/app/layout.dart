@@ -42,8 +42,7 @@ class AppLayout extends StatelessWidget {
                 ListTile(
                   leading: SizedBox.square(
                     dimension: 40,
-                    child: ClipRRect(
-                      borderRadius: .circular(50),
+                    child: ClipOval(
                       child: self.profilePicture != null
                           ? Image.network(self.profilePicture!)
                           : Image.asset('assets/images/default-picture.jpg'),
