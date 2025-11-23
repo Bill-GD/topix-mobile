@@ -5,7 +5,7 @@ import 'package:theme_provider/theme_provider.dart';
 
 import 'package:topix/ui/auth/login/login_screen.dart';
 import 'package:topix/ui/auth/login/login_view_model.dart' show LoginViewModel;
-import 'package:topix/ui/core/screens/widget_error_screen.dart';
+import 'package:topix/ui/core/widgets/errored_widget.dart';
 import 'package:topix/utils/auth_observer.dart';
 
 class TopixApp extends StatelessWidget {
@@ -47,13 +47,13 @@ class TopixApp extends StatelessWidget {
           builder: (context) {
             return MaterialApp(
               navigatorKey: navKey,
-              title: 'Flutter Demo',
+              title: 'topix',
               theme: ThemeProvider.themeOf(context).data,
               debugShowCheckedModeBanner: false,
               navigatorObservers: [AuthObserver()],
               builder: (context, child) {
                 ErrorWidget.builder = (errorDetails) {
-                  return WidgetErrorScreen(e: errorDetails);
+                  return ErroredWidget(e: errorDetails);
                 };
                 if (child != null) return child;
                 throw StateError('Widget is null');
