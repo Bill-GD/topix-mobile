@@ -1,3 +1,5 @@
+import 'dart:ui' show Color;
+
 class Tag {
   final int? id;
   final String name;
@@ -11,14 +13,5 @@ class Tag {
     colorHex: json['color'] as String,
   );
 
-  Map<String, dynamic> toJson() => {'id': id, 'name': name, 'colorHex': colorHex};
-
-  @override
-  String toString() {
-    return 'Tag{\n'
-        '\tid: $id,\n'
-        '\tname: $name,\n'
-        '\tcolorHex: $colorHex\n'
-        '}';
-  }
+  Color get color => Color(int.parse(colorHex, radix: 16) | 0xFF000000);
 }

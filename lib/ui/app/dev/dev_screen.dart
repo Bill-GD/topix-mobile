@@ -6,7 +6,7 @@ import 'package:topix/data/models/post.dart';
 import 'package:topix/data/models/user.dart';
 import 'package:topix/ui/app/layout.dart';
 import 'package:topix/ui/core/widgets/button.dart';
-import 'package:topix/ui/core/widgets/post.dart';
+import 'package:topix/ui/core/widgets/post/post.dart';
 import 'package:topix/utils/extensions.dart' show NumDurationExtensions;
 
 class DevScreen extends StatelessWidget {
@@ -99,6 +99,8 @@ class DevScreen extends StatelessWidget {
                 dateCreated: DateTime.now().subtract(30.minutes),
                 groupApproved: true,
               ),
+              reactPost: (_, _) async {},
+              deletePost: (_) async {},
             ),
             PostWidget(
               self: context.read(),
@@ -117,6 +119,8 @@ class DevScreen extends StatelessWidget {
                 threadVisibility: .public,
                 groupApproved: true,
               ),
+              reactPost: (_, _) async {},
+              deletePost: (_) async {},
             ),
             PostWidget(
               self: context.read(),
@@ -150,6 +154,8 @@ class DevScreen extends StatelessWidget {
                 threadVisibility: .public,
                 groupApproved: true,
               ),
+              reactPost: (_, _) async {},
+              deletePost: (_) async {},
             ),
             PostWidget(
               self: context.read(),
@@ -167,6 +173,8 @@ class DevScreen extends StatelessWidget {
                 dateCreated: DateTime.now().subtract(30.minutes),
                 groupApproved: true,
               ),
+              reactPost: (_, _) async {},
+              deletePost: (_) async {},
             ),
             PostWidget(
               self: context.read(),
@@ -183,6 +191,8 @@ class DevScreen extends StatelessWidget {
                 dateCreated: DateTime.now().subtract(30.minutes),
                 groupApproved: true,
               ),
+              reactPost: (_, _) async {},
+              deletePost: (_) async {},
             ),
           ],
         ),

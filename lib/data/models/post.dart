@@ -1,14 +1,22 @@
+import 'dart:ui';
+
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
+import 'package:flutter/material.dart' show Icon, Icons, Colors;
+
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import 'package:topix/data/models/enums.dart' show Visibility, ReactionType;
 import 'package:topix/data/models/tag.dart';
 import 'package:topix/data/models/user.dart';
-import 'package:topix/utils/extensions.dart';
+import 'package:topix/ui/core/theme/colors.dart';
+import 'package:topix/utils/extensions.dart' show WhereOrNull;
 
 class Post {
   final int id;
   final User owner;
   final String content;
-  final ReactionType? reaction;
-  final int reactionCount;
+  ReactionType? reaction;
+  int reactionCount;
   final int replyCount;
   final List<String> mediaPaths;
   final Visibility visibility;
@@ -53,6 +61,26 @@ class Post {
     this.tag,
   });
 
+  static Icon reactionIcon(ReactionType? reaction, [double size = 20]) {
+    return switch (reaction) {
+      .like => Icon(Icons.thumb_up_rounded, color: ThemeColors.primary, size: size),
+      .heart => Icon(CupertinoIcons.heart_fill, color: Colors.redAccent, size: size),
+      .laugh => FaIcon(FontAwesomeIcons.solidFaceLaugh, color: Colors.yellow, size: size),
+      .sad => FaIcon(
+        FontAwesomeIcons.solidFaceFrownOpen,
+        color: Colors.yellow,
+        shadows: [Shadow(color: Colors.black26)],
+        size: size,
+      ),
+      .angry => FaIcon(
+        FontAwesomeIcons.solidFaceAngry,
+        color: Colors.redAccent,
+        size: size,
+      ),
+      null => Icon(Icons.thumb_up_off_alt_outlined, size: size),
+    };
+  }
+
   factory Post.fromJson(Map<String, dynamic> json) => Post(
     id: json['id'] as int,
     owner: User.fromJson(json['owner'] as Map<String, dynamic>),
@@ -93,55 +121,4 @@ class Post {
     groupApproved: json['groupApproved'] as bool,
     tag: json['tag'] != null ? Tag.fromJson(json['tag'] as Map<String, dynamic>) : null,
   );
-
-  Map<String, dynamic> toJson() => {
-    'id': id,
-    'owner': owner.toJson(),
-    'content': content,
-    'reaction': reaction?.name,
-    'reactionCount': reactionCount,
-    'replyCount': replyCount,
-    'mediaPaths': mediaPaths,
-    'visibility': visibility.name,
-    'dateCreated': dateCreated.toIso8601String(),
-    'dateUpdated': dateUpdated?.toIso8601String(),
-    'parentPost': parentPost?.toJson(),
-    'threadId': threadId,
-    'threadTitle': threadTitle,
-    'threadOwnerId': threadOwnerId,
-    'threadVisibility': threadVisibility?.name,
-    'groupId': groupId,
-    'groupName': groupName,
-    'groupVisibility': groupVisibility?.name,
-    'joinedGroup': joinedGroup,
-    'groupApproved': groupApproved,
-    'tag': tag?.toJson(),
-  };
-
-  @override
-  String toString() {
-    final ownerStr = owner.toString().replaceAll('\n', '\n\t');
-    return 'Post{\n'
-        '\tid: $id,\n'
-        '\towner: $ownerStr,\n'
-        '\tcontent: $content,\n'
-        '\treaction: ${reaction?.name},\n'
-        '\treactionCount: $reactionCount,\n'
-        '\treplyCount: $replyCount,\n'
-        '\tmediaPaths: $mediaPaths,\n'
-        '\tvisibility: ${visibility.name},\n'
-        '\tdateCreated: $dateCreated,\n'
-        '\tdateUpdated: $dateUpdated,\n'
-        '\tthreadId: $threadId,\n'
-        '\tthreadTitle: $threadTitle,\n'
-        '\tthreadOwnerId: $threadOwnerId,\n'
-        '\tthreadVisibility: ${threadVisibility?.name},\n'
-        '\tgroupId: $groupId,\n'
-        '\tgroupName: $groupName,\n'
-        '\tgroupVisibility: ${groupVisibility?.name},\n'
-        '\tjoinedGroup: $joinedGroup,\n'
-        '\tgroupApproved: $groupApproved,\n'
-        '\ttag: ${tag?.name}\n'
-        '}';
-  }
 }

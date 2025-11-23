@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:topix/data/models/user.dart';
 import 'package:topix/ui/app/feed/feed_view_model.dart';
 import 'package:topix/ui/app/layout.dart';
-import 'package:topix/ui/core/widgets/post.dart';
+import 'package:topix/ui/core/widgets/post/post.dart';
 import 'package:topix/utils/extensions.dart' show ThemeHelper;
 
 class FeedScreen extends StatefulWidget {
@@ -76,31 +76,41 @@ class _FeedScreenState extends State<FeedScreen> {
                         ListView.separated(
                           key: PageStorageKey('new_feed_posts_key'),
                           controller: vm.scroll,
-                          itemCount:
-                              vm.posts(.all).length + (vm.loading ? 1 : 0),
+                          itemCount: vm.posts(.all).length + (vm.loading ? 1 : 0),
                           separatorBuilder: (_, _) => const SizedBox(height: 8),
                           itemBuilder: (context, index) {
-                            if (vm.loading &&
-                                index == vm.posts(.all).length) {
+                            if (vm.loading && index == vm.posts(.all).length) {
                               return Center(child: CircularProgressIndicator.adaptive());
                             }
                             final post = vm.posts(.all).elementAt(index);
-                            return PostWidget(self: context.read<User>(), post: post);
+                            return PostWidget(
+                              self: context.read<User>(),
+                              post: post,
+                              reactPost: vm.reactPost,
+                              deletePost: (id) async {
+                                await vm.removePost(id, .all);
+                              },
+                            );
                           },
                         ),
                         ListView.separated(
                           key: PageStorageKey('follow_feed_posts_key'),
                           controller: vm.scroll,
-                          itemCount:
-                              vm.posts(.following).length + (vm.loading ? 1 : 0),
+                          itemCount: vm.posts(.following).length + (vm.loading ? 1 : 0),
                           separatorBuilder: (_, _) => const SizedBox(height: 8),
                           itemBuilder: (context, index) {
-                            if (vm.loading &&
-                                index == vm.posts(.following).length) {
+                            if (vm.loading && index == vm.posts(.following).length) {
                               return Center(child: CircularProgressIndicator.adaptive());
                             }
                             final post = vm.posts(.following).elementAt(index);
-                            return PostWidget(self: context.read<User>(), post: post);
+                            return PostWidget(
+                              self: context.read<User>(),
+                              post: post,
+                              reactPost: vm.reactPost,
+                              deletePost: (id) async {
+                                await vm.removePost(id, .following);
+                              },
+                            );
                           },
                         ),
                       ],

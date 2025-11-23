@@ -19,7 +19,7 @@ import 'package:topix/data/services/token_service.dart' show TokenService;
 import 'package:topix/data/services/user_service.dart';
 import 'package:topix/firebase_options.dart';
 import 'package:topix/ui/app/feed/feed_view_model.dart';
-import 'package:topix/ui/core/widgets/popup.dart' show showPopupMessage;
+import 'package:topix/ui/core/widgets/popup.dart';
 import 'package:topix/utils/constants.dart';
 import 'package:topix/utils/helpers.dart' show setupFirebaseRemoteConfig;
 
@@ -42,8 +42,7 @@ Future<void> main() async {
       .error,
     );
 
-    showPopupMessage(
-      curContext,
+    curContext.showPopupMessage(
       title: e.toString(),
       content: s.toString(),
       centerContent: false,
