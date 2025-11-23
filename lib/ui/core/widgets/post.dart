@@ -208,7 +208,16 @@ class _PostWidgetState extends State<PostWidget> {
                                 ),
                               )
                             else
-                              Center(child: CircularProgressIndicator.adaptive()),
+                              Container(
+                                alignment: .center,
+                                width: .infinity,
+                                height: 200,
+                                decoration: BoxDecoration(
+                                  borderRadius: .circular(8),
+                                  color: context.colorScheme.surfaceContainerHigh,
+                                ),
+                                child: CircularProgressIndicator.adaptive(),
+                              ),
                         ],
                       ),
               ),

@@ -12,10 +12,10 @@ class PostService {
     : _tokenService = tokenService,
       _dio = dio;
 
-  Future<(bool, Iterable<Post>)> getFeed(int page) async {
+  Future<(bool, Iterable<Post>)> getFeed(int page, [bool following = false]) async {
     final at = await _tokenService.tryGet(.access);
     final res = (await _dio.get(
-      '/post?page=$page',
+      '/post${following ? '/following' : ''}?page=$page',
       options: Options(headers: {'Authorization': 'Bearer $at'}),
     )).toApiResponse();
 

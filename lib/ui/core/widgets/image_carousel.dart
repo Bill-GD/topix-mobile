@@ -35,11 +35,12 @@ class _ImageCarouselState extends State<ImageCarousel> {
                 }
                 loadedImageCount++;
                 if (loadedImageCount == widget.post.mediaPaths.length) {
-                  setState(() => loading = false);
-
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    controller.animateToItem(0, duration: 1.ms);
-                  });
+                  if (mounted) {
+                    setState(() => loading = false);
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      controller.animateToItem(0, duration: 1.ms);
+                    });
+                  }
                 }
               }),
             );
@@ -56,7 +57,14 @@ class _ImageCarouselState extends State<ImageCarousel> {
           child: AspectRatio(
             aspectRatio: maxHeightSize.$1 / maxHeightSize.$2,
             child: loading
-                ? Center(child: CircularProgressIndicator.adaptive())
+                ? Container(
+                    alignment: .center,
+                    decoration: BoxDecoration(
+                      borderRadius: .circular(8),
+                      color: context.colorScheme.surfaceContainerHigh,
+                    ),
+                    child: CircularProgressIndicator.adaptive(),
+                  )
                 : CarouselView(
                     controller: controller,
                     padding: const .all(0),

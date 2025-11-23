@@ -26,6 +26,8 @@ class AppLayout extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           leading: DrawerButton(),
+          backgroundColor: context.colorScheme.surface,
+          surfaceTintColor: Colors.transparent,
           title: FittedBox(child: Image.asset('assets/images/icon.png', height: 32)),
         ),
         drawer: Drawer(
