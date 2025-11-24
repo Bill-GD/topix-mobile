@@ -52,6 +52,30 @@ class PostService {
     );
   }
 
+  Future<(bool, Iterable<PostModel>)> getPostReplies({
+    required int postId,
+    int? threadId,
+    int? groupId,
+    required int page,
+  }) async {
+    LoggerService.log('Fetching replies of post #$postId, page $page');
+
+    final at = await _tokenService.tryGet(.access);
+    final res = (await _dio.get(
+      '/post?parentId=$postId&page=$page'
+      '${groupId != null ? '&groupId=$groupId' : ''}'
+      '${threadId != null ? '&threadId=$threadId' : ''}',
+      options: Options(headers: {'Authorization': 'Bearer $at'}),
+    )).toApiResponse();
+
+    if (!res.success) throw Exception(res.error);
+    final resData = res.data as List<dynamic>;
+    return (
+      bool.parse(res.headers['x-end-of-list']?.first ?? 'false'),
+      resData.map((e) => PostModel.fromJson(e as Map<String, dynamic>)),
+    );
+  }
+
   Future<void> deletePost(int postId) async {
     final at = await _tokenService.tryGet(.access);
     final res = (await _dio.delete(

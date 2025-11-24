@@ -18,8 +18,9 @@ import 'package:topix/utils/extensions.dart' show ThemeHelper;
 
 class AppLayout extends StatelessWidget {
   final Widget child;
+  final Widget? floatingActionButton;
 
-  const AppLayout({super.key, required this.child});
+  const AppLayout({super.key, required this.child, this.floatingActionButton});
 
   @override
   Widget build(BuildContext context) {
@@ -141,6 +142,7 @@ class AppLayout extends StatelessWidget {
           ),
         ),
         body: child,
+        floatingActionButton: floatingActionButton,
         bottomNavigationBar: Container(
           decoration: BoxDecoration(color: context.colorScheme.surfaceContainerLowest),
           padding: const .all(8),
