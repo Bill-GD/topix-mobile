@@ -9,15 +9,17 @@ import 'package:flutter_dotenv/flutter_dotenv.dart' show dotenv;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart' show GetIt;
 import 'package:google_sign_in/google_sign_in.dart' show GoogleSignIn;
-import 'package:provider/provider.dart' show MultiProvider;
 
 import 'package:topix/app.dart';
 import 'package:topix/data/services/auth_service.dart';
 import 'package:topix/data/services/logger_service.dart';
+import 'package:topix/data/services/post_service.dart';
 import 'package:topix/data/services/token_service.dart' show TokenService;
+import 'package:topix/data/services/user_service.dart';
 import 'package:topix/firebase_options.dart';
-import 'package:topix/ui/core/widgets/popup.dart' show showPopupMessage;
+import 'package:topix/ui/core/widgets/popup.dart';
 import 'package:topix/utils/constants.dart';
+import 'package:topix/utils/extensions.dart' show NumDurationExtension;
 import 'package:topix/utils/helpers.dart' show setupFirebaseRemoteConfig;
 
 Future<void> main() async {
@@ -39,8 +41,7 @@ Future<void> main() async {
       .error,
     );
 
-    showPopupMessage(
-      curContext,
+    curContext.showPopupMessage(
       title: e.toString(),
       content: s.toString(),
       centerContent: false,
@@ -56,28 +57,25 @@ Future<void> main() async {
 
   await GoogleSignIn.instance.initialize();
 
-  GetIt.I.registerSingleton(TokenService(FlutterSecureStorage()));
-  GetIt.I.registerSingleton(GoogleSignIn.instance);
-  GetIt.I.registerSingleton(
-    Dio(
-      BaseOptions(
-        baseUrl: Constants.apiUrl.value,
-        contentType: Headers.jsonContentType,
-        headers: {Headers.acceptHeader: Headers.jsonContentType},
-        validateStatus: (_) => true,
-      ),
+  final dio = Dio(
+    BaseOptions(
+      baseUrl: Constants.apiUrl.value,
+      contentType: Headers.jsonContentType,
+      headers: {Headers.acceptHeader: Headers.jsonContentType},
+      connectTimeout: 10.seconds,
+      validateStatus: (_) => true,
     ),
   );
-  GetIt.I.registerSingleton(
-    AuthService(dio: GetIt.I<Dio>(), tokenService: GetIt.I<TokenService>()),
-  );
+  final tokenService = TokenService(FlutterSecureStorage());
+
+  GetIt.I.registerSingleton(GoogleSignIn.instance);
+  GetIt.I.registerSingleton(tokenService);
+  GetIt.I.registerSingleton(dio);
+  GetIt.I.registerSingleton(AuthService(dio: dio, tokenService: tokenService));
+  GetIt.I.registerSingleton(UserService(dio: dio, tokenService: tokenService));
+  GetIt.I.registerSingleton(PostService(dio: dio, tokenService: tokenService));
 
   runApp(
-    MultiProvider(
-      providers: [
-        // Provider.value(value: remoteConfig),
-      ],
-      child: TopixApp(navKey: navigatorKey),
-    ),
+    TopixApp(navKey: navigatorKey),
   );
 }

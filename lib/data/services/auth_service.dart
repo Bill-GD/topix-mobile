@@ -55,9 +55,10 @@ class AuthService {
   }
 
   Future<void> refresh() async {
+    final rt = await _tokenService.tryGet(.refresh);
     final res = (await _dio.post(
       '/auth/refresh',
-      options: Options(headers: {'Authorization': _tokenService.tryGet(.refresh)}),
+      options: Options(headers: {'Authorization': 'Bearer $rt'}),
     )).toApiResponse();
 
     final resData = res.data as Map<String, dynamic>;
@@ -88,5 +89,9 @@ class AuthService {
     );
 
     return (true, res.message);
+  }
+
+  Future<void> logout() async {
+    return _tokenService.deleteTokens();
   }
 }

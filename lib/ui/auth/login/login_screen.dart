@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get_it/get_it.dart';
+import 'package:provider/provider.dart';
 
 import 'package:topix/data/services/auth_service.dart';
 import 'package:topix/data/services/logger_service.dart';
@@ -137,7 +138,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
                                 builder: (context) {
-                                  return FeedScreen();
+                                  return FeedScreen(viewModel: context.read());
                                 },
                               ),
                             );

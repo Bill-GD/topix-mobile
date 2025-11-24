@@ -1,7 +1,7 @@
 name: topix
 description: "The Android client of topix."
 publish_to: 'none'
-version: 0.1.0+1
+version: 0.1.0+2
 
 environment:
   sdk: ^3.10.0
@@ -9,10 +9,10 @@ environment:
 dependencies:
   theme_provider: ^0.6.0
   font_awesome_flutter: ^10.12.0
-  animations: ^2.1.1
+  # animations: ^2.1.1
   provider: ^6.1.5+1
   get_it: ^9.0.5
-  path_provider: ^2.1.5
+  # path_provider: ^2.1.5
   flutter_dotenv: ^6.0.0
   firebase_core: ^4.2.1
   firebase_remote_config: ^6.1.2

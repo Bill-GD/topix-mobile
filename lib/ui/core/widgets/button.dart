@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-import 'package:theme_provider/theme_provider.dart' show ThemeProvider;
-
 import 'package:topix/ui/core/theme/colors.dart';
 import 'package:topix/ui/core/theme/font.dart';
+import 'package:topix/utils/extensions.dart' show ThemeHelper;
 
 enum ButtonType { base, primary, danger, success }
 
 class Button extends StatelessWidget {
-  final ButtonType type;
+  final ButtonType? type;
   final bool outline;
+  final String? tooltip;
   final void Function()? onPressed;
   final bool disabled;
 
@@ -20,8 +20,9 @@ class Button extends StatelessWidget {
 
   const Button({
     super.key,
-    required this.type,
+    this.type,
     this.outline = false,
+    this.tooltip,
     this.onPressed,
     this.disabled = false,
     this.text,
@@ -33,79 +34,78 @@ class Button extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(icon != null || text != null);
 
-    final isDark = ThemeProvider.themeOf(context).id.contains('dark');
+    final colorScheme = context.colorScheme;
 
+    Color? bgColor = outline ? Colors.transparent : null;
     Color? outlineColor;
-    Color hoverColor;
-    Color textColor;
-    Color bgColor;
+    Color? hoverColor;
+    Color? textColor;
 
     switch (type) {
-      case ButtonType.base:
+      case .base:
         if (outline) {
-          outlineColor = isDark ? ThemeColors.darkFaint : ThemeColors.lightFaint;
-          hoverColor = outlineColor;
-          textColor = isDark ? ThemeColors.lightFaint : ThemeColors.darkDim;
-          bgColor = Colors.transparent;
+          outlineColor = colorScheme.surfaceContainerHighest;
+          textColor = colorScheme.onSurface;
         } else {
-          bgColor = isDark ? ThemeColors.lightDim : ThemeColors.darkDim;
-          hoverColor = isDark ? ThemeColors.lightFaint : ThemeColors.darkFaint;
-          textColor = isDark ? ThemeColors.darkSubtle : ThemeColors.lightSubtle;
-          outlineColor = null;
+          bgColor = colorScheme.onSurface;
+          textColor = colorScheme.onInverseSurface;
         }
-      case ButtonType.primary:
+      case .primary:
         if (outline) {
           outlineColor = ThemeColors.primary;
-          hoverColor = ThemeColors.primaryLight;
-          textColor = ThemeColors.primaryLight;
-          bgColor = Colors.transparent;
+          textColor = ThemeColors.primary;
         } else {
           bgColor = ThemeColors.primary;
-          hoverColor = ThemeColors.primaryLight;
           textColor = ThemeColors.lightDim;
-          outlineColor = null;
+          hoverColor = ThemeColors.primaryLight;
         }
-      case ButtonType.danger:
+      case .danger:
         if (outline) {
           outlineColor = ThemeColors.danger;
-          hoverColor = ThemeColors.dangerLight;
-          textColor = ThemeColors.dangerLight;
-          bgColor = Colors.transparent;
+          textColor = ThemeColors.danger;
         } else {
           bgColor = ThemeColors.danger;
-          hoverColor = ThemeColors.dangerLight;
           textColor = ThemeColors.lightDim;
-          outlineColor = null;
+          hoverColor = ThemeColors.dangerLight;
         }
-      case ButtonType.success:
+      case .success:
         if (outline) {
           outlineColor = ThemeColors.success;
-          hoverColor = ThemeColors.successLight;
-          textColor = ThemeColors.successLight;
-          bgColor = Colors.transparent;
+          textColor = ThemeColors.success;
         } else {
           bgColor = ThemeColors.success;
-          hoverColor = ThemeColors.successLight;
           textColor = ThemeColors.lightDim;
-          outlineColor = null;
+          hoverColor = ThemeColors.successLight;
         }
+      case null:
     }
 
     final colors = {
-      'bg': bgColor,
-      'outline': outlineColor,
-      'hover': hoverColor,
-      'text': textColor,
+      'bg': ?bgColor,
+      'outline': ?outlineColor,
+      'hover': ?hoverColor,
+      'text': ?textColor,
     };
 
-    return icon == null
+    final button = icon == null
         ? ElevatedButton(
-            onPressed: disabled ? null : onPressed,
+            onPressed: disabled
+                ? null
+                : () {
+                    onPressed?.call();
+                    colors['text'] = Colors.white;
+                  },
             style: ButtonStyle(
+              elevation: const WidgetStatePropertyAll(0),
               backgroundColor: WidgetStatePropertyAll(colors['bg']),
               overlayColor: WidgetStatePropertyAll(colors['hover']),
               shape: WidgetStatePropertyAll(
-                RoundedRectangleBorder(borderRadius: .circular(8)),
+                RoundedRectangleBorder(
+                  borderRadius: .circular(8),
+                  side: outline && colors['outline'] != null
+                      ? BorderSide(color: colors['outline']!)
+                      : .none,
+                ),
               ),
             ),
             child: Text(
@@ -120,18 +120,24 @@ class Button extends StatelessWidget {
         : IconButton(
             onPressed: disabled ? null : onPressed,
             padding: padding,
+            hoverColor: colors['hover'],
             style: ButtonStyle(
               elevation: const WidgetStatePropertyAll(0),
               backgroundColor: WidgetStatePropertyAll(colors['bg']),
               overlayColor: WidgetStatePropertyAll(colors['hover']),
+              foregroundColor: WidgetStatePropertyAll(colors['text']),
               shape: WidgetStatePropertyAll(
                 RoundedRectangleBorder(
                   borderRadius: .circular(10),
-                  side: outline ? BorderSide(color: colors['outline']!) : .none,
+                  side: outline && colors['outline'] != null
+                      ? BorderSide(color: colors['outline']!)
+                      : .none,
                 ),
               ),
             ),
             icon: icon!,
           );
+
+    return tooltip == null ? button : Tooltip(message: tooltip, child: button);
   }
 }

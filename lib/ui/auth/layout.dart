@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:theme_provider/theme_provider.dart' show ThemeProvider;
 
+import 'package:topix/utils/extensions.dart' show ThemeHelper;
+
 class AuthLayout extends StatelessWidget {
   final Widget child;
 
@@ -9,9 +11,9 @@ class AuthLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Stack(
+    return SafeArea(
+      child: Scaffold(
+        body: Stack(
           children: [
             PositionedDirectional(
               top: 4,
@@ -19,7 +21,7 @@ class AuthLayout extends StatelessWidget {
               child: IconButton(
                 onPressed: ThemeProvider.controllerOf(context).nextTheme,
                 icon: Icon(
-                  ThemeProvider.themeOf(context).id.contains('dark')
+                  context.isDarkMode
                       ? Icons.light_mode_rounded
                       : Icons.dark_mode_rounded,
                 ),
