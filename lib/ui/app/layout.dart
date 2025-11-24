@@ -7,6 +7,8 @@ import 'package:topix/data/models/user.dart';
 import 'package:topix/data/services/auth_service.dart';
 import 'package:topix/ui/app/dev/dev_screen.dart';
 import 'package:topix/ui/app/feed/feed_screen.dart';
+import 'package:topix/ui/app/user/user_profile_screen.dart';
+import 'package:topix/ui/app/user/user_profile_view_model.dart';
 import 'package:topix/ui/auth/login/login_screen.dart';
 import 'package:topix/ui/auth/login/login_view_model.dart' show LoginViewModel;
 import 'package:topix/ui/core/theme/font.dart';
@@ -43,11 +45,7 @@ class AppLayout extends StatelessWidget {
                 ListTile(
                   leading: SizedBox.square(
                     dimension: 40,
-                    child: ClipOval(
-                      child: self.profilePicture != null
-                          ? Image.network(self.profilePicture!)
-                          : Image.asset('assets/images/default-picture.jpg'),
-                    ),
+                    child: ClipOval(child: self.profileImage),
                   ),
                   title: RichText(
                     text: TextSpan(
@@ -72,7 +70,15 @@ class AppLayout extends StatelessWidget {
                   tileColor: context.colorScheme.surfaceContainer,
                   shape: RoundedRectangleBorder(borderRadius: .circular(12)),
                   onTap: () {
-                    context.showToast('Profile page not yet implemented.');
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return UserProfileScreen(
+                            viewModel: UserProfileViewModel(username: self.username),
+                          );
+                        },
+                      ),
+                    );
                   },
                 ),
                 ListTile(

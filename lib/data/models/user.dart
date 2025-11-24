@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 import 'package:topix/data/models/enums.dart' show UserRole;
 
 class UserModel {
@@ -25,6 +27,10 @@ class UserModel {
     this.role = .user,
   });
 
+  Image get profileImage => profilePicture != null
+      ? .network(profilePicture!)
+      : .asset('assets/images/default-picture.jpg');
+
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
     id: json['id'] as int,
     username: json['username'] as String,
@@ -33,7 +39,7 @@ class UserModel {
     profilePicture: json['profilePicture'] as String?,
     followerCount: json['followerCount'] as int?,
     followingCount: json['followingCount'] as int?,
-    followed: json['followed'] as bool?,
+    followed: json['followed'] == null ? null : json['followed'] == 1,
     chatChannelId: json['chatChannelId'] as int?,
     role: (json['role'] as String?) == 'admin' ? .admin : .user,
   );

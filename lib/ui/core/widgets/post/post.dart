@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:topix/ui/app/user/user_profile_screen.dart';
-import 'package:topix/ui/app/user/user_profile_view_model.dart';
 
 import 'package:video_player/video_player.dart';
 
 import 'package:topix/data/models/enums.dart';
 import 'package:topix/data/models/post.dart';
 import 'package:topix/data/models/user.dart';
+import 'package:topix/ui/app/user/user_profile_screen.dart';
+import 'package:topix/ui/app/user/user_profile_view_model.dart';
 import 'package:topix/ui/core/theme/colors.dart';
 import 'package:topix/ui/core/theme/font.dart';
 import 'package:topix/ui/core/widgets/bottom_sheet/bottom_sheet.dart';
@@ -103,11 +103,7 @@ class _PostState extends State<Post> {
             children: [
               SizedBox.square(
                 dimension: 40,
-                child: ClipOval(
-                  child: widget.post.owner.profilePicture != null
-                      ? Image.network(widget.post.owner.profilePicture!)
-                      : Image.asset('assets/images/default-picture.jpg'),
-                ),
+                child: ClipOval(child: widget.post.owner.profileImage),
               ),
               Flexible(
                 child: Column(
@@ -150,7 +146,7 @@ class _PostState extends State<Post> {
                       children: [
                         GestureDetector(
                           onTap: () {
-                            Navigator.of(context).push(
+                            Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
                                 builder: (context) {
                                   return UserProfileScreen(
