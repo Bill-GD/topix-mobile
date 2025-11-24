@@ -1,6 +1,6 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-import 'package:topix/utils/extensions.dart' show NumDurationExtensions;
+import 'package:topix/utils/extensions.dart' show NumDurationExtension;
 
 enum TokenType { access, refresh }
 

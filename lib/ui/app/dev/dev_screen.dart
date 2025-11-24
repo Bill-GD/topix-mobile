@@ -7,7 +7,7 @@ import 'package:topix/data/models/user.dart';
 import 'package:topix/ui/app/layout.dart';
 import 'package:topix/ui/core/widgets/button.dart';
 import 'package:topix/ui/core/widgets/post/post.dart';
-import 'package:topix/utils/extensions.dart' show NumDurationExtensions;
+import 'package:topix/utils/extensions.dart' show NumDurationExtension;
 
 class DevScreen extends StatelessWidget {
   const DevScreen({super.key});

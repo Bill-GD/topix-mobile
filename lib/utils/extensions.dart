@@ -6,7 +6,7 @@ import 'package:theme_provider/theme_provider.dart' show ThemeProvider;
 import 'package:topix/data/models/api_response.dart';
 import 'package:topix/utils/helpers.dart' show range;
 
-extension NumDurationExtensions on num {
+extension NumDurationExtension on num {
   Duration get microseconds => Duration(microseconds: round());
 
   Duration get ms => Duration(milliseconds: round());
