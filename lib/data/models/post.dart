@@ -65,10 +65,10 @@ class PostModel {
     return switch (reaction) {
       .like => Icon(Icons.thumb_up_rounded, color: ThemeColors.primary, size: size),
       .heart => Icon(CupertinoIcons.heart_fill, color: Colors.redAccent, size: size),
-      .laugh => FaIcon(FontAwesomeIcons.solidFaceLaugh, color: Colors.yellow, size: size),
+      .laugh => FaIcon(FontAwesomeIcons.solidFaceLaugh, color: Colors.yellowAccent, size: size),
       .sad => FaIcon(
         FontAwesomeIcons.solidFaceFrownOpen,
-        color: Colors.yellow,
+        color: Colors.yellowAccent,
         shadows: [Shadow(color: Colors.black26)],
         size: size,
       ),
