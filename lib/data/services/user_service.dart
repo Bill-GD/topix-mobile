@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart' show Dio, Options;
 
 import 'package:topix/data/models/user.dart';
+import 'package:topix/data/services/logger_service.dart';
 import 'package:topix/data/services/token_service.dart';
 import 'package:topix/utils/extensions.dart' show ParseApiResponse;
 
@@ -13,6 +14,7 @@ class UserService {
       _dio = dio;
 
   Future<UserModel> getSelf() async {
+    LoggerService.log('Fetching current user');
     final at = await _tokenService.tryGet(.access);
     final res = (await _dio.get(
       '/user/me',

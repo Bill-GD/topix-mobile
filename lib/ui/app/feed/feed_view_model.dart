@@ -9,13 +9,13 @@ import 'package:topix/data/services/post_service.dart';
 enum FeedType { all, following }
 
 class FeedViewModel extends ChangeNotifier {
-  bool _loading = true;
+  bool _loading = false;
   int _newPage = 0, _followPage = 0;
   bool _newEndOfList = false, _followEndOfList = false;
 
   final _newPosts = <PostModel>[], _followingPosts = <PostModel>[];
 
-  final scroll = ScrollController();
+  final newScroll = ScrollController(), followingScroll = ScrollController();
 
   List<PostModel> posts(FeedType type) {
     return switch (type) {
@@ -27,7 +27,7 @@ class FeedViewModel extends ChangeNotifier {
   bool get loading => _loading;
 
   Future<void> loadNew({bool reload = false}) async {
-    if (_newEndOfList) return;
+    if (loading || _newEndOfList) return;
     if (reload) {
       _newPage = 0;
       _newPosts.clear();
@@ -46,7 +46,7 @@ class FeedViewModel extends ChangeNotifier {
   }
 
   Future<void> loadFollowing({bool reload = false}) async {
-    if (_followEndOfList) return;
+    if (loading || _followEndOfList) return;
     if (reload) {
       _followPage = 0;
       _followingPosts.clear();

@@ -2,6 +2,7 @@ import 'package:dio/dio.dart' show Dio, Options;
 
 import 'package:topix/data/models/enums.dart';
 import 'package:topix/data/models/post.dart' show PostModel;
+import 'package:topix/data/services/logger_service.dart';
 import 'package:topix/data/services/token_service.dart';
 import 'package:topix/utils/extensions.dart' show ParseApiResponse;
 
@@ -14,6 +15,8 @@ class PostService {
       _dio = dio;
 
   Future<(bool, Iterable<PostModel>)> getFeed(int page, [bool following = false]) async {
+    LoggerService.log('Fetching ${following ? 'following ' : ''}feed, page $page');
+
     final at = await _tokenService.tryGet(.access);
     final res = (await _dio.get(
       '/post${following ? '/following' : ''}?page=$page',

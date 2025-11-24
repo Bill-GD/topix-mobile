@@ -79,6 +79,12 @@ class _PostState extends State<Post> {
   }
 
   @override
+  void dispose() {
+    vidController?.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       color: context.colorScheme.surfaceContainer,

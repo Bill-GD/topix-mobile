@@ -17,11 +17,19 @@ class FeedScreen extends StatefulWidget {
   State<FeedScreen> createState() => _FeedScreenState();
 }
 
-class _FeedScreenState extends State<FeedScreen> {
+class _FeedScreenState extends State<FeedScreen> with SingleTickerProviderStateMixin {
+  late final tabController = TabController(length: 2, vsync: this);
+  int feedIndex = 0;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      tabController.addListener(() {
+        if (tabController.index != tabController.previousIndex) {
+          feedIndex = tabController.index;
+        }
+      });
       widget.viewModel.loadNew();
     });
   }
@@ -29,98 +37,95 @@ class _FeedScreenState extends State<FeedScreen> {
   @override
   Widget build(BuildContext context) {
     final vm = widget.viewModel;
-    int feedIndex = 0;
 
     return AppLayout(
-      child: DefaultTabController(
-        length: 2,
-        child: Column(
-          children: [
-            TabBar(
-              enableFeedback: false,
-              splashFactory: NoSplash.splashFactory,
-              indicatorSize: .label,
-              indicator: UnderlineTabIndicator(
-                borderRadius: .circular(10),
-                insets: const .symmetric(vertical: 6),
-                borderSide: BorderSide(width: 3, color: context.colorScheme.primary),
-              ),
-              labelStyle: const TextStyle(fontWeight: .bold),
-              unselectedLabelStyle: const TextStyle(fontWeight: .w500),
-              onTap: (tabIndex) => feedIndex = tabIndex,
-              tabs: [
-                Tab(text: 'New'),
-                Tab(text: 'Following'),
-              ],
+      child: Column(
+        children: [
+          TabBar(
+            controller: tabController,
+            enableFeedback: false,
+            splashFactory: NoSplash.splashFactory,
+            indicatorSize: .label,
+            indicator: UnderlineTabIndicator(
+              borderRadius: .circular(10),
+              insets: const .symmetric(vertical: 6),
+              borderSide: BorderSide(width: 3, color: context.colorScheme.primary),
             ),
-            Expanded(
-              child: ListenableBuilder(
-                listenable: vm,
-                builder: (context, _) {
-                  return NotificationListener<ScrollUpdateNotification>(
-                    onNotification: (notification) {
-                      final pixels = notification.metrics.pixels,
-                          maxScrollExtent = notification.metrics.maxScrollExtent;
-                      if (maxScrollExtent - pixels <= 50) {
-                        switch (FeedType.values[feedIndex]) {
-                          case .all:
-                            vm.loadNew();
-                          case .following:
-                            vm.loadFollowing();
-                        }
+            labelStyle: const TextStyle(fontWeight: .bold),
+            unselectedLabelStyle: const TextStyle(fontWeight: .w500),
+            tabs: [
+              Tab(text: 'New'),
+              Tab(text: 'Following'),
+            ],
+          ),
+          Expanded(
+            child: ListenableBuilder(
+              listenable: vm,
+              builder: (context, _) {
+                return NotificationListener<ScrollEndNotification>(
+                  onNotification: (notification) {
+                    final pixels = notification.metrics.pixels,
+                        maxScrollExtent = notification.metrics.maxScrollExtent;
+                    if (maxScrollExtent - pixels <= 50) {
+                      switch (FeedType.values[feedIndex]) {
+                        case .all:
+                          vm.loadNew();
+                        case .following:
+                          vm.loadFollowing();
                       }
-                      return false;
-                    },
-                    child: TabBarView(
-                      children: [
-                        ListView.separated(
-                          key: PageStorageKey('new_feed_posts_key'),
-                          controller: vm.scroll,
-                          itemCount: vm.posts(.all).length + (vm.loading ? 1 : 0),
-                          separatorBuilder: (_, _) => const SizedBox(height: 8),
-                          itemBuilder: (context, index) {
-                            if (vm.loading && index == vm.posts(.all).length) {
-                              return Center(child: CircularProgressIndicator.adaptive());
-                            }
-                            final post = vm.posts(.all).elementAt(index);
-                            return Post(
-                              self: context.read<UserModel>(),
-                              post: post,
-                              reactPost: vm.reactPost,
-                              deletePost: (id) async {
-                                await vm.removePost(id, .all);
-                              },
-                            );
-                          },
-                        ),
-                        ListView.separated(
-                          key: PageStorageKey('follow_feed_posts_key'),
-                          controller: vm.scroll,
-                          itemCount: vm.posts(.following).length + (vm.loading ? 1 : 0),
-                          separatorBuilder: (_, _) => const SizedBox(height: 8),
-                          itemBuilder: (context, index) {
-                            if (vm.loading && index == vm.posts(.following).length) {
-                              return Center(child: CircularProgressIndicator.adaptive());
-                            }
-                            final post = vm.posts(.following).elementAt(index);
-                            return Post(
-                              self: context.read<UserModel>(),
-                              post: post,
-                              reactPost: vm.reactPost,
-                              deletePost: (id) async {
-                                await vm.removePost(id, .following);
-                              },
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
+                    }
+                    return false;
+                  },
+                  child: TabBarView(
+                    controller: tabController,
+                    children: [
+                      ListView.separated(
+                        key: PageStorageKey('new_feed_posts_key'),
+                        controller: vm.newScroll,
+                        itemCount: vm.posts(.all).length + (vm.loading ? 1 : 0),
+                        separatorBuilder: (_, _) => const SizedBox(height: 8),
+                        itemBuilder: (context, index) {
+                          if (vm.loading && index == vm.posts(.all).length) {
+                            return Center(child: CircularProgressIndicator.adaptive());
+                          }
+                          final post = vm.posts(.all).elementAt(index);
+                          return Post(
+                            self: context.read<UserModel>(),
+                            post: post,
+                            reactPost: vm.reactPost,
+                            deletePost: (id) async {
+                              await vm.removePost(id, .all);
+                            },
+                          );
+                        },
+                      ),
+                      ListView.separated(
+                        key: PageStorageKey('follow_feed_posts_key'),
+                        controller: vm.followingScroll,
+                        itemCount: vm.posts(.following).length + (vm.loading ? 1 : 0),
+                        separatorBuilder: (_, _) => const SizedBox(height: 8),
+                        itemBuilder: (context, index) {
+                          if (vm.loading && index == vm.posts(.following).length) {
+                            return Center(child: CircularProgressIndicator.adaptive());
+                          }
+                          final post = vm.posts(.following).elementAt(index);
+                          return Post(
+                            self: context.read<UserModel>(),
+                            post: post,
+                            reactPost: vm.reactPost,
+                            deletePost: (id) async {
+                              await vm.removePost(id, .following);
+                            },
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
