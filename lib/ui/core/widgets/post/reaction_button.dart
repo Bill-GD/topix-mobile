@@ -89,7 +89,11 @@ class _ReactionButtonState extends State<ReactionButton>
       child: TextButton.icon(
         label: Text('${widget.reactionCount}'),
         icon: widget.reactionIcon,
-        style: ButtonStyle(),
+        style: ButtonStyle(
+          backgroundColor: WidgetStatePropertyAll(
+            context.colorScheme.surfaceContainerHighest,
+          ),
+        ),
         onPressed: () {
           if (overlay != null) {
             controller.reverse(from: 1).then((_) {

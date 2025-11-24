@@ -7,10 +7,13 @@ import 'package:topix/data/models/user.dart';
 import 'package:topix/data/services/auth_service.dart';
 import 'package:topix/ui/app/dev/dev_screen.dart';
 import 'package:topix/ui/app/feed/feed_screen.dart';
+import 'package:topix/ui/app/user/user_profile_screen.dart';
+import 'package:topix/ui/app/user/user_profile_view_model.dart';
 import 'package:topix/ui/auth/login/login_screen.dart';
 import 'package:topix/ui/auth/login/login_view_model.dart' show LoginViewModel;
 import 'package:topix/ui/core/theme/font.dart';
 import 'package:topix/ui/core/widgets/button.dart' show Button;
+import 'package:topix/ui/core/widgets/toast.dart';
 import 'package:topix/utils/extensions.dart' show ThemeHelper;
 
 class AppLayout extends StatelessWidget {
@@ -42,11 +45,7 @@ class AppLayout extends StatelessWidget {
                 ListTile(
                   leading: SizedBox.square(
                     dimension: 40,
-                    child: ClipOval(
-                      child: self.profilePicture != null
-                          ? Image.network(self.profilePicture!)
-                          : Image.asset('assets/images/default-picture.jpg'),
-                    ),
+                    child: ClipOval(child: self.profileImage),
                   ),
                   title: RichText(
                     text: TextSpan(
@@ -71,7 +70,15 @@ class AppLayout extends StatelessWidget {
                   tileColor: context.colorScheme.surfaceContainer,
                   shape: RoundedRectangleBorder(borderRadius: .circular(12)),
                   onTap: () {
-                    print('to profile page');
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return UserProfileScreen(
+                            viewModel: UserProfileViewModel(username: self.username),
+                          );
+                        },
+                      ),
+                    );
                   },
                 ),
                 ListTile(
@@ -82,7 +89,9 @@ class AppLayout extends StatelessWidget {
                     side: BorderSide(color: context.colorScheme.surfaceContainerHighest),
                   ),
                   dense: true,
-                  onTap: () {},
+                  onTap: () {
+                    context.showToast('Feature not yet implemented.');
+                  },
                 ),
                 if (self.role == .admin)
                   ListTile(
@@ -133,7 +142,7 @@ class AppLayout extends StatelessWidget {
         ),
         body: child,
         bottomNavigationBar: Container(
-          decoration: BoxDecoration(color: context.colorScheme.surfaceContainerLow),
+          decoration: BoxDecoration(color: context.colorScheme.surfaceContainerLowest),
           padding: const .all(8),
           child: Row(
             mainAxisAlignment: .spaceBetween,
@@ -152,22 +161,30 @@ class AppLayout extends StatelessWidget {
               Button(
                 icon: Icon(Icons.search_rounded, size: 32),
                 tooltip: 'Search',
-                onPressed: () {},
+                onPressed: () {
+                  context.showToast('Feature is not yet implemented.');
+                },
               ),
               Button(
                 icon: Icon(Icons.chat_bubble_rounded, size: 32),
                 tooltip: 'Chat',
-                onPressed: () {},
+                onPressed: () {
+                  context.showToast('Feature is not yet implemented.');
+                },
               ),
               Button(
                 icon: Icon(Icons.group_rounded, size: 32),
                 tooltip: 'Group',
-                onPressed: () {},
+                onPressed: () {
+                  context.showToast('Feature is not yet implemented.');
+                },
               ),
               Button(
                 icon: Icon(Icons.person_rounded, size: 32),
                 tooltip: 'Users',
-                onPressed: () {},
+                onPressed: () {
+                  context.showToast('Feature is not yet implemented.');
+                },
               ),
             ],
           ),

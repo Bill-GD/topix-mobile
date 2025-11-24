@@ -5,6 +5,8 @@ import 'package:video_player/video_player.dart';
 import 'package:topix/data/models/enums.dart';
 import 'package:topix/data/models/post.dart';
 import 'package:topix/data/models/user.dart';
+import 'package:topix/ui/app/user/user_profile_screen.dart';
+import 'package:topix/ui/app/user/user_profile_view_model.dart';
 import 'package:topix/ui/core/theme/colors.dart';
 import 'package:topix/ui/core/theme/font.dart';
 import 'package:topix/ui/core/widgets/bottom_sheet/bottom_sheet.dart';
@@ -14,6 +16,7 @@ import 'package:topix/ui/core/widgets/image_carousel.dart';
 import 'package:topix/ui/core/widgets/popup.dart';
 import 'package:topix/ui/core/widgets/post/reaction_button.dart';
 import 'package:topix/ui/core/widgets/tag.dart';
+import 'package:topix/ui/core/widgets/toast.dart';
 import 'package:topix/utils/extensions.dart' show ThemeHelper, TimeAgo;
 
 class Post extends StatefulWidget {
@@ -88,9 +91,10 @@ class _PostState extends State<Post> {
   Widget build(BuildContext context) {
     return Container(
       color: context.colorScheme.surfaceContainer,
-      padding: const .only(top: 12, left: 12, right: 12),
+      padding: const .only(top: 12, left: 12, right: 12, bottom: 4),
       child: Column(
         crossAxisAlignment: .stretch,
+        spacing: 8,
         children: [
           // post metadata & options
           Row(
@@ -99,11 +103,7 @@ class _PostState extends State<Post> {
             children: [
               SizedBox.square(
                 dimension: 40,
-                child: ClipOval(
-                  child: widget.post.owner.profilePicture != null
-                      ? Image.network(widget.post.owner.profilePicture!)
-                      : Image.asset('assets/images/default-picture.jpg'),
-                ),
+                child: ClipOval(child: widget.post.owner.profileImage),
               ),
               Flexible(
                 child: Column(
@@ -129,7 +129,9 @@ class _PostState extends State<Post> {
                                 widget.post.groupName != null))
                           Expanded(
                             child: GestureDetector(
-                              onTap: () {},
+                              onTap: () {
+                                context.showToast('Thread/group not yet implemented.');
+                              },
                               child: Text(
                                 widget.post.threadTitle ?? widget.post.groupName ?? '',
                                 style: TextStyle(fontWeight: .w700),
@@ -144,7 +146,17 @@ class _PostState extends State<Post> {
                       children: [
                         GestureDetector(
                           onTap: () {
-                            print('to profile page');
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return UserProfileScreen(
+                                    viewModel: UserProfileViewModel(
+                                      username: widget.post.owner.username,
+                                    ),
+                                  );
+                                },
+                              ),
+                            );
                           },
                           child: Text(
                             widget.post.owner.displayName,
@@ -239,46 +251,42 @@ class _PostState extends State<Post> {
             ],
           ),
           // post content
-          Padding(
-            padding: const .only(top: 8),
-            child:
-                widget.post.visibility != .public &&
-                    widget.self.id != widget.post.owner.id
-                ? Text('Post is privated or hidden.')
-                : Column(
-                    crossAxisAlignment: .start,
-                    spacing: 4,
-                    children: [
-                      if (widget.post.tag != null) Tag(tag: widget.post.tag!),
-                      if (widget.post.content.isNotEmpty) Text(widget.post.content),
-                      if (widget.post.mediaPaths.isNotEmpty)
-                        if (isImages)
-                          ImageCarousel(post: widget.post)
-                        else if (isVideo && vidController?.value.isInitialized == true)
-                          ClipRRect(
-                            borderRadius: .circular(8),
-                            child: AspectRatio(
-                              aspectRatio: vidController!.value.aspectRatio,
-                              child: VideoPlayer(vidController!),
-                            ),
-                          )
-                        else
-                          Container(
-                            alignment: .center,
-                            width: .infinity,
-                            height: 200,
-                            decoration: BoxDecoration(
-                              borderRadius: .circular(8),
-                              color: context.colorScheme.surfaceContainerHigh,
-                            ),
-                            child: CircularProgressIndicator.adaptive(),
-                          ),
-                    ],
-                  ),
-          ),
+          if (widget.post.visibility != .public && widget.self.id != widget.post.owner.id)
+            Text('Post is privated or hidden.')
+          else
+            Column(
+              crossAxisAlignment: .start,
+              spacing: 4,
+              children: [
+                if (widget.post.tag != null) Tag(tag: widget.post.tag!),
+                if (widget.post.content.isNotEmpty) Text(widget.post.content),
+                if (widget.post.mediaPaths.isNotEmpty)
+                  if (isImages)
+                    ImageCarousel(post: widget.post)
+                  else if (isVideo && vidController?.value.isInitialized == true)
+                    ClipRRect(
+                      borderRadius: .circular(8),
+                      child: AspectRatio(
+                        aspectRatio: vidController!.value.aspectRatio,
+                        child: VideoPlayer(vidController!),
+                      ),
+                    )
+                  else
+                    Container(
+                      alignment: .center,
+                      width: .infinity,
+                      height: 200,
+                      decoration: BoxDecoration(
+                        borderRadius: .circular(8),
+                        color: context.colorScheme.surfaceContainerHigh,
+                      ),
+                      child: CircularProgressIndicator.adaptive(),
+                    ),
+              ],
+            ),
           // post interaction
           Row(
-            spacing: 4,
+            spacing: 8,
             children: [
               ReactionButton(
                 reactionIcon: PostModel.reactionIcon(widget.post.reaction),
@@ -292,11 +300,15 @@ class _PostState extends State<Post> {
               TextButton.icon(
                 label: Text('${widget.post.replyCount}'),
                 icon: Icon(Icons.reply_rounded),
-                style: ButtonStyle(),
+                style: ButtonStyle(
+                  backgroundColor: WidgetStatePropertyAll(
+                    context.colorScheme.surfaceContainerHighest,
+                  ),
+                ),
                 onPressed: widget.isDetailed
                     ? null
                     : () {
-                        print('go to post');
+                        context.showToast('Post detailed view not implemented.');
                       },
               ),
             ],
