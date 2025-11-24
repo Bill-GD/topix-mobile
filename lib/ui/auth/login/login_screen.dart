@@ -123,7 +123,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             password = passwordController.text.trim();
 
                         if (username.isEmpty || password.isEmpty) {
-                          return showToast(context, 'All fields must not be empty.');
+                          return context.showToast('All fields must not be empty.');
                         }
 
                         final res = await GetIt.I<AuthService>().login(
@@ -132,7 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         );
 
                         if (context.mounted) {
-                          showToast(context, res.$2);
+                          context.showToast(res.$2);
                           if (res.$1) {
                             LoggerService.log(res.$2);
                             Navigator.of(context).pushReplacement(

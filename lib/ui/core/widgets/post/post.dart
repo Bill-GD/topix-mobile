@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:topix/ui/core/widgets/toast.dart';
 
 import 'package:video_player/video_player.dart';
 
@@ -129,7 +130,9 @@ class _PostState extends State<Post> {
                                 widget.post.groupName != null))
                           Expanded(
                             child: GestureDetector(
-                              onTap: () {},
+                              onTap: () {
+                                context.showToast('Thread/group not yet implemented.');
+                              },
                               child: Text(
                                 widget.post.threadTitle ?? widget.post.groupName ?? '',
                                 style: TextStyle(fontWeight: .w700),
@@ -144,7 +147,7 @@ class _PostState extends State<Post> {
                       children: [
                         GestureDetector(
                           onTap: () {
-                            print('to profile page');
+                            context.showToast('Profile page not yet implemented.');
                           },
                           child: Text(
                             widget.post.owner.displayName,
@@ -296,7 +299,7 @@ class _PostState extends State<Post> {
                 onPressed: widget.isDetailed
                     ? null
                     : () {
-                        print('go to post');
+                        context.showToast('Post detailed view not implemented.');
                       },
               ),
             ],

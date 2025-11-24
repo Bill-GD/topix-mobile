@@ -186,18 +186,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             username.isEmpty ||
                             password.isEmpty ||
                             confirmPassword.isEmpty) {
-                          return showToast(context, 'All fields must not be empty.');
+                          return context.showToast('All fields must not be empty.');
                         }
 
                         final emailRegex =
                             '^[a-zA-Z0-9]+([._-][0-9a-zA-Z]+)*@[a-zA-Z0-9]+([.-][0-9a-zA-Z]+)*.[a-zA-Z]{2,}\$';
 
                         if (!RegExp(emailRegex).hasMatch(email)) {
-                          return showToast(context, 'Email format is invalid.');
+                          return context.showToast('Email format is invalid.');
                         }
 
                         if (password != confirmPassword) {
-                          return showToast(context, 'Passwords do not match.');
+                          return context.showToast('Passwords do not match.');
                         }
 
                         final res = await GetIt.I<AuthService>().register(
@@ -210,11 +210,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                         if (context.mounted) {
                           if (!res.$1) {
-                            showToast(context, res.$2);
+                            context.showToast(res.$2);
                             return;
                           }
                           if (widget.viewModel.isGoogleOAuth) {
-                            showToast(context, 'Account registered.');
+                            context.showToast('Account registered.');
                             Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
                                 builder: (context) {
@@ -223,7 +223,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ),
                             );
                           } else {
-                            showToast(context, 'Verification code sent.');
+                            context.showToast('Verification code sent.');
                             Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
                                 builder: (context) => VerifyScreen(

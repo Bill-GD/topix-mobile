@@ -65,7 +65,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
                         final otp = otpController.text.trim();
 
                         if (otp.isEmpty) {
-                          return showToast(context, 'You must enter the code.');
+                          return context.showToast('You must enter the code.');
                         }
 
                         final res = await GetIt.I<AuthService>().verify(
@@ -74,7 +74,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
                         );
 
                         if (context.mounted) {
-                          showToast(context, 'Email verified.');
+                          context.showToast('Email verified.');
                           if (res.$1) {
                             Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
@@ -94,7 +94,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
                         final res = await GetIt.I<AuthService>().resend(
                           widget.viewModel.userId,
                         );
-                        if (context.mounted) showToast(context, res.$2);
+                        if (context.mounted) context.showToast(res.$2);
                       },
                     ),
                     const Divider(),
