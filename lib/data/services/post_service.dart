@@ -31,6 +31,27 @@ class PostService {
     );
   }
 
+  Future<(bool, Iterable<PostModel>)> getUserPosts({
+    required int selfId,
+    required int userId,
+    required int page,
+  }) async {
+    LoggerService.log('Fetching posts of user #$userId, page $page');
+
+    final at = await _tokenService.tryGet(.access);
+    final res = (await _dio.get(
+      '/post?userId=$userId${selfId == userId ? '&visibility=private' : ''}&page=$page&threadId=null&groupId=null',
+      options: Options(headers: {'Authorization': 'Bearer $at'}),
+    )).toApiResponse();
+
+    if (!res.success) throw Exception(res.error);
+    final resData = res.data as List<dynamic>;
+    return (
+      bool.parse(res.headers['x-end-of-list']?.first ?? 'false'),
+      resData.map((e) => PostModel.fromJson(e as Map<String, dynamic>)),
+    );
+  }
+
   Future<void> deletePost(int postId) async {
     final at = await _tokenService.tryGet(.access);
     final res = (await _dio.delete(

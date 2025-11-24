@@ -7,6 +7,7 @@ import 'package:topix/ui/app/layout.dart';
 import 'package:topix/ui/app/user/user_profile_view_model.dart';
 import 'package:topix/ui/core/theme/font.dart';
 import 'package:topix/ui/core/widgets/button.dart';
+import 'package:topix/ui/core/widgets/post/post.dart';
 import 'package:topix/ui/core/widgets/toast.dart';
 import 'package:topix/utils/extensions.dart' show ThemeHelper;
 
@@ -27,13 +28,14 @@ class _UserProfileScreenState extends State<UserProfileScreen>
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       tabController.addListener(() {
         if (tabController.index != tabController.previousIndex) {
           profileTabIndex = tabController.index;
         }
       });
-      widget.viewModel.loadUser();
+      await widget.viewModel.loadUser();
+      widget.viewModel.loadPosts(context.read<UserModel>().id);
     });
   }
 
@@ -55,7 +57,7 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                 child: vm.loadingUser
                     ? Center(child: CircularProgressIndicator.adaptive())
                     : Column(
-                  spacing: 8,
+                        spacing: 8,
                         children: [
                           Row(
                             spacing: 16,
@@ -115,7 +117,7 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                                 Button(
                                   tooltip: 'Message',
                                   type: .base,
-                                  icon: Icon(Icons.chat_bubble_rounded,size: 20,),
+                                  icon: Icon(Icons.chat_bubble_rounded, size: 20),
                                   onPressed: () {
                                     context.showToast('Feature is not yet implemented.');
                                   },
@@ -128,7 +130,8 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                                   icon: Icon(
                                     vm.user.followed == true
                                         ? Icons.person_remove_rounded
-                                        : Icons.person_add_alt_rounded,size: 20,
+                                        : Icons.person_add_alt_rounded,
+                                    size: 20,
                                   ),
                                   onPressed: () {
                                     context.showToast('Feature is not yet implemented.');
@@ -146,6 +149,74 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                           ),
                         ],
                       ),
+              ),
+
+              TabBar(
+                controller: tabController,
+                enableFeedback: false,
+                splashFactory: NoSplash.splashFactory,
+                indicatorSize: .label,
+                indicator: UnderlineTabIndicator(
+                  borderRadius: .circular(10),
+                  insets: const .symmetric(vertical: 6),
+                  borderSide: BorderSide(width: 3, color: context.colorScheme.primary),
+                ),
+                labelStyle: const TextStyle(fontWeight: .bold),
+                unselectedLabelStyle: const TextStyle(fontWeight: .w500),
+                tabs: [
+                  Tab(text: 'Posts'),
+                  Tab(text: 'Threads'),
+                  Tab(text: 'Groups'),
+                ],
+              ),
+
+              Expanded(
+                child: ListenableBuilder(
+                  listenable: vm,
+                  builder: (context, _) {
+                    return NotificationListener<ScrollEndNotification>(
+                      onNotification: (notification) {
+                        final pixels = notification.metrics.pixels,
+                            maxScrollExtent = notification.metrics.maxScrollExtent;
+                        if (maxScrollExtent - pixels <= 50) {
+                          switch (profileTabIndex) {
+                            case 0:
+                              vm.loadPosts(self.id);
+                            case 1:
+                            case 2:
+                          }
+                        }
+                        return false;
+                      },
+                      child: TabBarView(
+                        controller: tabController,
+                        children: [
+                          ListView.separated(
+                            key: PageStorageKey('new_feed_posts_key'),
+                            controller: vm.postScroll,
+                            itemCount: vm.posts.length + (vm.loadingPosts ? 1 : 0),
+                            separatorBuilder: (_, _) => const SizedBox(height: 8),
+                            itemBuilder: (context, index) {
+                              if (vm.loadingPosts && index == vm.posts.length) {
+                                return Center(
+                                  child: CircularProgressIndicator.adaptive(),
+                                );
+                              }
+                              return Post(
+                                self: self,
+                                post: vm.posts.elementAt(index),
+                                reactPost: vm.reactPost,
+                                deletePost: vm.removePost,
+                              );
+                            },
+                          ),
+                          Text('Thread list not yet implemented', textAlign: .center),
+                          Text('Group list not yet implemented', textAlign: .center),
+                        ],
+                      ),
+                    );
+                  },
+                ),
               ),
             ],
           );

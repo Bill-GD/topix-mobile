@@ -14,7 +14,6 @@ class FeedViewModel extends ChangeNotifier {
   bool _newEndOfList = false, _followEndOfList = false;
 
   final _newPosts = <PostModel>[], _followingPosts = <PostModel>[];
-
   final newScroll = ScrollController(), followingScroll = ScrollController();
 
   List<PostModel> posts(FeedType type) {
