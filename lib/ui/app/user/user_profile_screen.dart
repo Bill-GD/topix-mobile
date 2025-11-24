@@ -171,51 +171,46 @@ class _UserProfileScreenState extends State<UserProfileScreen>
               ),
 
               Expanded(
-                child: ListenableBuilder(
-                  listenable: vm,
-                  builder: (context, _) {
-                    return NotificationListener<ScrollEndNotification>(
-                      onNotification: (notification) {
-                        final pixels = notification.metrics.pixels,
-                            maxScrollExtent = notification.metrics.maxScrollExtent;
-                        if (maxScrollExtent - pixels <= 50) {
-                          switch (profileTabIndex) {
-                            case 0:
-                              vm.loadPosts(self.id);
-                            case 1:
-                            case 2:
-                          }
-                        }
-                        return false;
-                      },
-                      child: TabBarView(
-                        controller: tabController,
-                        children: [
-                          ListView.separated(
-                            key: PageStorageKey('new_feed_posts_key'),
-                            controller: vm.postScroll,
-                            itemCount: vm.posts.length + (vm.loadingPosts ? 1 : 0),
-                            separatorBuilder: (_, _) => const SizedBox(height: 8),
-                            itemBuilder: (context, index) {
-                              if (vm.loadingPosts && index == vm.posts.length) {
-                                return Center(
-                                  child: CircularProgressIndicator.adaptive(),
-                                );
-                              }
-                              return Post(
-                                self: self,
-                                post: vm.posts.elementAt(index),
-                                reactPost: vm.reactPost,
-                                deletePost: vm.removePost,
-                              );
-                            },
-                          ),
-                          Text('Thread list not yet implemented', textAlign: .center),
-                          Text('Group list not yet implemented', textAlign: .center),
-                        ],
-                      ),
-                    );
+                child: NotificationListener<ScrollEndNotification>(
+                  onNotification: (notification) {
+                    final pixels = notification.metrics.pixels,
+                        maxScrollExtent = notification.metrics.maxScrollExtent;
+                    if (maxScrollExtent - pixels <= 50) {
+                      switch (profileTabIndex) {
+                        case 0:
+                          vm.loadPosts(self.id);
+                        case 1:
+                        case 2:
+                      }
+                    }
+                    return true;
                   },
+                  child: TabBarView(
+                    controller: tabController,
+                    children: [
+                      ListView.separated(
+                        key: PageStorageKey('new_feed_posts_key'),
+                        controller: vm.postScroll,
+                        itemCount: vm.posts.length + (vm.loadingPosts ? 1 : 0),
+                        separatorBuilder: (_, _) => const SizedBox(height: 8),
+                        itemBuilder: (context, index) {
+                          if (vm.loadingPosts && index == vm.posts.length) {
+                            return Center(
+                              child: CircularProgressIndicator.adaptive(),
+                            );
+                          }
+                          return Post(
+                            self: self,
+                            post: vm.posts.elementAt(index),
+                            reactPost: vm.reactPost,
+                            deletePost: vm.removePost,
+                          );
+                        },
+                      ),
+                      Text('Thread list not yet implemented', textAlign: .center),
+                      Text('Group list not yet implemented', textAlign: .center),
+                    ],
+                  ),
                 ),
               ),
             ],

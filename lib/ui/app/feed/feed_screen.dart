@@ -74,7 +74,7 @@ class _FeedScreenState extends State<FeedScreen> with SingleTickerProviderStateM
                           vm.loadFollowing();
                       }
                     }
-                    return false;
+                    return true;
                   },
                   child: TabBarView(
                     controller: tabController,
