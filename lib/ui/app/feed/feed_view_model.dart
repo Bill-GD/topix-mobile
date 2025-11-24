@@ -13,11 +13,11 @@ class FeedViewModel extends ChangeNotifier {
   int _newPage = 0, _followPage = 0;
   bool _newEndOfList = false, _followEndOfList = false;
 
-  final _newPosts = <Post>[], _followingPosts = <Post>[];
+  final _newPosts = <PostModel>[], _followingPosts = <PostModel>[];
 
   final scroll = ScrollController();
 
-  List<Post> posts(FeedType type) {
+  List<PostModel> posts(FeedType type) {
     return switch (type) {
       .all => _newPosts,
       .following => _followingPosts,

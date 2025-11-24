@@ -16,9 +16,9 @@ import 'package:topix/ui/core/widgets/post/reaction_button.dart';
 import 'package:topix/ui/core/widgets/tag.dart';
 import 'package:topix/utils/extensions.dart' show ThemeHelper, TimeAgo;
 
-class PostWidget extends StatefulWidget {
-  final User self;
-  final Post post;
+class Post extends StatefulWidget {
+  final UserModel self;
+  final PostModel post;
   final bool isDetailed;
   final bool showReplyMarker;
   final bool showReaction;
@@ -28,7 +28,7 @@ class PostWidget extends StatefulWidget {
   final Future<void> Function(int, ReactionType?) reactPost;
   final Future<void> Function(int) deletePost;
 
-  const PostWidget({
+  const Post({
     super.key,
     required this.self,
     required this.post,
@@ -43,10 +43,10 @@ class PostWidget extends StatefulWidget {
   });
 
   @override
-  State<PostWidget> createState() => _PostWidgetState();
+  State<Post> createState() => _PostState();
 }
 
-class _PostWidgetState extends State<PostWidget> {
+class _PostState extends State<Post> {
   late final isImages =
           widget.post.mediaPaths.isNotEmpty &&
           widget.post.mediaPaths.every((m) => m.contains('image')),
@@ -243,7 +243,7 @@ class _PostWidgetState extends State<PostWidget> {
                     crossAxisAlignment: .start,
                     spacing: 4,
                     children: [
-                      if (widget.post.tag != null) TagWidget(tag: widget.post.tag!),
+                      if (widget.post.tag != null) Tag(tag: widget.post.tag!),
                       if (widget.post.content.isNotEmpty) Text(widget.post.content),
                       if (widget.post.mediaPaths.isNotEmpty)
                         if (isImages)
@@ -275,16 +275,10 @@ class _PostWidgetState extends State<PostWidget> {
             spacing: 4,
             children: [
               ReactionButton(
-                reactionIcon: Post.reactionIcon(widget.post.reaction),
+                reactionIcon: PostModel.reactionIcon(widget.post.reaction),
                 reactionCount: widget.post.reactionCount,
                 onReact: (newReaction) async {
-                  if (newReaction == widget.post.reaction) {
-                    widget.post.reaction = null;
-                    widget.post.reactionCount--;
-                  } else {
-                    if (widget.post.reaction == null) widget.post.reactionCount++;
-                    widget.post.reaction = newReaction;
-                  }
+                  widget.post.updateReaction(newReaction);
                   await widget.reactPost(widget.post.id, widget.post.reaction);
                   setState(() {});
                 },

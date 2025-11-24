@@ -86,11 +86,11 @@ class DevScreen extends StatelessWidget {
               ],
             ),
 
-            PostWidget(
+            Post(
               self: context.read(),
-              post: Post(
+              post: PostModel(
                 id: 0,
-                owner: User(id: 1, username: 'owner', displayName: 'Owner'),
+                owner: UserModel(id: 1, username: 'owner', displayName: 'Owner'),
                 content: 'example content',
                 reactionCount: 1,
                 replyCount: 1,
@@ -102,11 +102,11 @@ class DevScreen extends StatelessWidget {
               reactPost: (_, _) async {},
               deletePost: (_) async {},
             ),
-            PostWidget(
+            Post(
               self: context.read(),
-              post: Post(
+              post: PostModel(
                 id: 0,
-                owner: User(id: 1, username: 'owner', displayName: 'Owner'),
+                owner: UserModel(id: 1, username: 'owner', displayName: 'Owner'),
                 content: 'example content',
                 reactionCount: 1,
                 replyCount: 1,
@@ -122,20 +122,20 @@ class DevScreen extends StatelessWidget {
               reactPost: (_, _) async {},
               deletePost: (_) async {},
             ),
-            PostWidget(
+            Post(
               self: context.read(),
-              post: Post(
+              post: PostModel(
                 id: 0,
-                owner: User(id: 1, username: 'owner', displayName: 'Owner'),
+                owner: UserModel(id: 1, username: 'owner', displayName: 'Owner'),
                 content: 'example content',
                 reactionCount: 1,
                 replyCount: 0,
                 mediaPaths: [],
                 visibility: .public,
                 dateCreated: DateTime.now().subtract(30.minutes),
-                parentPost: Post(
+                parentPost: PostModel(
                   id: 0,
-                  owner: User(
+                  owner: UserModel(
                     id: 0,
                     username: 'owner',
                     displayName: 'Owner really long name',
@@ -157,11 +157,11 @@ class DevScreen extends StatelessWidget {
               reactPost: (_, _) async {},
               deletePost: (_) async {},
             ),
-            PostWidget(
+            Post(
               self: context.read(),
-              post: Post(
+              post: PostModel(
                 id: 0,
-                owner: User(id: 1, username: 'owner', displayName: 'Owner'),
+                owner: UserModel(id: 1, username: 'owner', displayName: 'Owner'),
                 content: 'example content',
                 reactionCount: 1,
                 replyCount: 1,
@@ -176,11 +176,11 @@ class DevScreen extends StatelessWidget {
               reactPost: (_, _) async {},
               deletePost: (_) async {},
             ),
-            PostWidget(
+            Post(
               self: context.read(),
-              post: Post(
+              post: PostModel(
                 id: 0,
-                owner: User(id: 1, username: 'owner', displayName: 'Owner'),
+                owner: UserModel(id: 1, username: 'owner', displayName: 'Owner'),
                 content: 'example content',
                 reactionCount: 1,
                 replyCount: 1,

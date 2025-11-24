@@ -1,13 +1,13 @@
 import 'dart:ui' show Color;
 
-class Tag {
+class TagModel {
   final int? id;
   final String name;
   final String colorHex;
 
-  Tag({this.id, required this.name, required this.colorHex});
+  TagModel({this.id, required this.name, required this.colorHex});
 
-  factory Tag.fromJson(Map<String, dynamic> json) => Tag(
+  factory TagModel.fromJson(Map<String, dynamic> json) => TagModel(
     id: json['id'] as int?,
     name: json['name'] as String,
     colorHex: json['color'] as String,

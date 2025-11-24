@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart' show Dio, Options;
 
 import 'package:topix/data/models/enums.dart';
-import 'package:topix/data/models/post.dart' show Post;
+import 'package:topix/data/models/post.dart' show PostModel;
 import 'package:topix/data/services/token_service.dart';
 import 'package:topix/utils/extensions.dart' show ParseApiResponse;
 
@@ -13,7 +13,7 @@ class PostService {
     : _tokenService = tokenService,
       _dio = dio;
 
-  Future<(bool, Iterable<Post>)> getFeed(int page, [bool following = false]) async {
+  Future<(bool, Iterable<PostModel>)> getFeed(int page, [bool following = false]) async {
     final at = await _tokenService.tryGet(.access);
     final res = (await _dio.get(
       '/post${following ? '/following' : ''}?page=$page',
@@ -24,7 +24,7 @@ class PostService {
     final resData = res.data as List<dynamic>;
     return (
       bool.parse(res.headers['x-end-of-list']?.first ?? 'false'),
-      resData.map((e) => Post.fromJson(e as Map<String, dynamic>)),
+      resData.map((e) => PostModel.fromJson(e as Map<String, dynamic>)),
     );
   }
 

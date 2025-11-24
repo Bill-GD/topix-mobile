@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'package:topix/data/models/tag.dart';
 
-class TagWidget extends StatelessWidget {
-  final Tag tag;
+class Tag extends StatelessWidget {
+  final TagModel tag;
 
-  const TagWidget({super.key, required this.tag});
+  const Tag({super.key, required this.tag});
 
   @override
   Widget build(BuildContext context) {

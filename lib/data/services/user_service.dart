@@ -12,7 +12,7 @@ class UserService {
     : _tokenService = tokenService,
       _dio = dio;
 
-  Future<User> getSelf() async {
+  Future<UserModel> getSelf() async {
     final at = await _tokenService.tryGet(.access);
     final res = (await _dio.get(
       '/user/me',
@@ -20,6 +20,6 @@ class UserService {
     )).toApiResponse();
 
     if (!res.success) throw Exception(res.error);
-    return User.fromJson(res.data as Map<String, dynamic>);
+    return UserModel.fromJson(res.data as Map<String, dynamic>);
   }
 }

@@ -57,7 +57,7 @@ class _FeedScreenState extends State<FeedScreen> {
               child: ListenableBuilder(
                 listenable: vm,
                 builder: (context, _) {
-                  return NotificationListener<ScrollEndNotification>(
+                  return NotificationListener<ScrollUpdateNotification>(
                     onNotification: (notification) {
                       final pixels = notification.metrics.pixels,
                           maxScrollExtent = notification.metrics.maxScrollExtent;
@@ -83,8 +83,8 @@ class _FeedScreenState extends State<FeedScreen> {
                               return Center(child: CircularProgressIndicator.adaptive());
                             }
                             final post = vm.posts(.all).elementAt(index);
-                            return PostWidget(
-                              self: context.read<User>(),
+                            return Post(
+                              self: context.read<UserModel>(),
                               post: post,
                               reactPost: vm.reactPost,
                               deletePost: (id) async {
@@ -103,8 +103,8 @@ class _FeedScreenState extends State<FeedScreen> {
                               return Center(child: CircularProgressIndicator.adaptive());
                             }
                             final post = vm.posts(.following).elementAt(index);
-                            return PostWidget(
-                              self: context.read<User>(),
+                            return Post(
+                              self: context.read<UserModel>(),
                               post: post,
                               reactPost: vm.reactPost,
                               deletePost: (id) async {

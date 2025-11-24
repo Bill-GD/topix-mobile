@@ -11,9 +11,9 @@ import 'package:topix/data/models/user.dart';
 import 'package:topix/ui/core/theme/colors.dart';
 import 'package:topix/utils/extensions.dart' show WhereOrNull;
 
-class Post {
+class PostModel {
   final int id;
-  final User owner;
+  final UserModel owner;
   final String content;
   ReactionType? reaction;
   int reactionCount;
@@ -23,7 +23,7 @@ class Post {
   final DateTime dateCreated;
   final DateTime? dateUpdated;
 
-  final Post? parentPost;
+  final PostModel? parentPost;
 
   final int? threadId;
   final String? threadTitle;
@@ -35,9 +35,9 @@ class Post {
   final Visibility? groupVisibility;
   final bool? joinedGroup;
   final bool groupApproved;
-  final Tag? tag;
+  final TagModel? tag;
 
-  Post({
+  PostModel({
     required this.id,
     required this.owner,
     required this.content,
@@ -81,9 +81,19 @@ class Post {
     };
   }
 
-  factory Post.fromJson(Map<String, dynamic> json) => Post(
+  void updateReaction(ReactionType newReaction) {
+    if (newReaction == reaction) {
+      reaction = null;
+      reactionCount--;
+    } else {
+      if (reaction == null) reactionCount++;
+      reaction = newReaction;
+    }
+  }
+
+  factory PostModel.fromJson(Map<String, dynamic> json) => PostModel(
     id: json['id'] as int,
-    owner: User.fromJson(json['owner'] as Map<String, dynamic>),
+    owner: UserModel.fromJson(json['owner'] as Map<String, dynamic>),
     content: json['content'] as String,
     reaction: .values.firstWhereOrNull((v) => v.name == json['reaction'] as String?),
     reactionCount: json['reactionCount'] as int? ?? 0,
@@ -99,7 +109,9 @@ class Post {
     dateUpdated: json['dateUpdated'] != null
         ? DateTime.parse(json['dateUpdated'] as String)
         : null,
-    parentPost: json['parentPost'] != null ? Post.fromJson(json['parentPost']) : null,
+    parentPost: json['parentPost'] != null
+        ? PostModel.fromJson(json['parentPost'])
+        : null,
     threadId: json['threadId'] as int?,
     threadTitle: json['threadTitle'] as String?,
     threadOwnerId: json['threadOwnerId'] as int?,
@@ -119,6 +131,8 @@ class Post {
         : null,
     joinedGroup: json['joinedGroup'] as bool?,
     groupApproved: json['groupApproved'] as bool,
-    tag: json['tag'] != null ? Tag.fromJson(json['tag'] as Map<String, dynamic>) : null,
+    tag: json['tag'] != null
+        ? TagModel.fromJson(json['tag'] as Map<String, dynamic>)
+        : null,
   );
 }

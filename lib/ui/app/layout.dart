@@ -20,7 +20,7 @@ class AppLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final self = context.read<User>();
+    final self = context.read<UserModel>();
 
     return SafeArea(
       child: Scaffold(

@@ -1,6 +1,6 @@
 import 'package:topix/data/models/enums.dart' show UserRole;
 
-class User {
+class UserModel {
   final int id;
   final String username;
   final String displayName;
@@ -12,7 +12,7 @@ class User {
   final int? chatChannelId;
   final UserRole role;
 
-  User({
+  UserModel({
     required this.id,
     required this.username,
     required this.displayName,
@@ -25,7 +25,7 @@ class User {
     this.role = .user,
   });
 
-  factory User.fromJson(Map<String, dynamic> json) => User(
+  factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
     id: json['id'] as int,
     username: json['username'] as String,
     displayName: json['displayName'] as String,
@@ -37,33 +37,4 @@ class User {
     chatChannelId: json['chatChannelId'] as int?,
     role: (json['role'] as String?) == 'admin' ? .admin : .user,
   );
-
-  Map<String, dynamic> toJson() => {
-    'id': id,
-    'username': username,
-    'displayName': displayName,
-    'description': description,
-    'profilePicture': profilePicture,
-    'followerCount': followerCount,
-    'followingCount': followingCount,
-    'followed': followed,
-    'chatChannelId': chatChannelId,
-    'role': role.name,
-  };
-
-  @override
-  String toString() {
-    return 'User{\n'
-        '\tid: $id,\n'
-        '\tusername: $username,\n'
-        '\tdisplayName: $displayName,\n'
-        '\tdescription: $description,\n'
-        '\tprofilePicture: $profilePicture,\n'
-        '\tfollowerCount: $followerCount,\n'
-        '\tfollowingCount: $followingCount,\n'
-        '\tfollowed: $followed,\n'
-        '\tchatChannelId: $chatChannelId,\n'
-        '\trole: ${role.name}\n'
-        '}';
-  }
 }

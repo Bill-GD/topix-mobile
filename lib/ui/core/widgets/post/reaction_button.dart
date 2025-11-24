@@ -68,7 +68,7 @@ class _ReactionButtonState extends State<ReactionButton>
                         overlay?.remove();
                         overlay = null;
                       },
-                      child: Post.reactionIcon(t, 32),
+                      child: PostModel.reactionIcon(t, 32),
                     ),
                 ],
               ),

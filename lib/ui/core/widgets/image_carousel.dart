@@ -4,7 +4,7 @@ import 'package:topix/data/models/post.dart';
 import 'package:topix/utils/extensions.dart';
 
 class ImageCarousel extends StatefulWidget {
-  final Post post;
+  final PostModel post;
 
   const ImageCarousel({super.key, required this.post});
 
