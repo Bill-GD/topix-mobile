@@ -51,72 +51,60 @@ class _PostScreenState extends State<PostScreen> with SingleTickerProviderStateM
       child: ListenableBuilder(
         listenable: vm,
         builder: (context, _) {
-          return Column(
-            crossAxisAlignment: .start,
-            children: [
-              if (isReply) ...[
+          return NotificationListener<ScrollEndNotification>(
+            onNotification: (notification) {
+              final pixels = notification.metrics.pixels,
+                  maxScrollExtent = notification.metrics.maxScrollExtent;
+              if (maxScrollExtent - pixels <= 50) vm.loadReplies();
+              return true;
+            },
+            child: ListView(
+              controller: vm.scroll,
+              children: [
+                if (isReply) ...[
+                  Post(
+                    self: self,
+                    post: vm.post.parentPost!,
+                    showReaction: false,
+                    showOptions: false,
+                    reactPost: vm.reactPost,
+                    deletePost: vm.removePost,
+                  ),
+
+                  Container(
+                    height: 16,
+                    width: 2,
+                    decoration: BoxDecoration(
+                      border: .symmetric(
+                        vertical: .new(color: context.colorScheme.onSurfaceVariant),
+                      ),
+                    ),
+                  ),
+                ],
+
                 Post(
                   self: self,
-                  post: vm.post.parentPost!,
-                  showReaction: false,
-                  showOptions: false,
+                  post: vm.post,
+                  isDetailed: true,
+                  showThreadAndGroup: !isReply,
                   reactPost: vm.reactPost,
                   deletePost: vm.removePost,
                 ),
 
-                Container(
-                  height: 16,
-                  width: 2,
-                  decoration: BoxDecoration(
-                    border: .symmetric(
-                      vertical: .new(color: context.colorScheme.onSurfaceVariant),
-                    ),
+                Padding(padding: const .all(12), child: Text('Replies')),
+
+                for (final reply in vm.replies)
+                  Post(
+                    self: self,
+                    post: reply,
+                    showReplyMarker: false,
+                    reactPost: vm.reactPost,
+                    deletePost: vm.removePost,
                   ),
-                ),
+
+                if (vm.loading) Center(child: CircularProgressIndicator.adaptive()),
               ],
-
-              Post(
-                self: self,
-                post: vm.post,
-                isDetailed: true,
-                showThreadAndGroup: !isReply,
-                reactPost: vm.reactPost,
-                deletePost: vm.removePost,
-              ),
-
-              Padding(
-                padding: const .all(12),
-                child: Text('Replies'),
-              ),
-
-              Expanded(
-                child: NotificationListener<ScrollEndNotification>(
-                  onNotification: (notification) {
-                    final pixels = notification.metrics.pixels,
-                        maxScrollExtent = notification.metrics.maxScrollExtent;
-                    if (maxScrollExtent - pixels <= 50) vm.loadReplies();
-                    return true;
-                  },
-                  child: ListView.separated(
-                    controller: vm.scroll,
-                    itemCount: vm.replies.length + (vm.loading ? 1 : 0),
-                    separatorBuilder: (_, _) => const SizedBox(height: 8),
-                    itemBuilder: (context, index) {
-                      if (vm.loading && index == vm.replies.length) {
-                        return Center(child: CircularProgressIndicator.adaptive());
-                      }
-                      return Post(
-                        self: self,
-                        post: vm.replies.elementAt(index),
-                        showReplyMarker: false,
-                        reactPost: vm.reactPost,
-                        deletePost: vm.removePost,
-                      );
-                    },
-                  ),
-                ),
-              ),
-            ],
+            ),
           );
         },
       ),

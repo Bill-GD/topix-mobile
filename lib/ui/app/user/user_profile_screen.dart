@@ -48,175 +48,213 @@ class _UserProfileScreenState extends State<UserProfileScreen>
       child: ListenableBuilder(
         listenable: vm,
         builder: (context, _) {
-          return Column(
-            children: [
-              // user info
-              Container(
-                color: context.colorScheme.surfaceContainer,
-                padding: const .only(top: 12, left: 12, right: 12, bottom: 6),
-                child: vm.loadingUser
-                    ? Center(child: CircularProgressIndicator.adaptive())
-                    : Column(
-                        spacing: 8,
-                        children: [
-                          Row(
-                            spacing: 16,
+          return NotificationListener<ScrollEndNotification>(
+            onNotification: (notification) {
+              final pixels = notification.metrics.pixels,
+                  maxScrollExtent = notification.metrics.maxScrollExtent;
+              if (maxScrollExtent - pixels <= 50) {
+                switch (profileTabIndex) {
+                  case 0:
+                    vm.loadPosts(self.id);
+                  case 1:
+                  case 2:
+                }
+              }
+              return true;
+            },
+            child: NestedScrollView(
+              headerSliverBuilder: (context, innerBoxIsScrolled) => [
+                // user info
+                SliverToBoxAdapter(
+                  child: Container(
+                    color: context.colorScheme.surfaceContainer,
+                    padding: const .only(top: 12, left: 12, right: 12, bottom: 6),
+                    child: vm.loadingUser
+                        ? Center(child: CircularProgressIndicator.adaptive())
+                        : Column(
+                            spacing: 8,
                             children: [
-                              SizedBox.square(
-                                dimension: 80,
-                                child: ClipOval(child: vm.user.profileImage),
-                              ),
-                              Expanded(
-                                child: Column(
-                                  mainAxisAlignment: .spaceBetween,
-                                  children: [
-                                    Row(
-                                      spacing: 8,
+                              Row(
+                                spacing: 16,
+                                children: [
+                                  SizedBox.square(
+                                    dimension: 80,
+                                    child: ClipOval(child: vm.user.profileImage),
+                                  ),
+                                  Expanded(
+                                    child: Column(
+                                      mainAxisAlignment: .spaceBetween,
                                       children: [
-                                        Text(
-                                          vm.user.displayName,
-                                          style: TextStyle(
-                                            color: context.colorScheme.onSurface,
-                                            fontSize: FontSize.mediumSmall,
-                                            fontWeight: .w700,
-                                          ),
+                                        Row(
+                                          spacing: 8,
+                                          children: [
+                                            Text(
+                                              vm.user.displayName,
+                                              style: TextStyle(
+                                                color: context.colorScheme.onSurface,
+                                                fontSize: FontSize.mediumSmall,
+                                                fontWeight: .w700,
+                                              ),
+                                            ),
+                                            Text(
+                                              '@${vm.user.username}',
+                                              style: TextStyle(
+                                                color:
+                                                    context.colorScheme.onSurfaceVariant,
+                                                fontSize: FontSize.small,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                         Text(
-                                          '@${vm.user.username}',
+                                          vm.user.description ?? '',
                                           style: TextStyle(
-                                            color: context.colorScheme.onSurfaceVariant,
-                                            fontSize: FontSize.small,
+                                            color: context.colorScheme.onSurface,
                                           ),
                                         ),
                                       ],
                                     ),
-                                    Text(
-                                      vm.user.description ?? '',
-                                      style: TextStyle(
-                                        color: context.colorScheme.onSurface,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            spacing: 8,
-                            children: [
-                              Text(
-                                'Following: ${vm.user.followingCount}',
-                                style: TextStyle(color: context.colorScheme.onSurface),
-                              ),
-                              Text(
-                                'Follower: ${vm.user.followerCount}',
-                                style: TextStyle(color: context.colorScheme.onSurface),
-                              ),
-                              const Spacer(),
-                              if (self.id != vm.user.id) ...[
-                                Button(
-                                  tooltip: 'Message',
-                                  type: .base,
-                                  icon: Icon(Icons.chat_bubble_rounded, size: 20),
-                                  onPressed: () {
-                                    context.showToast('Feature is not yet implemented.');
-                                  },
-                                ),
-                                Button(
-                                  tooltip: vm.user.followed == true
-                                      ? 'Unfollow'
-                                      : 'Follow',
-                                  type: vm.user.followed == true ? .danger : .base,
-                                  icon: Icon(
-                                    vm.user.followed == true
-                                        ? Icons.person_remove_rounded
-                                        : Icons.person_add_alt_rounded,
-                                    size: 20,
                                   ),
-                                  onPressed: () {
-                                    context.showToast('Feature is not yet implemented.');
-                                  },
-                                ),
-                              ] else
-                                Button(
-                                  tooltip: 'Options',
-                                  icon: Icon(Icons.menu_rounded),
-                                  onPressed: () {
-                                    context.showToast('Feature is not yet implemented.');
-                                  },
-                                ),
+                                ],
+                              ),
+                              Row(
+                                spacing: 8,
+                                children: [
+                                  Text(
+                                    'Following: ${vm.user.followingCount}',
+                                    style: TextStyle(
+                                      color: context.colorScheme.onSurface,
+                                    ),
+                                  ),
+                                  Text(
+                                    'Follower: ${vm.user.followerCount}',
+                                    style: TextStyle(
+                                      color: context.colorScheme.onSurface,
+                                    ),
+                                  ),
+                                  const Spacer(),
+                                  if (self.id != vm.user.id) ...[
+                                    Button(
+                                      tooltip: 'Message',
+                                      type: .base,
+                                      icon: Icon(Icons.chat_bubble_rounded, size: 20),
+                                      onPressed: () {
+                                        context.showToast(
+                                          'Feature is not yet implemented.',
+                                        );
+                                      },
+                                    ),
+                                    Button(
+                                      tooltip: vm.user.followed == true
+                                          ? 'Unfollow'
+                                          : 'Follow',
+                                      type: vm.user.followed == true ? .danger : .base,
+                                      icon: Icon(
+                                        vm.user.followed == true
+                                            ? Icons.person_remove_rounded
+                                            : Icons.person_add_alt_rounded,
+                                        size: 20,
+                                      ),
+                                      onPressed: () {
+                                        context.showToast(
+                                          'Feature is not yet implemented.',
+                                        );
+                                      },
+                                    ),
+                                  ] else
+                                    Button(
+                                      tooltip: 'Options',
+                                      icon: Icon(Icons.menu_rounded),
+                                      onPressed: () {
+                                        context.showToast(
+                                          'Feature is not yet implemented.',
+                                        );
+                                      },
+                                    ),
+                                ],
+                              ),
                             ],
                           ),
-                        ],
-                      ),
-              ),
-
-              TabBar(
-                controller: tabController,
-                enableFeedback: false,
-                splashFactory: NoSplash.splashFactory,
-                indicatorSize: .label,
-                indicator: UnderlineTabIndicator(
-                  borderRadius: .circular(10),
-                  insets: const .symmetric(vertical: 6),
-                  borderSide: BorderSide(width: 3, color: context.colorScheme.primary),
+                  ),
                 ),
-                labelStyle: const TextStyle(fontWeight: .bold),
-                unselectedLabelStyle: const TextStyle(fontWeight: .w500),
-                tabs: [
-                  Tab(text: 'Posts'),
-                  Tab(text: 'Threads'),
-                  Tab(text: 'Groups'),
-                ],
-              ),
-
-              Expanded(
-                child: NotificationListener<ScrollEndNotification>(
-                  onNotification: (notification) {
-                    final pixels = notification.metrics.pixels,
-                        maxScrollExtent = notification.metrics.maxScrollExtent;
-                    if (maxScrollExtent - pixels <= 50) {
-                      switch (profileTabIndex) {
-                        case 0:
-                          vm.loadPosts(self.id);
-                        case 1:
-                        case 2:
-                      }
-                    }
-                    return true;
-                  },
-                  child: TabBarView(
-                    controller: tabController,
-                    children: [
-                      ListView.separated(
-                        key: PageStorageKey('new_feed_posts_key'),
-                        controller: vm.postScroll,
-                        itemCount: vm.posts.length + (vm.loadingPosts ? 1 : 0),
-                        separatorBuilder: (_, _) => const SizedBox(height: 8),
-                        itemBuilder: (context, index) {
+                SliverPersistentHeader(
+                  pinned: true,
+                  delegate: _TabBarDelegate(
+                    TabBar(
+                      controller: tabController,
+                      enableFeedback: false,
+                      splashFactory: NoSplash.splashFactory,
+                      indicatorSize: .label,
+                      indicator: UnderlineTabIndicator(
+                        borderRadius: .circular(10),
+                        insets: const .symmetric(vertical: 6),
+                        borderSide: BorderSide(
+                          width: 3,
+                          color: context.colorScheme.primary,
+                        ),
+                      ),
+                      labelStyle: const TextStyle(fontWeight: .bold),
+                      unselectedLabelStyle: const TextStyle(fontWeight: .w500),
+                      tabs: [
+                        Tab(text: 'Posts'),
+                        Tab(text: 'Threads'),
+                        Tab(text: 'Groups'),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+              body: TabBarView(
+                controller: tabController,
+                children: [
+                  CustomScrollView(
+                    slivers: [
+                      SliverList(
+                        delegate: SliverChildBuilderDelegate((context, index) {
                           if (vm.loadingPosts && index == vm.posts.length) {
-                            return Center(
-                              child: CircularProgressIndicator.adaptive(),
-                            );
+                            return Center(child: CircularProgressIndicator.adaptive());
                           }
+
                           return Post(
                             self: self,
                             post: vm.posts.elementAt(index),
                             reactPost: vm.reactPost,
                             deletePost: vm.removePost,
                           );
-                        },
+                        }, childCount: vm.posts.length + (vm.loadingPosts ? 1 : 0)),
                       ),
-                      Text('Thread list not yet implemented', textAlign: .center),
-                      Text('Group list not yet implemented', textAlign: .center),
                     ],
                   ),
-                ),
+                  Text('Thread list not yet implemented', textAlign: .center),
+                  Text('Group list not yet implemented', textAlign: .center),
+                ],
               ),
-            ],
+            ),
           );
         },
       ),
     );
+  }
+}
+
+class _TabBarDelegate extends SliverPersistentHeaderDelegate {
+  final TabBar tabBar;
+
+  _TabBarDelegate(this.tabBar);
+
+  @override
+  double get minExtent => tabBar.preferredSize.height;
+
+  @override
+  double get maxExtent => tabBar.preferredSize.height;
+
+  @override
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return Container(color: Theme.of(context).scaffoldBackgroundColor, child: tabBar);
+  }
+
+  @override
+  bool shouldRebuild(_TabBarDelegate oldDelegate) {
+    return false;
   }
 }
