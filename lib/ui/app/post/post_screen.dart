@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:topix/data/models/user.dart';
 import 'package:topix/ui/app/layout.dart';
 import 'package:topix/ui/app/post/post_view_model.dart';
+import 'package:topix/ui/app/upload/upload_screen.dart';
+import 'package:topix/ui/app/upload/upload_view_model.dart';
 import 'package:topix/ui/core/widgets/button.dart';
 import 'package:topix/ui/core/widgets/post/post.dart';
 import 'package:topix/utils/extensions.dart';
@@ -87,14 +89,17 @@ class _PostScreenState extends State<PostScreen> with SingleTickerProviderStateM
 
                 Padding(padding: const .all(12), child: Text('Replies')),
 
-                for (final reply in vm.replies)
-                  Post(
-                    self: self,
-                    post: reply,
-                    showReplyMarker: false,
-                    reactPost: vm.reactPost,
-                    deletePost: vm.removePost,
-                  ),
+                if (vm.replies.isEmpty)
+                  Center(child: Text('No reply'))
+                else
+                  for (final reply in vm.replies)
+                    Post(
+                      self: self,
+                      post: reply,
+                      showReplyMarker: false,
+                      reactPost: vm.reactPost,
+                      deletePost: vm.removePost,
+                    ),
 
                 if (vm.loading) Center(child: CircularProgressIndicator.adaptive()),
               ],
@@ -106,7 +111,15 @@ class _PostScreenState extends State<PostScreen> with SingleTickerProviderStateM
         type: .primary,
         tooltip: 'Reply',
         icon: Icon(Icons.add_rounded),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => UploadScreen(
+                viewModel: UploadViewModel(selfId: self.id, parentPostId: vm.post.id),
+              ),
+            ),
+          );
+        },
       ),
     );
   }

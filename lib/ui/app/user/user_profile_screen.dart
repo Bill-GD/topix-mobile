@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 
 import 'package:topix/data/models/user.dart';
 import 'package:topix/ui/app/layout.dart';
+import 'package:topix/ui/app/upload/upload_screen.dart';
+import 'package:topix/ui/app/upload/upload_view_model.dart';
 import 'package:topix/ui/app/user/user_profile_view_model.dart';
 import 'package:topix/ui/core/theme/font.dart';
 import 'package:topix/ui/core/widgets/button.dart';
@@ -44,11 +46,11 @@ class _UserProfileScreenState extends State<UserProfileScreen>
     final vm = widget.viewModel;
     final self = context.read<UserModel>();
 
-    return AppLayout(
-      body: ListenableBuilder(
-        listenable: vm,
-        builder: (context, _) {
-          return NotificationListener<ScrollEndNotification>(
+    return ListenableBuilder(
+      listenable: vm,
+      builder: (context, child) {
+        return AppLayout(
+          body: NotificationListener<ScrollEndNotification>(
             onNotification: (notification) {
               final pixels = notification.metrics.pixels,
                   maxScrollExtent = notification.metrics.maxScrollExtent;
@@ -230,15 +232,27 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                 ],
               ),
             ),
-          );
-        },
-      ),
-      floatingActionButton: Button(
-        type: .primary,
-        tooltip: 'Reply',
-        icon: Icon(Icons.add_rounded),
-        onPressed: () {},
-      ),
+          ),
+          floatingActionButton: !vm.loadingUser && self.id == vm.user.id
+              ? Button(
+                  type: .primary,
+                  tooltip: 'Reply',
+                  icon: Icon(Icons.add_rounded),
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return UploadScreen(
+                            viewModel: UploadViewModel(selfId: self.id),
+                          );
+                        },
+                      ),
+                    );
+                  },
+                )
+              : null,
+        );
+      },
     );
   }
 }
