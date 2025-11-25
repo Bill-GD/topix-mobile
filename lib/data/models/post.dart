@@ -17,7 +17,7 @@ class PostModel {
   final String content;
   ReactionType? reaction;
   int reactionCount;
-  final int replyCount;
+  int replyCount;
   final List<String> mediaPaths;
   final Visibility visibility;
   final DateTime dateCreated;

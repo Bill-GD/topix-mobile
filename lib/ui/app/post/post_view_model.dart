@@ -23,7 +23,13 @@ class PostViewModel extends ChangeNotifier {
 
   List<PostModel> get replies => _replies;
 
-  void loadReplies() async {
+  void loadReplies({bool reload = false}) async {
+    if (reload) {
+      _replies.clear();
+      _replyPage = 0;
+      _endOfList = false;
+    }
+
     if (_loading || _endOfList) return;
     _loading = true;
     notifyListeners();

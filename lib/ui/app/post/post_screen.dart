@@ -98,7 +98,10 @@ class _PostScreenState extends State<PostScreen> with SingleTickerProviderStateM
                       post: reply,
                       showReplyMarker: false,
                       reactPost: vm.reactPost,
-                      deletePost: vm.removePost,
+                      deletePost: (id) async {
+                        vm.post.replyCount--;
+                        await vm.removePost(id);
+                      },
                     ),
 
                 if (vm.loading) Center(child: CircularProgressIndicator.adaptive()),
@@ -111,14 +114,16 @@ class _PostScreenState extends State<PostScreen> with SingleTickerProviderStateM
         type: .primary,
         tooltip: 'Reply',
         icon: Icon(Icons.add_rounded),
-        onPressed: () {
-          Navigator.of(context).push(
+        onPressed: () async {
+          await Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => UploadScreen(
                 viewModel: UploadViewModel(selfId: self.id, parentPostId: vm.post.id),
               ),
             ),
           );
+          vm.post.replyCount++;
+          vm.loadReplies(reload: true);
         },
       ),
     );

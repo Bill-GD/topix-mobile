@@ -37,6 +37,29 @@ class PostService {
     return true;
   }
 
+  Future<bool> reply(int parentPostId, String content) async {
+    LoggerService.log('Replying to post #$parentPostId');
+    final at = await _tokenService.tryGet(.access);
+
+    final res = (await _dio.post(
+      '/post/$parentPostId/reply',
+      data: FormData.fromMap({
+        'content': content,
+        'type': 'image',
+        'approved': true,
+      }),
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $at',
+          Headers.contentTypeHeader: Headers.multipartFormDataContentType,
+        },
+      ),
+    )).toApiResponse();
+
+    if (!res.success) throw Exception(res.error);
+    return true;
+  }
+
   Future<(bool, Iterable<PostModel>)> getFeed(int page, [bool following = false]) async {
     LoggerService.log('Fetching ${following ? 'following ' : ''}feed, page $page');
 

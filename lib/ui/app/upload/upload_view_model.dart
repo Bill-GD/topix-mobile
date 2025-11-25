@@ -21,7 +21,10 @@ class UploadViewModel extends ChangeNotifier {
   bool get hasVideo => video != null;
 
   Future<bool> uploadPost(String content) {
-    return GetIt.I<PostService>().uploadPost(content);
+    final postService = GetIt.I<PostService>();
+    return isReply
+        ? postService.reply(parentPostId!, content)
+        : postService.uploadPost(content);
   }
 
   void addImage(String path) {
