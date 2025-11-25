@@ -17,6 +17,7 @@ class Input extends StatefulWidget {
   final void Function(String)? onChanged;
   final TextInputType? textInputType;
   final TextInputAction? textInputAction;
+  final TextCapitalization? textCapitalization;
   final bool obscureText;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
@@ -38,6 +39,7 @@ class Input extends StatefulWidget {
     this.obscureText = false,
     this.textInputType,
     this.textInputAction,
+    this.textCapitalization,
     this.prefixIcon,
     this.suffixIcon,
   });
@@ -55,6 +57,7 @@ class _InputState extends State<Input> {
       readOnly: widget.readOnly ?? false,
       obscureText: widget.obscureText,
       keyboardType: widget.textInputType,
+      textCapitalization: widget.textCapitalization ?? .none,
       decoration: InputDecoration(
         labelText: widget.labelText,
         hintText: widget.hintText,

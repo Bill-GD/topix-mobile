@@ -4,7 +4,7 @@ import 'package:topix/ui/app/upload/upload_view_model.dart';
 import 'package:topix/ui/core/theme/colors.dart';
 import 'package:topix/ui/core/widgets/button.dart';
 import 'package:topix/ui/core/widgets/input.dart';
-import 'package:topix/ui/core/widgets/post/file_picker.dart';
+// import 'package:topix/ui/core/widgets/post/file_picker.dart';
 import 'package:topix/ui/core/widgets/toast.dart';
 
 class UploadScreen extends StatelessWidget {
@@ -32,7 +32,9 @@ class UploadScreen extends StatelessWidget {
                     icon: Icon(Icons.check_rounded, color: ThemeColors.successLight),
                     disabled: value.text.trim().isEmpty,
                     onPressed: () async {
-                      final res = await viewModel.uploadPost(contentController.text.trim());
+                      final res = await viewModel.uploadPost(
+                        contentController.text.trim(),
+                      );
                       if (res) {
                         if (context.mounted) {
                           context.showToast('Post uploaded successfully');
@@ -41,7 +43,7 @@ class UploadScreen extends StatelessWidget {
                       }
                     },
                   );
-                }
+                },
               ),
             ],
           ),
@@ -53,8 +55,12 @@ class UploadScreen extends StatelessWidget {
                 children: [
                   Input(
                     controller: contentController,
-                    hintText: "What's happening?",
-                    maxLines: 8,
+                    hintText: viewModel.isReply
+                        ? 'Enter your reply'
+                        : "What's happening?",
+                    minLines: 3,
+                    textInputType: .multiline,
+                    textCapitalization: .sentences,
                   ),
 
                   Row(
@@ -67,9 +73,9 @@ class UploadScreen extends StatelessWidget {
                         onPressed: () async {
                           context.showToast('Feature is not yet implemented.');
                           return;
-                          if (viewModel.hasVideo) return;
-                          final path = await FilePicker.image(context: context);
-                          if (path != null) viewModel.addImage(path);
+                          // if (viewModel.hasVideo) return;
+                          // final path = await FilePicker.image(context: context);
+                          // if (path != null) viewModel.addImage(path);
                         },
                       ),
                       Button(
@@ -77,9 +83,9 @@ class UploadScreen extends StatelessWidget {
                         onPressed: () async {
                           context.showToast('Feature is not yet implemented.');
                           return;
-                          if (viewModel.hasImage) return;
-                          final path = await FilePicker.video(context: context);
-                          if (path != null) viewModel.updateVideo(path);
+                          // if (viewModel.hasImage) return;
+                          // final path = await FilePicker.video(context: context);
+                          // if (path != null) viewModel.updateVideo(path);
                         },
                       ),
                     ],
