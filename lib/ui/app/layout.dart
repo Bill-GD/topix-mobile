@@ -17,10 +17,10 @@ import 'package:topix/ui/core/widgets/toast.dart';
 import 'package:topix/utils/extensions.dart' show ThemeHelper;
 
 class AppLayout extends StatelessWidget {
-  final Widget child;
+  final Widget body;
   final Widget? floatingActionButton;
 
-  const AppLayout({super.key, required this.child, this.floatingActionButton});
+  const AppLayout({super.key, required this.body, this.floatingActionButton});
 
   @override
   Widget build(BuildContext context) {
@@ -141,7 +141,7 @@ class AppLayout extends StatelessWidget {
             ),
           ),
         ),
-        body: child,
+        body: body,
         floatingActionButton: floatingActionButton,
         bottomNavigationBar: Container(
           decoration: BoxDecoration(color: context.colorScheme.surfaceContainerLowest),

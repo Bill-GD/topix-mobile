@@ -42,13 +42,7 @@ class _PostScreenState extends State<PostScreen> with SingleTickerProviderStateM
     final isReply = vm.post.parentPost != null;
 
     return AppLayout(
-      floatingActionButton: Button(
-        type: .primary,
-        tooltip: 'Reply',
-        icon: Icon(Icons.add_rounded),
-        onPressed: () {},
-      ),
-      child: ListenableBuilder(
+      body: ListenableBuilder(
         listenable: vm,
         builder: (context, _) {
           return NotificationListener<ScrollEndNotification>(
@@ -107,6 +101,12 @@ class _PostScreenState extends State<PostScreen> with SingleTickerProviderStateM
             ),
           );
         },
+      ),
+      floatingActionButton: Button(
+        type: .primary,
+        tooltip: 'Reply',
+        icon: Icon(Icons.add_rounded),
+        onPressed: () {},
       ),
     );
   }

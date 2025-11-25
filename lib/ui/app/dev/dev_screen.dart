@@ -15,7 +15,7 @@ class DevScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppLayout(
-      child: Padding(
+      body: Padding(
         padding: const .symmetric(horizontal: 8),
         child: ListView(
           children: [

@@ -45,7 +45,7 @@ class _UserProfileScreenState extends State<UserProfileScreen>
     final self = context.read<UserModel>();
 
     return AppLayout(
-      child: ListenableBuilder(
+      body: ListenableBuilder(
         listenable: vm,
         builder: (context, _) {
           return NotificationListener<ScrollEndNotification>(
@@ -232,6 +232,12 @@ class _UserProfileScreenState extends State<UserProfileScreen>
             ),
           );
         },
+      ),
+      floatingActionButton: Button(
+        type: .primary,
+        tooltip: 'Reply',
+        icon: Icon(Icons.add_rounded),
+        onPressed: () {},
       ),
     );
   }
