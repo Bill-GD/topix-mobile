@@ -1,4 +1,4 @@
-import 'package:dio/dio.dart' show Dio, Options;
+import 'package:dio/dio.dart' show Dio, Options, Headers, FormData;
 
 import 'package:topix/data/models/enums.dart';
 import 'package:topix/data/models/post.dart' show PostModel;
@@ -13,6 +13,52 @@ class PostService {
   PostService({required Dio dio, required TokenService tokenService})
     : _tokenService = tokenService,
       _dio = dio;
+
+  Future<bool> uploadPost(String content) async {
+    LoggerService.log('Uploading new post');
+    final at = await _tokenService.tryGet(.access);
+
+    final res = (await _dio.post(
+      '/post',
+      data: FormData.fromMap({
+        'content': content,
+        'type': 'image',
+        'approved': true,
+      }),
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $at',
+          Headers.contentTypeHeader: Headers.multipartFormDataContentType,
+        },
+      ),
+    )).toApiResponse();
+
+    if (!res.success) throw Exception(res.error);
+    return true;
+  }
+
+  Future<bool> reply(int parentPostId, String content) async {
+    LoggerService.log('Replying to post #$parentPostId');
+    final at = await _tokenService.tryGet(.access);
+
+    final res = (await _dio.post(
+      '/post/$parentPostId/reply',
+      data: FormData.fromMap({
+        'content': content,
+        'type': 'image',
+        'approved': true,
+      }),
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $at',
+          Headers.contentTypeHeader: Headers.multipartFormDataContentType,
+        },
+      ),
+    )).toApiResponse();
+
+    if (!res.success) throw Exception(res.error);
+    return true;
+  }
 
   Future<(bool, Iterable<PostModel>)> getFeed(int page, [bool following = false]) async {
     LoggerService.log('Fetching ${following ? 'following ' : ''}feed, page $page');
@@ -41,6 +87,30 @@ class PostService {
     final at = await _tokenService.tryGet(.access);
     final res = (await _dio.get(
       '/post?userId=$userId${selfId == userId ? '&visibility=private' : ''}&page=$page&threadId=null&groupId=null',
+      options: Options(headers: {'Authorization': 'Bearer $at'}),
+    )).toApiResponse();
+
+    if (!res.success) throw Exception(res.error);
+    final resData = res.data as List<dynamic>;
+    return (
+      bool.parse(res.headers['x-end-of-list']?.first ?? 'false'),
+      resData.map((e) => PostModel.fromJson(e as Map<String, dynamic>)),
+    );
+  }
+
+  Future<(bool, Iterable<PostModel>)> getPostReplies({
+    required int postId,
+    int? threadId,
+    int? groupId,
+    required int page,
+  }) async {
+    LoggerService.log('Fetching replies of post #$postId, page $page');
+
+    final at = await _tokenService.tryGet(.access);
+    final res = (await _dio.get(
+      '/post?parentId=$postId&page=$page'
+      '${groupId != null ? '&groupId=$groupId' : ''}'
+      '${threadId != null ? '&threadId=$threadId' : ''}',
       options: Options(headers: {'Authorization': 'Bearer $at'}),
     )).toApiResponse();
 

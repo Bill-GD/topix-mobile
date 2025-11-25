@@ -39,7 +39,7 @@ class _FeedScreenState extends State<FeedScreen> with SingleTickerProviderStateM
     final vm = widget.viewModel;
 
     return AppLayout(
-      child: Column(
+      body: Column(
         children: [
           TabBar(
             controller: tabController,
@@ -74,7 +74,7 @@ class _FeedScreenState extends State<FeedScreen> with SingleTickerProviderStateM
                           vm.loadFollowing();
                       }
                     }
-                    return false;
+                    return true;
                   },
                   child: TabBarView(
                     controller: tabController,

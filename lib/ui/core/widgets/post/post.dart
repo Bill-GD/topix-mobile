@@ -5,6 +5,8 @@ import 'package:video_player/video_player.dart';
 import 'package:topix/data/models/enums.dart';
 import 'package:topix/data/models/post.dart';
 import 'package:topix/data/models/user.dart';
+import 'package:topix/ui/app/post/post_screen.dart';
+import 'package:topix/ui/app/post/post_view_model.dart';
 import 'package:topix/ui/app/user/user_profile_screen.dart';
 import 'package:topix/ui/app/user/user_profile_view_model.dart';
 import 'package:topix/ui/core/theme/colors.dart';
@@ -89,9 +91,9 @@ class _PostState extends State<Post> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final postContent = Container(
       color: context.colorScheme.surfaceContainer,
-      padding: const .only(top: 12, left: 12, right: 12, bottom: 4),
+      padding: .only(top: 12, left: 12, right: 12, bottom: widget.showReaction ? 6 : 12),
       child: Column(
         crossAxisAlignment: .stretch,
         spacing: 8,
@@ -241,6 +243,7 @@ class _PostState extends State<Post> {
 
                             if (confirm == true) {
                               await widget.deletePost(widget.post.id);
+                              Navigator.of(context, rootNavigator: true).pop();
                             }
                           },
                         ),
@@ -285,36 +288,57 @@ class _PostState extends State<Post> {
               ],
             ),
           // post interaction
-          Row(
-            spacing: 8,
-            children: [
-              ReactionButton(
-                reactionIcon: PostModel.reactionIcon(widget.post.reaction),
-                reactionCount: widget.post.reactionCount,
-                onReact: (newReaction) async {
-                  widget.post.updateReaction(newReaction);
-                  await widget.reactPost(widget.post.id, widget.post.reaction);
-                  setState(() {});
-                },
-              ),
-              TextButton.icon(
-                label: Text('${widget.post.replyCount}'),
-                icon: Icon(Icons.reply_rounded),
-                style: ButtonStyle(
-                  backgroundColor: WidgetStatePropertyAll(
-                    context.colorScheme.surfaceContainerHighest,
-                  ),
+          if (widget.showReaction)
+            Row(
+              spacing: 8,
+              children: [
+                ReactionButton(
+                  reactionIcon: PostModel.reactionIcon(widget.post.reaction),
+                  reactionCount: widget.post.reactionCount,
+                  onReact: (newReaction) async {
+                    widget.post.updateReaction(newReaction);
+                    await widget.reactPost(widget.post.id, widget.post.reaction);
+                    setState(() {});
+                  },
                 ),
-                onPressed: widget.isDetailed
-                    ? null
-                    : () {
-                        context.showToast('Post detailed view not implemented.');
-                      },
-              ),
-            ],
-          ),
+                TextButton.icon(
+                  label: Text('${widget.post.replyCount}'),
+                  icon: Icon(Icons.reply_rounded),
+                  style: ButtonStyle(
+                    backgroundColor: WidgetStatePropertyAll(
+                      context.colorScheme.surfaceContainerHighest,
+                    ),
+                  ),
+                  onPressed: () {
+                    if (widget.isDetailed) return;
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return PostScreen(viewModel: PostViewModel(post: widget.post));
+                        },
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
         ],
       ),
     );
+
+    return widget.showReaction || widget.isDetailed
+        ? postContent
+        : InkWell(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) {
+                    return PostScreen(viewModel: PostViewModel(post: widget.post));
+                  },
+                ),
+              );
+            },
+            child: postContent,
+          );
   }
 }
