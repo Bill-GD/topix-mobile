@@ -49,34 +49,31 @@ class Input extends StatefulWidget {
 class _InputState extends State<Input> {
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 50,
-      child: TextFormField(
-        style: widget.style ?? const TextStyle(fontSize: FontSize.small),
-        controller: widget.controller,
-        readOnly: widget.readOnly ?? false,
-        obscureText: widget.obscureText,
-        keyboardType: widget.textInputType,
-        decoration: InputDecoration(
-          labelText: widget.labelText,
-          hintText: widget.hintText,
-          errorText: widget.errorText,
-          labelStyle:
-              widget.labelStyle ??
-              TextStyle(
-                fontWeight: .w600, //
-                color: Theme.of(context).colorScheme.primary,
-              ),
-          border: widget.border,
-          constraints: widget.constraints,
-          prefixIcon: widget.prefixIcon,
-          suffixIcon: widget.suffixIcon,
-        ),
-        textInputAction: widget.textInputAction,
-        maxLines: widget.obscureText ? 1 : widget.maxLines,
-        minLines: widget.minLines,
-        onChanged: widget.onChanged,
+    return TextFormField(
+      style: widget.style ?? const TextStyle(fontSize: FontSize.small),
+      controller: widget.controller,
+      readOnly: widget.readOnly ?? false,
+      obscureText: widget.obscureText,
+      keyboardType: widget.textInputType,
+      decoration: InputDecoration(
+        labelText: widget.labelText,
+        hintText: widget.hintText,
+        errorText: widget.errorText,
+        labelStyle:
+            widget.labelStyle ??
+            TextStyle(
+              fontWeight: .w600, //
+              color: Theme.of(context).colorScheme.primary,
+            ),
+        border: widget.border,
+        constraints: widget.constraints,
+        prefixIcon: widget.prefixIcon,
+        suffixIcon: widget.suffixIcon,
       ),
+      textInputAction: widget.textInputAction,
+      maxLines: widget.obscureText ? 1 : widget.maxLines,
+      minLines: widget.minLines,
+      onChanged: widget.onChanged,
     );
   }
 }

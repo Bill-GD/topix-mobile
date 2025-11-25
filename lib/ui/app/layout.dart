@@ -91,7 +91,7 @@ class AppLayout extends StatelessWidget {
                   ),
                   dense: true,
                   onTap: () {
-                    context.showToast('Feature not yet implemented.');
+                    context.showToast('Feature is not yet implemented.');
                   },
                 ),
                 if (self.role == .admin)

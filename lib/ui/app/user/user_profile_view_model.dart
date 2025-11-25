@@ -35,7 +35,13 @@ class UserProfileViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void loadPosts(int selfId) async {
+  void loadPosts(int selfId, {bool reload = false}) async {
+    if (reload) {
+      _posts.clear();
+      _postPage = 0;
+      _postEndOfList = false;
+    }
+
     if (_loadingPosts || _postEndOfList) return;
     _loadingPosts = true;
     notifyListeners();

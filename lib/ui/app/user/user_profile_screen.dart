@@ -238,16 +238,20 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                   type: .primary,
                   tooltip: 'Reply',
                   icon: Icon(Icons.add_rounded),
-                  onPressed: () {
-                    Navigator.of(context).push(
+                  onPressed: () async {
+                    await Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) {
                           return UploadScreen(
-                            viewModel: UploadViewModel(selfId: self.id),
+                            viewModel: UploadViewModel(
+                              selfId: self.id,
+                              allowVisiblity: true,
+                            ),
                           );
                         },
                       ),
                     );
+                    vm.loadPosts(self.id, reload: true);
                   },
                 )
               : null,

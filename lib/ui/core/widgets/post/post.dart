@@ -243,6 +243,7 @@ class _PostState extends State<Post> {
 
                             if (confirm == true) {
                               await widget.deletePost(widget.post.id);
+                              Navigator.of(context, rootNavigator: true).pop();
                             }
                           },
                         ),

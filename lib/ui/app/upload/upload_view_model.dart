@@ -1,10 +1,46 @@
 import 'package:flutter/material.dart';
 
+import 'package:get_it/get_it.dart';
+
+import 'package:topix/data/services/post_service.dart';
+
 class UploadViewModel extends ChangeNotifier {
   final int selfId;
   final int? parentPostId;
+  final bool allowVisiblity;
 
-  UploadViewModel({required this.selfId, this.parentPostId});
+  final images = <String>[];
+  String? video;
+
+  UploadViewModel({required this.selfId, this.parentPostId, this.allowVisiblity = false});
 
   bool get isReply => parentPostId != null;
+
+  bool get hasImage => images.isNotEmpty;
+
+  bool get hasVideo => video != null;
+
+  Future<bool> uploadPost(String content) {
+    return GetIt.I<PostService>().uploadPost(content);
+  }
+
+  void addImage(String path) {
+    images.add(path);
+    notifyListeners();
+  }
+
+  void removeImage(int index) {
+    images.removeAt(index);
+    notifyListeners();
+  }
+
+  void updateVideo(String path) {
+    video = path;
+    notifyListeners();
+  }
+
+  void removeVideo() {
+    video = null;
+    notifyListeners();
+  }
 }

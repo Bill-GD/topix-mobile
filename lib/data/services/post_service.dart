@@ -1,4 +1,4 @@
-import 'package:dio/dio.dart' show Dio, Options;
+import 'package:dio/dio.dart' show Dio, Options, Headers, FormData;
 
 import 'package:topix/data/models/enums.dart';
 import 'package:topix/data/models/post.dart' show PostModel;
@@ -13,6 +13,29 @@ class PostService {
   PostService({required Dio dio, required TokenService tokenService})
     : _tokenService = tokenService,
       _dio = dio;
+
+  Future<bool> uploadPost(String content) async {
+    LoggerService.log('Uploading new post');
+    final at = await _tokenService.tryGet(.access);
+
+    final res = (await _dio.post(
+      '/post',
+      data: FormData.fromMap({
+        'content': content,
+        'type': 'image',
+        'approved': true,
+      }),
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $at',
+          Headers.contentTypeHeader: Headers.multipartFormDataContentType,
+        },
+      ),
+    )).toApiResponse();
+
+    if (!res.success) throw Exception(res.error);
+    return true;
+  }
 
   Future<(bool, Iterable<PostModel>)> getFeed(int page, [bool following = false]) async {
     LoggerService.log('Fetching ${following ? 'following ' : ''}feed, page $page');

@@ -75,7 +75,5 @@ Future<void> main() async {
   GetIt.I.registerSingleton(UserService(dio: dio, tokenService: tokenService));
   GetIt.I.registerSingleton(PostService(dio: dio, tokenService: tokenService));
 
-  runApp(
-    TopixApp(navKey: navigatorKey),
-  );
+  runApp(TopixApp(navKey: navigatorKey));
 }
