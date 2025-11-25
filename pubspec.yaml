@@ -20,7 +20,7 @@ dependencies:
   google_sign_in: ^7.2.0
   dio: ^5.9.0
   flutter_secure_storage: ^9.2.4
-  image_picker: ^1.2.1
+  # image_picker: ^1.2.1
   video_player: ^2.10.1
   flutter:
     sdk: flutter
