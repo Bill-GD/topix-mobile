@@ -1,3 +1,9 @@
+import 'package:firebase_remote_config/firebase_remote_config.dart'
+    show FirebaseRemoteConfig, RemoteConfigSettings;
+
+import 'package:topix/utils/constants.dart';
+import 'package:topix/utils/extensions.dart' show NumDurationExtension;
+
 /// From https://pub.dev/packages/dedent, modified to not use extra packages
 String dedent(String text) {
   final whitespaceOnlyRe = RegExp(r'^[ \t]+$', multiLine: true);
@@ -41,7 +47,10 @@ String dedent(String text) {
   }
 
   if (margin != null && margin != '') {
-    final r = RegExp(r'^' + margin, multiLine: true); // python r"(?m)^" illegal in js regex so leave it out
+    final r = RegExp(
+      r'^' + margin,
+      multiLine: true,
+    ); // python r"(?m)^" illegal in js regex so leave it out
     text = text.replaceAll(r, '');
   }
   return text;
@@ -54,4 +63,26 @@ Iterable<List<T>> zip<T>(Iterable<Iterable<T>> iterables) sync* {
   while (iterators.every((e) => e.moveNext())) {
     yield iterators.map((e) => e.current).toList(growable: false);
   }
+}
+
+/// [start] and [end] are inclusive
+List<int> range(int start, int end) {
+  return List<int>.generate(end - start + 1, (i) => i + start);
+}
+
+Future<void> setupFirebaseRemoteConfig(FirebaseRemoteConfig config) async {
+  await config.setConfigSettings(
+    RemoteConfigSettings(fetchTimeout: 1.minutes, minimumFetchInterval: 1.hours),
+  );
+  await config.fetchAndActivate();
+  Constants.emailVerificationEnabled.value = config.getBool('ENABLE_EMAIL_VERIFICATION');
+  Constants.apiUrl.value = config.getString('API_URL');
+
+  config.onConfigUpdated.listen((event) async {
+    await config.activate();
+    Constants.emailVerificationEnabled.value = config.getBool(
+      'ENABLE_EMAIL_VERIFICATION',
+    );
+    Constants.apiUrl.value = config.getString('API_URL');
+  });
 }

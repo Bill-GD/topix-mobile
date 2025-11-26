@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "111111111111",
+    "project_id": "example_app",
+    "storage_bucket": "example_app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "mobilesdk_app_id",
+        "android_client_info": {
+          "package_name": "com.example.example"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "android_client_id.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.example",
+            "certificate_hash": "hashhere"
+          }
+        },
+        {
+          "client_id": "web_client_id.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "api_public_key"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "extra_client_id.apps.googleusercontent.com",
+              "client_type": 1
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
