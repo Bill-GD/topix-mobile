@@ -38,10 +38,7 @@ jobs:
         env:
           GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
 
-      # - name: Check google-services.json
-      #   run: cat android/app/google-services.json | jq .
-
-      - name: Writing key.properties
+      - name: Write key.properties
         run: |
           echo "storePassword=${{ secrets.STORE_PASSWORD }}" > android/key.properties
           echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> android/key.properties
@@ -65,6 +62,7 @@ jobs:
       - name: Create env
         run: |
           echo "VERSION=${{ env.VERSION }}" > .env
+          echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> .env
 
       - name: Build APKs
         run: flutter build apk

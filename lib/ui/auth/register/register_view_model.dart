@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -11,6 +12,11 @@ class RegisterViewModel extends ChangeNotifier {
   bool _hidePassword = true;
   bool _hideConfirmPassword = true;
   GoogleSignInAccount? _oauthUser;
+
+  final emailController = TextEditingController(),
+      usernameController = TextEditingController(),
+      passwordController = TextEditingController(),
+      confirmPasswordController = TextEditingController();
 
   bool get hidePassword => _hidePassword;
 
@@ -39,6 +45,8 @@ class RegisterViewModel extends ChangeNotifier {
   Future<void> requestGoogleSignIn() async {
     LoggerService.log('Authenticating with Google');
     _oauthUser = await GetIt.I<GoogleSignIn>().authenticate();
+    emailController.text = googleAccount?.email ?? '';
+    usernameController.text = accountUsername.toLowerCase().replaceAll(' ', '_');
     notifyListeners();
   }
 }

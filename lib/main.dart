@@ -55,7 +55,7 @@ Future<void> main() async {
   final remoteConfig = FirebaseRemoteConfig.instance;
   await setupFirebaseRemoteConfig(remoteConfig);
 
-  await GoogleSignIn.instance.initialize();
+  await GoogleSignIn.instance.initialize(serverClientId: dotenv.env['GOOGLE_CLIENT_ID']);
 
   final dio = Dio(
     BaseOptions(
