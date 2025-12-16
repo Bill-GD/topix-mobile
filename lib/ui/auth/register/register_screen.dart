@@ -27,10 +27,19 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  late final vm = widget.viewModel;
+
   final emailController = TextEditingController(),
       usernameController = TextEditingController(),
       passwordController = TextEditingController(),
       confirmPasswordController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    emailController.text = vm.googleAccount?.email ?? '';
+    usernameController.text = vm.accountUsername.toLowerCase().replaceAll(' ', '_');
+  }
 
   @override
   void dispose() {
@@ -102,11 +111,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         textAlign: .center,
                       ),
                     Input(
-                      controller: emailController
-                        ..text = widget.viewModel.googleAccount?.email ?? '',
+                      controller: emailController,
                       readOnly:
-                          widget.viewModel.isGoogleOAuth ||
-                          (!widget.viewModel.isGoogleOAuth &&
+                          vm.isGoogleOAuth ||
+                          (!vm.isGoogleOAuth &&
                               !Constants.emailVerificationEnabled.value),
                       labelText: 'Email',
                       hintText: 'Enter your email',
@@ -115,11 +123,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       textInputAction: .next,
                     ),
                     Input(
-                      controller: usernameController
-                        ..text = widget.viewModel.accountUsername,
+                      controller: usernameController,
                       readOnly:
-                          widget.viewModel.isGoogleOAuth ||
-                          (!widget.viewModel.isGoogleOAuth &&
+                          vm.isGoogleOAuth ||
+                          (!vm.isGoogleOAuth &&
                               !Constants.emailVerificationEnabled.value),
                       labelText: 'Username',
                       hintText: 'Enter your username',
@@ -130,20 +137,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     Input(
                       controller: passwordController,
                       readOnly:
-                          !widget.viewModel.isGoogleOAuth &&
-                          !Constants.emailVerificationEnabled.value,
+                          !vm.isGoogleOAuth && !Constants.emailVerificationEnabled.value,
                       labelText: 'Password',
                       hintText: 'Enter your password',
-                      obscureText: widget.viewModel.hidePassword,
+                      obscureText: vm.hidePassword,
                       textInputType: .visiblePassword,
                       textInputAction: .next,
                       prefixIcon: Icon(Icons.password_rounded),
                       suffixIcon: ExcludeFocus(
                         child: IconButton(
-                          onPressed: () =>
-                              widget.viewModel.togglePasswordVisibility(.normal),
+                          onPressed: () => vm.togglePasswordVisibility(.normal),
                           icon: Icon(
-                            widget.viewModel.hidePassword
+                            vm.hidePassword
                                 ? Icons.visibility
                                 : Icons.visibility_off_rounded,
                           ),
@@ -153,20 +158,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     Input(
                       controller: confirmPasswordController,
                       readOnly:
-                          !widget.viewModel.isGoogleOAuth &&
-                          !Constants.emailVerificationEnabled.value,
+                          !vm.isGoogleOAuth && !Constants.emailVerificationEnabled.value,
                       labelText: 'Confirm password',
                       hintText: 'Repeat your password',
-                      obscureText: widget.viewModel.hideConfirmPassword,
+                      obscureText: vm.hideConfirmPassword,
                       textInputType: .visiblePassword,
                       textInputAction: .done,
                       prefixIcon: Icon(Icons.password_rounded),
                       suffixIcon: ExcludeFocus(
                         child: IconButton(
-                          onPressed: () =>
-                              widget.viewModel.togglePasswordVisibility(.confirm),
+                          onPressed: () => vm.togglePasswordVisibility(.confirm),
                           icon: Icon(
-                            widget.viewModel.hideConfirmPassword
+                            vm.hideConfirmPassword
                                 ? Icons.visibility
                                 : Icons.visibility_off_rounded,
                           ),
@@ -204,8 +207,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           email,
                           username,
                           password,
-                          verified: widget.viewModel.isGoogleOAuth ? true : null,
-                          picture: widget.viewModel.googleAccount?.photoUrl,
+                          verified: vm.isGoogleOAuth ? true : null,
+                          picture: vm.googleAccount?.photoUrl,
                         );
 
                         if (context.mounted) {
@@ -213,7 +216,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             context.showToast(res.$2);
                             return;
                           }
-                          if (widget.viewModel.isGoogleOAuth) {
+                          if (vm.isGoogleOAuth) {
                             context.showToast('Account registered.');
                             Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
@@ -255,7 +258,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       disabled: !GetIt.I<GoogleSignIn>().supportsAuthenticate(),
                       padding: const .all(12),
                       icon: Image.asset('assets/images/google_icon.png', scale: 1.75),
-                      onPressed: widget.viewModel.requestGoogleSignIn,
+                      onPressed: vm.requestGoogleSignIn,
                     ),
                   ],
                 ),
