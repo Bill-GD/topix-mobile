@@ -271,7 +271,12 @@ class _PostState extends State<Post> {
                       borderRadius: .circular(8),
                       child: AspectRatio(
                         aspectRatio: vidController!.value.aspectRatio,
-                        child: VideoPlayer(vidController!),
+                        child: Stack(
+                          children: [
+                            VideoPlayer(vidController!),
+                            Center(child: Icon(Icons.play_arrow_rounded, size: 40)),
+                          ],
+                        ),
                       ),
                     )
                   else

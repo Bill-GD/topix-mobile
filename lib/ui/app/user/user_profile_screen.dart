@@ -86,6 +86,7 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                                   Expanded(
                                     child: Column(
                                       mainAxisAlignment: .spaceBetween,
+                                      crossAxisAlignment: .start,
                                       children: [
                                         Row(
                                           spacing: 8,

@@ -122,7 +122,6 @@ class _PostScreenState extends State<PostScreen> with SingleTickerProviderStateM
               ),
             ),
           );
-          vm.post.replyCount++;
           vm.loadReplies(reload: true);
         },
       ),
