@@ -4,8 +4,8 @@ import 'package:topix/ui/app/upload/upload_view_model.dart';
 import 'package:topix/ui/core/theme/colors.dart';
 import 'package:topix/ui/core/widgets/button.dart';
 import 'package:topix/ui/core/widgets/input.dart';
-// import 'package:topix/ui/core/widgets/post/file_picker.dart';
 import 'package:topix/ui/core/widgets/toast.dart';
+import 'package:topix/utils/extensions.dart';
 
 class UploadScreen extends StatelessWidget {
   final UploadViewModel viewModel;
@@ -26,11 +26,18 @@ class UploadScreen extends StatelessWidget {
             actions: [
               ValueListenableBuilder(
                 valueListenable: contentController,
-                builder: (context, value, child) {
+                builder: (context, content, child) {
+                  final disabledUpload = content.text.trim().isEmpty;
+
                   return Button(
                     tooltip: 'Post',
-                    icon: Icon(Icons.check_rounded, color: ThemeColors.successLight),
-                    disabled: value.text.trim().isEmpty,
+                    icon: Icon(
+                      Icons.check_rounded,
+                      color: disabledUpload
+                          ? context.colorScheme.surfaceContainerHighest
+                          : ThemeColors.successLight,
+                    ),
+                    disabled: disabledUpload,
                     onPressed: () async {
                       final res = await viewModel.uploadPost(
                         contentController.text.trim(),
