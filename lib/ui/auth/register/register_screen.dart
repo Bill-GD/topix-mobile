@@ -29,24 +29,12 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   late final vm = widget.viewModel;
 
-  final emailController = TextEditingController(),
-      usernameController = TextEditingController(),
-      passwordController = TextEditingController(),
-      confirmPasswordController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    emailController.text = vm.googleAccount?.email ?? '';
-    usernameController.text = vm.accountUsername.toLowerCase().replaceAll(' ', '_');
-  }
-
   @override
   void dispose() {
-    emailController.dispose();
-    usernameController.dispose();
-    passwordController.dispose();
-    confirmPasswordController.dispose();
+    vm.emailController.dispose();
+    vm.usernameController.dispose();
+    vm.passwordController.dispose();
+    vm.confirmPasswordController.dispose();
     super.dispose();
   }
 
@@ -111,7 +99,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         textAlign: .center,
                       ),
                     Input(
-                      controller: emailController,
+                      controller: vm.emailController,
                       readOnly:
                           vm.isGoogleOAuth ||
                           (!vm.isGoogleOAuth &&
@@ -123,7 +111,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       textInputAction: .next,
                     ),
                     Input(
-                      controller: usernameController,
+                      controller: vm.usernameController,
                       readOnly:
                           vm.isGoogleOAuth ||
                           (!vm.isGoogleOAuth &&
@@ -135,7 +123,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       textInputAction: .next,
                     ),
                     Input(
-                      controller: passwordController,
+                      controller: vm.passwordController,
                       readOnly:
                           !vm.isGoogleOAuth && !Constants.emailVerificationEnabled.value,
                       labelText: 'Password',
@@ -156,7 +144,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ),
                     Input(
-                      controller: confirmPasswordController,
+                      controller: vm.confirmPasswordController,
                       readOnly:
                           !vm.isGoogleOAuth && !Constants.emailVerificationEnabled.value,
                       labelText: 'Confirm password',
@@ -180,10 +168,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       type: .success,
                       text: 'Register',
                       onPressed: () async {
-                        final email = emailController.text.trim(),
-                            username = usernameController.text.trim(),
-                            password = passwordController.text.trim(),
-                            confirmPassword = confirmPasswordController.text.trim();
+                        final email = vm.emailController.text.trim(),
+                            username = vm.usernameController.text.trim(),
+                            password = vm.passwordController.text.trim(),
+                            confirmPassword = vm.confirmPasswordController.text.trim();
 
                         if (email.isEmpty ||
                             username.isEmpty ||

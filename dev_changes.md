@@ -1,5 +1,1 @@
-- Switched Google OAuth from Firebase to Google Cloud Platform (GCP)
-- Added new GCP Android client (with new Client ID & correct SHA-1)
-- Explicitly passes the Web Client ID to `GoogleSignIn`
-- Uses new Client ID in GitHub Actions
-- Fixed registration text controllers reset on password visibility toggled
+- Fixed register screen text field not updating for Google OAuth

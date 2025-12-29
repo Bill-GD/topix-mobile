@@ -1,7 +1,7 @@
 name: topix
 description: "The Android client of topix."
 publish_to: 'none'
-version: 0.1.2+7
+version: 0.1.2+8
 
 environment:
   sdk: ^3.10.0

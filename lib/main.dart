@@ -62,7 +62,7 @@ Future<void> main() async {
       baseUrl: Constants.apiUrl.value,
       contentType: Headers.jsonContentType,
       headers: {Headers.acceptHeader: Headers.jsonContentType},
-      connectTimeout: 10.seconds,
+      connectTimeout: 5.seconds,
       validateStatus: (_) => true,
     ),
   );
